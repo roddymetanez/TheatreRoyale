@@ -1,0 +1,28 @@
+Planning
+
+    Outline
+        
+        Theatre
+            Seats
+                Types of Seat
+                
+        Users
+            Age
+            Name
+            Address
+            Credit Card (security adaptable W++)
+        
+        Show
+            Title
+            Type
+            Description of show
+            Genre
+            Language
+                Performance 
+                    When
+                    Duration
+                    Price
+
+            Tickets
+            Availability
+                seat / performance / user-discount
