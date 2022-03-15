@@ -25,9 +25,9 @@ public class Engine {
             if (results != null) {
                 db.printResult(results); }
             query = parser.getQuery();
-            }
+        }
         // close the file interface and the database
         parser.close();
         db.close();
-        }
+    }
 }

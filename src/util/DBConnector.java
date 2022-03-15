@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.*;
+import java.sql.ResultSetMetaData;
 import java.util.Scanner;
 import java.nio.file.Files;
 import java.io.File;
@@ -34,7 +34,7 @@ public class DBConnector {
     public void connect() {
         Scanner scanner;
         try {
-        scanner = new Scanner(new File(connParams));}
+            scanner = new Scanner(new File(connParams));}
         catch (FileNotFoundException e) { 
             System.out.println("No such File");
             return;
@@ -74,7 +74,7 @@ public class DBConnector {
                 int rowcount = 0;
                 if (results.last()) {
                     rowcount = results.getRow();
-                    results.beforeFirst(); // not rs.first() because the rs.next() below will move on, missing the first
+                    results.beforeFirst(); // not rs.first() because the rs.next() later will move on, missing the first
                                             // element
                 }
                 System.out.println(sql + "\n Success.  Result set has " + rowcount + " rows");
@@ -110,7 +110,7 @@ public class DBConnector {
                     rsmd = rs.getMetaData();
                     for (Integer i = 1; i <= colCount; i++) {
                         Integer headerWidth = rsmd.getColumnDisplaySize(i);
-                        String name = rsmd.getColumnName(i);
+                        String name = rsmd.getColumnLabel(i);
                         String data = rs.getString(i);
                         firstColData.add(i-1, data);
                         
@@ -121,28 +121,25 @@ public class DBConnector {
                         if (name.length() > colWidth)
                             colWidth = name.length();
                         colWidths.add(i-1, colWidth);
-                        System.out.print(name);
                         // to make the columns the right width
-                        for (int j = 0; j<=(colWidth - name.length()); j++)
+                        System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", name));
                         System.out.print(" ");
                     }
                     System.out.println();
                     for (int i = 1; i <= colCount; i++) {
                         String data = firstColData.get(i-1);
-                        System.out.print(data);
-                        for (int j = 0; j<=(colWidths.get(i-1) - data.length()); j++)
+                        colWidth = colWidths.get(i-1);
+                        System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", data));
                         System.out.print(" ");                        
                     }
                     System.out.println();
                     heading = false;
                 } else {
-                    for (int i = 1; i <= colCount; i++)
-                        {colWidth = colWidths.get(i-1);  
-                        //System.out.println("column width" + colWidth);
-                        System.out.print(rs.getString(i));
+                    for (int i = 1; i <= colCount; i++) {
                         //to make the columns line up
-                        for (int j = 0; j<=(colWidth - rs.getString(i).length()); j++)
-                        { System.out.print(" "); }
+                        colWidth = colWidths.get(i-1);  
+                        System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", rs.getString(i)));
+                        System.out.print(" ");
                     }      
                     System.out.println();
                 }
