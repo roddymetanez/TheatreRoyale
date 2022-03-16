@@ -1,9 +1,9 @@
-package src.controller;
+package controller;
 
 import java.sql.ResultSet;
 
-import src.util.DBConnector;
-import src.util.Parser;
+import util.DBConnector;
+import util.Parser;
 
 /**
  * Engine drives the system to read SQL queries from a file, process these queries
