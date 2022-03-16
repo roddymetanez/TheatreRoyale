@@ -12,7 +12,7 @@ public class InputReader {
 	/**
 	 * Print a message to the console and return the next integer value entered by the user
 	 * 
-	 * @param message
+	 * @param message to print to console
 	 * @return integer user inputs
 	 */
 	public int getNextInt(String message) {
@@ -23,7 +23,7 @@ public class InputReader {
 	/**
 	 * Print a message to the console and return the next string value entered by the user
 	 * 
-	 * @param message
+	 * @param message to print to console
 	 * @return String user inputs
 	 */
 	public String getNextText(String message) {
