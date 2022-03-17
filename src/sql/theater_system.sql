@@ -16,18 +16,31 @@ CREATE TABLE Customers (
     cust_history VARCHAR(100) -- Derived archive of perfID, showID, DATETIME of transaction. 
 );
 
+<<<<<<< Updated upstream
+DROP TABLE IF EXISTS Show_details;
+CREATE TABLE Show_details (
+=======
 DROP TABLE IF EXISTS Show_Details;
 CREATE TABLE Show_Details (
+>>>>>>> Stashed changes
     showID INT,
     show_ticketPrice DOUBLE,
     show_performer VARCHAR(50),
     show_title VARCHAR(50),
     show_description VARCHAR(500),
+<<<<<<< Updated upstream
+    show_genre VARCHAR(50),
+    primary_language VARCHAR(50),
+    show_live_music TINYINT(1),
+    show_duration INT, -- number of calendar days the show will run for
+    show_runlength INT
+=======
     show_genre VARCHAR(25),
     primary_language VARCHAR(25),
     show_live_music TINYINT(1)
     show_duration VARCHAR(15), --number of calendar days the show will run for
     show_runlength VARCHAR(15),
+>>>>>>> Stashed changes
 );
 
 DROP TABLE IF EXISTS Performance;
@@ -50,6 +63,36 @@ CREATE TABLE IF NOT EXISTS Tickets (
 );
 */
 
+<<<<<<< Updated upstream
+INSERT INTO Show_details(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)
+VALUES (901, 8.99, "Appleton Players", "Aladdin", "Well what a disappointment that was, not even sure where to begin." ,"Pantomime", "English", 0, 14, 110);
+
+INSERT INTO Show_details(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)
+VALUES (902, 15.99, "Brian Blessed", "Buster", "Well what a disappointment that was, I was hoping to see Prince Vultan, like in Flash Gordon","Play", "BSL", 0, 7, 110);
+
+INSERT INTO Show_details(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)
+VALUES (903, 8.99, "Couer en Hiver", "Chris Corkmann & Organ", "Eh bien, quelle déception c'était, je ne savais même pas par où commencer.", "Cinema","French, with English Subtitles", 1, 1, 167);
+
+
+INSERT INTO Performance (showID, perfID, perf_date)
+VALUES (901, 901101, '2020-07-01 19:30:00');
+INSERT INTO Performance (showID, perfID, perf_date)
+VALUES (901, 901102, '2020-07-01 12:30:00');
+INSERT INTO Performance (showID, perfID, perf_date)
+VALUES (901, 901102, '2020-07-02 19:30:00');
+INSERT INTO Performance (showID, perfID, perf_date)
+VALUES (901, 901103, '2020-07-02 12:30:00');
+INSERT INTO Performance (showID, perfID, perf_date)
+VALUES (901, 901104, '2020-07-03 19:30:00');
+INSERT INTO Performance (showID, perfID, perf_date)
+VALUES (901, 901105, '2020-07-04 19:30:00');
+INSERT INTO Performance (showID, perfID, perf_date)
+VALUES (902, 902101, '2020-07-01 19:30:00');
+INSERT INTO Performance (showID, perfID, perf_date)
+VALUES (902, 902101, '2020-07-01 19:30:00');
+INSERT INTO Performance (showID, perfID, perf_date)
+VALUES (903, 903101, '2020-07-01 19:30:00');
+=======
 INSERT INTO Show_detail(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music)
 VALUES (901, 8.99, "Appleton Players", "Aladdin", "Well what a disappointment that was, not even sure where to begin." ,"Pantomime", "English", 0);
 
@@ -78,3 +121,4 @@ INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlengt
 VALUES (902, 902101, '2020-07-01 19:30:00', 0, 150);
 INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (903, 903101, '2020-07-01 19:30:00', 0, 167);
+>>>>>>> Stashed changes
