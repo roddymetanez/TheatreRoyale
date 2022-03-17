@@ -159,5 +159,16 @@ public class DBConnector {
         }
     }
 
-
+    public String toString(){
+        try {
+            return conn.getCatalog();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Invalid Connection.";
+        }
+    }
+    
+    public Connection getConn() {
+        return conn;
+    }
 }
