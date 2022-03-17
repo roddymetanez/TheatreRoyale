@@ -2,11 +2,11 @@
 dependency1.from=DataAccessTest
 dependency1.to=DataAccess
 dependency1.type=UsesDependency
-objectbench.height=161
+objectbench.height=74
 objectbench.width=459
 package.divider.horizontal=0.6005154639175257
-package.divider.vertical=0.6660039761431411
-package.editor.height=328
+package.divider.vertical=0.8389662027833003
+package.editor.height=415
 package.editor.width=666
 package.editor.x=120
 package.editor.y=120
