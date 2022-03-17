@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public abstract class Show {
 
-    private ArrayList<Performance> performances;
+    private final ArrayList<Performance> performances;
 
     private String title;
     private String type;
@@ -19,7 +19,7 @@ public abstract class Show {
     /**
      * Retrieve all performances within this show
      *
-     * @return ArrayList<Performance>
+     * @return ArrayList<> all performances for this show
      */
     public ArrayList<Performance> getPerformances() {
         return this.performances;
@@ -48,8 +48,8 @@ public abstract class Show {
     /**
      * Retrieve all performances on a specific date
      *
-     * @param date
-     * @return
+     * @param date to find performances on
+     * @return ArrayList<> all performances on the specified date
      */
     public ArrayList<Performance> findPerformancesByDate(LocalDate date) {
         ArrayList<Performance> performancesOnDate = new ArrayList<>();

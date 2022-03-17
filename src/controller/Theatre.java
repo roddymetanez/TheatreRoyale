@@ -11,9 +11,9 @@ import util.InputReader;
 
 public class Theatre {
 
-    private HashMap<String, Show> scheduledShows;
+    private final HashMap<String, Show> scheduledShows;
 
-    private InputReader inputReader;
+    private final InputReader inputReader;
 
     public Theatre() {
         this.scheduledShows = new HashMap<>();
@@ -63,14 +63,12 @@ public class Theatre {
      * Print out all available shows
      */
     private void browseShows() {
-        if (!hasScheduledShows()) {
+        if (showsIsEmpty()) {
             System.out.println("There are no shows currently scheduled");
             return;
         }
         
-        scheduledShows.forEach((title, show) -> {
-            System.out.println(show);
-        });
+        scheduledShows.forEach((title, show) -> System.out.println(show));
 
     }
 
@@ -78,7 +76,7 @@ public class Theatre {
      * Locate a show by the title
      */
     private void findShowByTitle() {
-        if (!hasScheduledShows()) {
+        if (showsIsEmpty()) {
             System.out.println("There are no shows currently scheduled");
             return;
         }
@@ -96,7 +94,7 @@ public class Theatre {
      * Find all shows that have performances on a specific date
      */
     private void findShowsByDate() {
-        if (!hasScheduledShows()) {
+        if (showsIsEmpty()) {
             System.out.println("There are no shows currently scheduled");
             return;
         }
@@ -125,19 +123,17 @@ public class Theatre {
     /**
      * Print out all shows within the provided arraylist.
      * 
-     * @param shows
+     * @param shows to print to console
      */
     private void printShows(ArrayList<Show> shows) {
         if (!shows.isEmpty()) {
             System.out.println("\nAvailable shows");
 
-            shows.forEach(show -> {
-                System.out.println(show);
-            });
+            shows.forEach(System.out::println);
         }
     }
 
-    private boolean hasScheduledShows() {
-        return !this.scheduledShows.isEmpty();
+    private boolean showsIsEmpty() {
+        return this.scheduledShows.isEmpty();
     }
 }

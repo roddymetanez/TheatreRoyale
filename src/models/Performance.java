@@ -12,9 +12,8 @@ public class Performance {
 
 
     public Performance(String date, int duration) {
-        this.setDuration(duration);
+        this.duration = duration;
         this.startDateTime = LocalDateTime.parse(date);
-        // Instantiate global variables
     }
 
     public int getID() {
