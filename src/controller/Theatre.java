@@ -11,6 +11,9 @@ import util.InputReader;
 
 public class Theatre {
 
+	public final static int seatsCircle = 80;
+	public final static int seatsStalls = 120;
+	
     private final HashMap<String, Show> scheduledShows;
 
     private final InputReader inputReader;
@@ -136,4 +139,12 @@ public class Theatre {
     private boolean showsIsEmpty() {
         return this.scheduledShows.isEmpty();
     }
+
+	public int getSeatsCircle() {
+		return seatsCircle;
+	}
+
+	public int getSeatsStalls() {
+		return seatsStalls;
+	}
 }
