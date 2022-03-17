@@ -1,1 +1,1 @@
-jdbc:mysql://localhost:3306/theatre, Tom2, password, 
+jdbc:mysql://localhost:3306/theatre, musketeer, musketeer, 
