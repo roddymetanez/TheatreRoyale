@@ -26,6 +26,8 @@ CREATE TABLE Show_Details (
     show_genre VARCHAR(25),
     primary_language VARCHAR(25),
     show_live_music TINYINT(1)
+    show_duration VARCHAR(15), --number of calendar days the show will run for
+    show_runlength VARCHAR(15),
 );
 
 DROP TABLE IF EXISTS Performance;
@@ -33,8 +35,6 @@ CREATE TABLE Performance (
     perfID INT,
     showID INT,
 	perf_date DATETIME,-- DATETIME - format: 'YYYY-MM-DD HH:MI:SS' or 'YYYY-MM-DD'  
-    perf_duration VARCHAR(15), -- number of calendar days the show will run for
-    perf_runlength VARCHAR(15),
     seats_circle INT,
     seats_stall INT
 );
@@ -48,33 +48,33 @@ CREATE TABLE IF NOT EXISTS Tickets (
     performance VARCHAR(25),
     concessionary_discount INT
 );
-*/ 
+*/
 
-INSERT INTO Show_Details(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music)
-VALUES (901, 8.99,"Appleton Players", "Aladdin", "Well what a disappointment that was, not even sure where to begin." ,"Pantomime", "English", 0);
+INSERT INTO Show_detail(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music)
+VALUES (901, 8.99, "Appleton Players", "Aladdin", "Well what a disappointment that was, not even sure where to begin." ,"Pantomime", "English", 0);
 
-INSERT INTO Show_Details(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music)
+INSERT INTO Show_detail(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music)
 VALUES (902, 15.99, "Brian Blessed", "Buster", "Well what a disappointment that was, I was hoping to see Prince Vultan, like in Flash Gordon","Play", "BSL", 0);
 
-INSERT INTO Show_Details(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music)
-VALUES (903, 3.99, "Chris Corkmann & Organ", "Couer en Hiver", "Eh bien, quelle déception c'était, je ne savais même pas par où commencer.", "Cinema", "French, English Subtitles", 1);
+INSERT INTO Show_detail(showID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music)
+VALUES (903, 8.99, "Couer en Hiver", "Chris Corkmann & Organ" "Eh bien, quelle déception c'était, je ne savais même pas par où commencer.", "Cinema","French, with English Subtitles" 1);
 
 
-INSERT INTO Performance (showID, perfID, perf_date, perf_duration, perf_runlength)
+INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (901, 901101, '2020-07-01 19:30:00', 14, 110);
-INSERT INTO Performance (showID, perfID, perf_date, perf_duration, perf_runlength)
+INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (901, 901102, '2020-07-01 12:30:00', 14, 110);
-INSERT INTO Performance (showID, perfID, perf_date, perf_duration, perf_runlength)
+INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (901, 901102, '2020-07-02 19:30:00', 13, 110);
-INSERT INTO Performance (showID, perfID, perf_date, perf_duration, perf_runlength)
+INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (901, 901103, '2020-07-02 12:30:00', 13, 110);
-INSERT INTO Performance (showID, perfID, perf_date, perf_duration, perf_runlength)
+INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (901, 901104, '2020-07-03 19:30:00', 12, 110);
-INSERT INTO Performance (showID, perfID, perf_date, perf_duration, perf_runlength)
+INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (901, 901105, '2020-07-04 19:30:00', 11, 110);
-INSERT INTO Performance (showID, perfID, perf_date, perf_duration, perf_runlength)
+INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (902, 902101, '2020-07-01 19:30:00', 1, 150);
-INSERT INTO Performance (showID, perfID, perf_date, perf_duration, perf_runlength)
+INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (902, 902101, '2020-07-01 19:30:00', 0, 150);
-INSERT INTO Performance (showID, perfID, perf_date, perf_duration, perf_runlength)
+INSERT INTO Performance (showID, perfID, perf_date, show_duration, show_runlength)
 VALUES (903, 903101, '2020-07-01 19:30:00', 0, 167);
