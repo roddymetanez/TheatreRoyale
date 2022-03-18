@@ -60,7 +60,7 @@ public class Performance {
      * 
      * @return Ticket created for this show
      */
-    public Ticket createTicket() {
-    	return new Ticket(this.ID, this.price, this);
-    }
+//    public Ticket createTicket() {
+//    	return new Ticket(this.ID, this.price, this);
+//    }
 }
