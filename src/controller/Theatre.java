@@ -1,25 +1,22 @@
 package controller;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 
-import models.Show;
 import util.InputReader;
 
 public class Theatre {
 
 	public final static int seatsCircle = 80;
 	public final static int seatsStalls = 120;
-	
-    private final HashMap<String, Show> scheduledShows;
+    
+    private DataAccess dataAccess;
 
     private final InputReader inputReader;
 
     public Theatre() {
-        this.scheduledShows = new HashMap<>();
+    	this.dataAccess = new DataAccess();
         this.inputReader = new InputReader();
         
         displayInterface();
@@ -28,8 +25,8 @@ public class Theatre {
     private void displayInterface() {
         int option;
         boolean exit = false;
-        
         do {
+        	
         	// Interface displayed to the user through the console window
             System.out.println("===========================================");
             System.out.println("| Enter the number to select an option..  |");
@@ -41,6 +38,7 @@ public class Theatre {
             System.out.println("|                                         |");
             System.out.println("===========================================");
             
+            // Ensure a digit is provided
             try {
                 option = inputReader.getNextInt("");
             } catch (InputMismatchException e) {
@@ -49,9 +47,10 @@ public class Theatre {
             }
             
             // Switch the option and call the correct method, or exit.
+            dataAccess = new DataAccess(); // Reopen the database connection
             switch (option) {
                 case 1 -> browseShows();
-                case 2 -> findShowByTitle();
+                case 2 -> findShowByName();
                 case 3 -> findShowsByDate();
                 case 4 -> exit = true;
             }
@@ -63,81 +62,57 @@ public class Theatre {
 
 
     /**
-     * Print out all available shows
+     * Call the procedure to retrieve all currently scheduled shows, and pass them to the printResults
+     * method to print them to the console.
      */
     private void browseShows() {
-        if (showsIsEmpty()) {
-            System.out.println("There are no shows currently scheduled");
-            return;
-        }
-        
-        scheduledShows.forEach((title, show) -> System.out.println(show));
-
+    	
+    	ResultSet rs = dataAccess.getShows();
+    	printResults(rs);
     }
 
     /**
-     * Locate a show by the title
+     * Call the procedure to retrieve all scheduled shows by name, and pass them to the printResults
+     * method to print them to the console.
      */
-    private void findShowByTitle() {
-        if (showsIsEmpty()) {
-            System.out.println("There are no shows currently scheduled");
-            return;
-        }
-        // Locate a specific show by the title
-        Show show = null;
+    private void findShowByName() {
+    	
+    	String name = inputReader.getNextText("Enter the show name\n");
+    	ResultSet rs = dataAccess.getShowByName(name);
 
-        while (show == null) {
-            String title = inputReader.getNextText("Enter the show title\n");
-            show = scheduledShows.get(title);
-        }
-        System.out.print(show);
+    	printResults(rs);
     }
 
     /**
-     * Find all shows that have performances on a specific date
+     * Call the procedure to retrieve all scheduled shows on a specific date, and pass them to the printResults
+     * method to print them to the console.
      */
     private void findShowsByDate() {
-        if (showsIsEmpty()) {
-            System.out.println("There are no shows currently scheduled");
-            return;
-        }
-        // Locate a specific show by the date it begins (Display all that apply)
-        LocalDate date;
-        try {
-        	// Attempt to parse the provided date into a LocalDate data type
-            date = LocalDate.parse(inputReader.getNextText("\nEnter the date of which you'd like to see shows for [yyyy-MM-dd]\n"));
-        } catch (DateTimeParseException e) {
-            System.out.println("Error: You must enter the date in the correct format. [yyyy-MM-dd] - [2021-04-01]");
-            return;
-        }
-        ArrayList<Show> showsByDate = new ArrayList<>();
-
-        // Add all shows that have performances on the date to the list to print out
-        scheduledShows.forEach((title, show) -> {
-            if (!show.findPerformancesByDate(date).isEmpty()) {
-                showsByDate.add(show);
-            }
-        });
+    	
+    	String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for [dd-MM-yy]\n");
+        ResultSet rs = dataAccess.getShowByDate(date.toString());
         
-        // Print out all shows found with performances on the date
-        printShows(showsByDate);
+    	printResults(rs);
     }
 
     /**
-     * Print out all shows within the provided arraylist.
+     * Print out the results of the provided ResultSet
      * 
-     * @param shows to print to console
+     * @param rs ResultSet to print
      */
-    private void printShows(ArrayList<Show> shows) {
-        if (!shows.isEmpty()) {
-            System.out.println("\nAvailable shows");
-
-            shows.forEach(System.out::println);
-        }
-    }
-
-    private boolean showsIsEmpty() {
-        return this.scheduledShows.isEmpty();
+    private boolean printResults(ResultSet rs) {
+    	// Interate through all elements within the ResultSet and print them to the console. 
+    	try {    			
+    		while (rs.next()) {
+    			System.out.println("\n[Name: " + rs.getString("Name") + "\n Description: " + rs.getString("Blurb") + "\n Date: " + rs.getString("Date") + "]\n");
+    		}
+    		
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	dataAccess.close(); // Close the connection to the database
+    	return true;
     }
 
 	public int getSeatsCircle() {
