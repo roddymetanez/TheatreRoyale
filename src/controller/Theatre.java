@@ -37,6 +37,7 @@ public class Theatre {
             System.out.println("| 4 - Exit                                |");
             System.out.println("|                                         |");
             System.out.println("===========================================");
+            System.out.print("\n> ");
             
             // Ensure a digit is provided
             try {
@@ -77,7 +78,7 @@ public class Theatre {
      */
     private void findShowByName() {
     	
-    	String name = inputReader.getNextText("Enter the show name\n");
+    	String name = inputReader.getNextText("\nEnter the show name:\n> ");
     	ResultSet rs = dataAccess.getShowByName(name);
 
     	printResults(rs);
@@ -89,7 +90,7 @@ public class Theatre {
      */
     private void findShowsByDate() {
     	
-    	String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for [dd-MM-yy]\n");
+    	String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for [dd-MM-yy]\n> ");
         ResultSet rs = dataAccess.getShowByDate(date.toString());
         
     	printResults(rs);
@@ -101,7 +102,7 @@ public class Theatre {
      * @param rs ResultSet to print
      */
     private boolean printResults(ResultSet rs) {
-    	// Interate through all elements within the ResultSet and print them to the console. 
+    	// Iterate through all elements within the ResultSet and print them to the console. 
     	try {    			
     		while (rs.next()) {
     			System.out.println("\n[Name: " + rs.getString("Name") + "\n Description: " + rs.getString("Blurb") + "\n Date: " + rs.getString("Date") + "]\n");

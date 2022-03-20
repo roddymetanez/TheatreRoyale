@@ -1,14 +1,18 @@
-package src.controller;
+package Tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.ResultSet;
-import src.util.DBConnector;
-import java.sql.Connection;
-import java.sql.SQLException;
+import controller.DataAccess;
+import util.DBConnector;
 
 
 /**
