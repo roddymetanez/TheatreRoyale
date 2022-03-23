@@ -72,7 +72,7 @@ public class DBConnector {
 	 * runQuery will prepare an SQL statement taken from a file to run
 	 */
 	public ResultSet runQuery(String sql) {
-		ResultSet tmpResults = runQuerySilent(sql, false);
+		ResultSet tmpResults = runQuery(sql, false);
 		return tmpResults;
 	}
 
@@ -105,7 +105,6 @@ public class DBConnector {
 			e.printStackTrace();
 			return null;
 		}
-
 	}
 
 	/**
