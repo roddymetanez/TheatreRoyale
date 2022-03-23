@@ -1,0 +1,2 @@
+﻿customerID ,first_name,middle_name,last_name,address_no,address_st,address_postcode,customer_email,cust_history
+INT NOT NULL AUTO_INCREMENT PRIMARY KEY,VARCHAR(25),VARCHAR(25),VARCHAR(50),VARCHAR(5),VARCHAR(25),VARCHAR(8),VARCHAR(50),VARCHAR(100)

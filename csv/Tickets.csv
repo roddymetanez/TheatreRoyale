@@ -1,0 +1,2 @@
+﻿PurchaseID,perfID,customerID,ticket_date
+INT NOT NULL,INT,INT,DATETIME
