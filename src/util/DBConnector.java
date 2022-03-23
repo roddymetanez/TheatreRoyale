@@ -2,6 +2,9 @@ package util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.OpenOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,6 +24,8 @@ public class DBConnector {
 	// connParams is the name of the file containing information required to make
 	// the connection
 	private static final String connParams = "connParams.txt";
+	private static final Charset CREATE = null;
+	private static final OpenOption APPEND = null;
 	private FileRoster fileRoster;
 	private CsvReader csvReader;
 
@@ -66,8 +71,12 @@ public class DBConnector {
 	/**
 	 * runQuery will prepare an SQL statement taken from a file to run
 	 */
-
 	public ResultSet runQuery(String sql) {
+		ResultSet tmpResults = runQuerySilent(sql, false);
+		return tmpResults;
+	}
+
+	public ResultSet runQuery(String sql, Boolean silent) {
 		PreparedStatement pst = null;
 		try {
 			pst = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, // allows us to move forward and back in
@@ -82,10 +91,12 @@ public class DBConnector {
 					results.beforeFirst(); // not rs.first() because the rs.next() later will move on, missing the first
 											// element
 				}
-				System.out.println(sql + "\n Success.  Result set has " + rowcount + " rows");
+				if (!silent) {
+					System.out.println(sql + "\n Success.  Result set has " + rowcount + " rows");
+				}
 			}
 			else {
-				System.out.println(sql + "\n Success.  No results returned");
+				System.out.println(sql);
 			}
 			return results;
 		}
@@ -188,12 +199,14 @@ public class DBConnector {
 	 * method is self contained so that on completion the temporary arrays can be
 	 * deleted
 	 * 
-	 * @param filePath to local foders of csv files
+	 * @param filePath to local folders of csv files
 	 * @param
+	 * @throws IOException
 	 */
-	public void loadSampleTablesIntoDb(File filePath, boolean dropTable) {
-		fileRoster = new FileRoster();
+	public void loadSampleTablesIntoDb(File filePath, boolean dropTable) throws IOException {
+		String writeInstr = "";
 		csvReader = new CsvReader();
+		fileRoster = new FileRoster();
 		ArrayList<File> tableFiles = new ArrayList<File>();
 		ArrayList<String> tableInstr = new ArrayList<String>();// Prep list for same
 		if (dropTable) {
@@ -209,8 +222,8 @@ public class DBConnector {
 				tableInstr = csvReader.readFile(table, dropTable);
 				// Pipe the tables to the Db, as one MySql command at a time
 				for (String instr : tableInstr) {
-					System.out.println(instr);
-					runQuery(instr);
+					// System.out.println(instr);
+					runQuery(instr, true);
 				}
 			}
 			catch (Exception malformedCsvFile_CheckCsv) {
@@ -218,5 +231,4 @@ public class DBConnector {
 			}
 		}
 	}
-
 }

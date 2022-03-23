@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 
 import util.DBConnector;
@@ -16,7 +17,7 @@ public class DataAccess {
 	private final String GET_SHOW_BY_DATE = "getShowByDate";
 	File filePath;
 
-	public DataAccess() {
+	public DataAccess() throws IOException {
 		db = new DBConnector();
 		filePath = new File("../TheatreRoyale/csv/");
 		/// TheatreRoyale/src/csv
