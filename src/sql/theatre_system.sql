@@ -96,7 +96,7 @@ BEGIN
 		Show_details s
 	JOIN Performance p
 		ON s.showID = p.perfID
-	GROUP by S.show_title;
+	GROUP by s.show_title;
 END;$$
 DELIMITER ;
 

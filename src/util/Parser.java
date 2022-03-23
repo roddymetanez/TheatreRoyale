@@ -1,4 +1,4 @@
-package util;
+package src.util;
 import java.io.File;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
@@ -19,6 +19,7 @@ public class Parser
 
     /**
      * open will open the specified file if it exists
+     * @param queryFile String - the name of the file to be scanned
     */
     public void open(String queryFile) {
         try {
@@ -33,7 +34,8 @@ public class Parser
     
     /**
      * getQuery will get the next SQL query from the open file 
-     * or return null if the end has been reached. 
+     * or return null if the end has been reached
+     * @return String - the next SQL statement from the file 
      */
     public String getQuery() {
         String query = null;

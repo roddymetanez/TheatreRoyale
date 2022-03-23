@@ -1,12 +1,12 @@
-package main;
+package src.main;
 
-import controller.Theatre;
+import src.controller.Theatre;
 
 public class Run {
 
-	public static void main(String[] args) {
-		// Create a new Theatre object
-		new Theatre();
-	}
+    public static void main(String[] args) {
+        // Create a new Theatre object
+        new Theatre();
+    }
 
 }
