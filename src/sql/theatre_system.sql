@@ -2,11 +2,10 @@ DROP DATABASE IF EXISTS Theatre;
 CREATE DATABASE Theatre;
 USE Theatre;
 
-
 --
 
 DROP TABLE IF EXISTS Performance; 
-CREATE TABLE Performance (perfID INT, SID INT, perf_date DATETIME, seats_circle INT, seats_stall INT); 
+CREATE TABLE Performance (perfID INT primary key, SID INT, perf_date DATETIME, seats_circle INT, seats_stall INT); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (01001-001, 001, '2022-03-31  19:30:00', 80, 120); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (01002-001, 001, '2022-04-01  19:30:00', 80, 120); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (01003-001, 001, '2022-04-01 01:30:00', 80, 120); 
@@ -59,17 +58,6 @@ CREATE TABLE Show_details (
     show_runlength INT
 );
 
-/*CREATE TABLE Show_details (
-	﻿SID INT NOT NULL PRIMARY KEY,
-    show_ticketPrice DOUBLE, 
-	show_performer VARCHAR(100),
-	show_title VARCHAR(100),
-    show_description VARCHAR(500), 
-	show_genre VARCHAR(50),
-    primary_language VARCHAR(50),
-    show_live_music TINYINT(1), 
-	show_duration INT,
-    show_runlength INT); */
 INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)  VALUES (1, 8.99, "Appleton Players", "Aladdin", "mightness at is to magnifice thesemble an inven story and opaque ther audience technicorn Thead into boot the gamera and tale use Swift’s in Gulliams form for the sames compositinged tank become", "Pantomime", "English", 0, 14, 110);
 INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)  VALUES (2, 15.99, "Brian Blessed", "Buster", "Leah Brothe changed taking use the sheet pinned is a brush with their charming voyages the scape here is mightness at is to magnifice thesemble an inven story and opaque ther audience technicorn ", "Play", "BSL", 0, 6, 120);
 INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)  VALUES (3, 10, "Chris Corkmann & Organ", "Couer en Hiver", "Thead into boot the gamera and tale use Swift’s in Gulliams form for the sames compositinged tank becomes a biting up as a bition ", "Cinema with live Bontempi organ", "French with English Subtitles", 1, 1, 167); 
@@ -80,7 +68,7 @@ INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, sho
 DROP TABLE IF EXISTS Customer; 
 CREATE TABLE Customer (customerID  INT NOT NULL AUTO_INCREMENT PRIMARY KEY, first_name VARCHAR(25), middle_name VARCHAR(25), last_name VARCHAR(50), address_no VARCHAR(5), address_st VARCHAR(25), address_postcode VARCHAR(8), customer_email VARCHAR(50), cust_history VARCHAR(100)); 
 DROP TABLE IF EXISTS Tickets; 
-CREATE TABLE Tickets (PurchaseID INT NOT NULL, perfID INT, customerID INT, ticket_date DATETIME); 
+CREATE TABLE Tickets (customerID INT, perfID INT, stall INT, circle INT, post INT); 
 
 --
 
@@ -98,7 +86,7 @@ BEGIN
 END;$$
 DELIMITER ;
 
-CALL getShows();
+#CALL getShows();
 
 DROP PROCEDURE IF EXISTS getShowByName;
 DELIMITER %
@@ -114,7 +102,7 @@ BEGIN
 	END;%
 DELIMITER ;
 
-CALL getShowByName('Aladdin');
+#CALL getShowByName('Aladdin');
 
 DROP PROCEDURE IF EXISTS getShowByDate;
 DELIMITER $$
@@ -129,38 +117,93 @@ BEGIN
 END;$$
 DELIMITER ;
 
-CALL getShowByDate('2020-07-01 19:30:00');
+#CALL getShowByDate('2020-07-01 19:30:00');
 
 
-DROP PROCEDURE IF EXISTS updateAvailability;
+DROP PROCEDURE IF EXISTS updateAvailableSeats;
 DELIMITER $$
 CREATE PROCEDURE
-	updateAvailability(in aSID varchar(6), aTickets int)  -- Show [tickets available] for specified show
+	updateAvailableSeats(in PID int, aStall int, aCircle int) 
 BEGIN
-DECLARE updated_seat_count int;
-	SELECT
-		t.number_of_seats - aTickets as updated_seat_count
-	FROM
-		Tickets t
-	WHERE
-		t.SID = aSID;
+	update Performance set seats_circle = aCircle, seats_stall = aStall
+	where perfId = PID;
 END;$$
 DELIMITER ;
 
-CALL updateAvailability('901101', 2);/*
+#CALL updateAvailableSeats(01001-001, 52, 108);
 
-DROP PROCEDURE IF EXISTS storeCustomerData;
+drop procedure if exists getAvailableSeats;
+delimiter $$
+create procedure 
+	getAvailableSeats (in  PID int) 
+    begin
+    select * 
+    from Performance
+    where perfID = PID;
+    end;$$
+    delimiter ;
+    
+    call getAvailableSeats(1000);
+    
+DROP PROCEDURE IF EXISTS createTicket;
 DELIMITER $$
 CREATE PROCEDURE
-	storeCustomerData(fname VARCHAR(25), mname VARCHAR(25), lname VARCHAR(25), add_no VARCHAR(5), add_st VARCHAR(25), post_code VARCHAR(8), email VARCHAR(25))  -- update customer data
+	createTicket(in CID int, PID int,  aStall int, aCircle int, aPost int) 
 BEGIN
-	INSERT INTO Customers
-		(first_name, middle_name, last_name, address_no, address_st, address_postcode, customer_email)
+	insert into Tickets (customerID, perfID, stall, circle, post)
+    values (CID, PID, aStall, aCircle, post);
+END;$$
+DELIMITER ;
+
+#CALL createTicket(1, 1000, 2, 2, 0);
+#select * from Tickets;
+
+
+DROP PROCEDURE IF EXISTS getTicket;
+DELIMITER $$
+CREATE PROCEDURE
+	getTicket(in CID int) 
+BEGIN
+	select * from Tickets 
+    where customerID = CID;
+END;$$
+DELIMITER ;
+
+#call getTicket(1);
+
+    
+DROP PROCEDURE IF EXISTS registerCustomer;
+delimiter $$
+CREATE PROCEDURE
+	registerCustomer(fname VARCHAR(25), lname VARCHAR(25), add_no VARCHAR(5), 
+    add_st VARCHAR(25), post_code VARCHAR(8))  -- update customer data
+BEGIN
+if (select 1=1 from Customer where first_name = fname and last_name = lname)
+	then begin
+    select customerID from Customer where first_name = fname and last_name = lname;
+    end;
+    else begin
+    INSERT INTO Customer
+		(first_name, last_name, address_no, address_st, address_postcode)
 		VALUES
-			(fname, mname, lname, add_no, add_st, post_code, email);
+			(fname,lname, add_no, add_st, post_code);
+            select last_insert_id() as customerID;
+            end;
+	end if;
 END;$$
 DELIMITER ;
 
-CALL storeCustomerData('Zoe', 'Bianca', 'Scott', '3', 'Saturn Way', 'CV37 7NE', 'zoebscott@hotmail.com');
+#CALL registerCustomer('Zoe','Scott', '3', 'Saturn Way', 'CV37 7NE');
 
-SELECT * FROM Customers;*/
+#SELECT * FROM Customer;
+
+DROP PROCEDURE IF EXISTS getCustomerData;
+delimiter $$
+CREATE PROCEDURE getCustomerData(in lname VARCHAR(25)) 
+   BEGIN
+	select * from Customer
+    where Customer.last_name = lname;
+   END;$$
+DELIMITER ;
+
+#CALL getCustomerData('Scott'); 

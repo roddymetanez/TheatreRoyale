@@ -117,7 +117,7 @@ public class DBConnector {
                 ResultSet.TYPE_SCROLL_SENSITIVE, // allows us to move forward and back in the ResultSet
                 ResultSet.CONCUR_UPDATABLE);
             int paramNum = 1;
-            for (Integer param: params){
+            for (int param: params){
                 cst.setInt(paramNum++, param);
             }
             return runCall(cst);
