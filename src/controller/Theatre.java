@@ -1,4 +1,4 @@
-package controller;
+package src.controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
