@@ -156,7 +156,7 @@ public class DataAccess {
        int newCircle = rs.getInt("seats_circle") - circle;
          if ((newStall >= 0)&&(newCircle >=0))
          // Update the available seats for the performance
-        {   String query = "{call " + UPDATE_AVAILABLE_SEATS + "(?)}";
+        {   String query = "{call " + UPDATE_AVAILABLE_SEATS + "(?,?,?)}";
             ArrayList<Integer> params = new ArrayList<Integer>();
             params.add(perfId);
             params.add(newStall);
