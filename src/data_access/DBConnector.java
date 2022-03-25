@@ -165,7 +165,9 @@ public class DBConnector {
                         Integer headerWidth = rsmd.getColumnDisplaySize(i);
                         String name = rsmd.getColumnLabel(i);
                         String data = rs.getString(i);
+                      // Conflicted line adapted as below
                         if (data == null) data =""; // If null, display empty string
+
                         firstColData.add(i-1, data);
                         
                         if (headerWidth > data.length())
@@ -182,7 +184,9 @@ public class DBConnector {
                     System.out.println();
                     for (int i = 1; i <= colCount; i++) {
                         String data = firstColData.get(i-1);
+// Duplicated line commented as below
                         if (data == null) data =""; // If null, display empty string
+   //                     if (data == null) data =""; // If null, display empty string
                         colWidth = colWidths.get(i-1);
                         System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", data));
                         System.out.print(" ");                        

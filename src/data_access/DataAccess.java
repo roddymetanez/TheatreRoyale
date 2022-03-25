@@ -17,7 +17,11 @@ public class DataAccess {
     private final String GET_SHOWS = "getShows";
     private final String GET_SHOW_BY_DATE = "getShowByDate";
     private final String GET_SHOW_BY_NAME = "getShowByName";
+// Revised Line SG2
     private final String REGISTER_CUSTOMER = "registerCustomer";
+ // Previous Line SG1?
+    //private final String STORE_CUSTOMER_DATA = "storeCustomerData";
+
 
     /**
      * DataAccess instantiates a new Database connectionand connects to that database
@@ -75,8 +79,13 @@ public class DataAccess {
         return db.callNString(query, params);
     }
    
+// Revised as below two lines
     public void registerCustomer(String fname, String lname, String add_no, String add_st, String post_code) {
         String query = "{call " + REGISTER_CUSTOMER + "(?, ?, ?, ?, ?)}";
+
+  //  public void storeCustomerData(String fname, String lname, String add_no, String add_st, String post_code) {
+   //     String query = "{call " + STORE_CUSTOMER_DATA + "(?, ?, ?, ?, ?)}";
+
         ArrayList<String> params = new ArrayList<String>();
         params.add(fname);
         params.add(lname);
