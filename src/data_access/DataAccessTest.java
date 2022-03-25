@@ -80,7 +80,7 @@ public class DataAccessTest
     public void getShowByNameTest() {
         DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
-        ResultSet rs = dataAccess.getShowByName("Alice");
+        ResultSet rs = dataAccess.getShowByName("Aladdin");// NameChange
         assertNotNull(rs);
         db.printResult(rs);
     }
@@ -93,7 +93,9 @@ public class DataAccessTest
     public void getShowByDateTest() {
         DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
-        ResultSet rs = dataAccess.getShowByDate("01-04-22");
+// TODO Check Acceptable Revised to DATETIME
+        ResultSet rs = dataAccess.getShowByDate("2022-04-29 19:30:00");// NameChange
+        // ResultSet rs = dataAccess.getShowByDate("01-04-22");
         assertNotNull(rs);
         db.printResult(rs);
     }
@@ -103,10 +105,17 @@ public class DataAccessTest
      * by storing a set of customer data and then retrieving it
      */
     @Test
-    public void storeCustomerDataTest(){
+// Commented as requires coordination
+    public void registerCustomerTest(){// NameChange
         DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
-        dataAccess.storeCustomerData("Zoe", "Scott", "3", "Saturn Way", "CV37 7NE");
+        dataAccess.registerCustomer("Zoe", "Scott", "3", "Saturn Way", "CV37 7NE");
+
+    //public void storeCustomerDataTest(){
+     //   DataAccess dataAccess = new DataAccess();
+     //   DBConnector db = dataAccess.getDb();
+     //   dataAccess.storeCustomerData("Zoe", "Scott", "3", "Saturn Way", "CV37 7NE");
+
         ResultSet rs = dataAccess.getCustomerData("Scott");
         assertNotNull(rs);
         db.printResult(rs);
