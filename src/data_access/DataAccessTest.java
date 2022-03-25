@@ -1,7 +1,6 @@
 package src.data_access;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -105,8 +104,9 @@ public class DataAccessTest
      * by storing a set of customer data and then retrieving it
      */
     @Test
-// Commented as requires coordination
-    public void registerCustomerTest(){// NameChange
+
+    public void registerCustomerTest() throws SQLException{
+
         DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
         dataAccess.registerCustomer("Zoe", "Scott", "3", "Saturn Way", "CV37 7NE");
@@ -119,6 +119,50 @@ public class DataAccessTest
         ResultSet rs = dataAccess.getCustomerData("Scott");
         assertNotNull(rs);
         db.printResult(rs);
+    }
+    
+    /**
+     * createTicketTest tests that ticket bookings are successfully stored in the database
+     * by storing a booking and then rettrieving it
+     */
+    @Test
+    public void createTicketTest(){
+        DataAccess dataAccess = new DataAccess();
+        DBConnector db = dataAccess.getDb();
+        dataAccess.createTicket(1,1,2,3,true);
+        ResultSet rs = dataAccess.getTicket(1);
+        assertNotNull(rs);
+        db.printResult(rs);
+    }
+    
+    /**
+     * updateAvailableSeatTest updates the number of seats for a performance and then 
+     * tests that the remaining number of seats is correct
+     */
+    @Test 
+     public void updateAvailableSeatTest() throws SQLException {
+    DataAccess dataAccess = new DataAccess();
+        DBConnector db = dataAccess.getDb();
+        int perfId = 01001-001;
+        ResultSet rs = dataAccess.getAvailableSeats(perfId);
+        assertNotNull(rs);
+        int aStall = -1;
+        int aCircle = -1;
+        try
+        {
+            aCircle = rs.getInt("seats_circle");
+            aStall = rs.getInt("seats_stall");
+        }
+        catch (SQLException sqle)
+        {
+            sqle.printStackTrace();
+        }
+        dataAccess.updateAvailableSeats(perfId, aStall, aCircle);
+        ResultSet rs1 = dataAccess.getAvailableSeats(perfId);
+        assertNotNull(rs1);
+        assertEquals(rs1.getInt("seats_stall"),0);
+        assertEquals(rs1.getInt("seats_circle"),0);        
+        db.printResult(rs1);
     }
     /**
      * closeTest shows that the current database connection will be closed, by closing the connection and 

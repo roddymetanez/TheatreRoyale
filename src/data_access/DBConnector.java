@@ -109,6 +109,26 @@ public class DBConnector {
     }
     
     
+    public ResultSet callNInt(String query, ArrayList<Integer> params) {
+        Connection conn = getConn();
+        try {
+            CallableStatement cst = conn.prepareCall(
+                query,
+                ResultSet.TYPE_SCROLL_SENSITIVE, // allows us to move forward and back in the ResultSet
+                ResultSet.CONCUR_UPDATABLE);
+            int paramNum = 1;
+            for (int param: params){
+                cst.setInt(paramNum++, param);
+            }
+            return runCall(cst);
+        } catch (SQLException e) {
+            System.out.println(query + "\n failed to run.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    
     /** 
      * runQuery will prepare an SQL statement taken from a file to run
      */
@@ -165,9 +185,9 @@ public class DBConnector {
                         Integer headerWidth = rsmd.getColumnDisplaySize(i);
                         String name = rsmd.getColumnLabel(i);
                         String data = rs.getString(i);
+                        if (data == null) data =""; // Ensure data is a valid string
                       // Conflicted line adapted as below
-                        if (data == null) data =""; // If null, display empty string
-
+//                        if (data == null) data =""; // If null, display empty string
                         firstColData.add(i-1, data);
                         
                         if (headerWidth > data.length())
@@ -184,9 +204,12 @@ public class DBConnector {
                     System.out.println();
                     for (int i = 1; i <= colCount; i++) {
                         String data = firstColData.get(i-1);
+
+                        if (data == null) data =""; // Ensure data is a valid string
 // Duplicated line commented as below
-                        if (data == null) data =""; // If null, display empty string
+                      //  if (data == null) data =""; // If null, display empty string
    //                     if (data == null) data =""; // If null, display empty string
+
                         colWidth = colWidths.get(i-1);
                         System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", data));
                         System.out.print(" ");                        
@@ -196,8 +219,10 @@ public class DBConnector {
                 } else {
                     for (int i = 1; i <= colCount; i++) {
                         //to make the columns line up
+                        String data = rs.getString(i);
+                        if (data == null) data =""; // Ensure data is a valid string
                         colWidth = colWidths.get(i-1);  
-                        System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", rs.getString(i)));
+                        System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", data));
                         System.out.print(" ");
                     }      
                     System.out.println();
