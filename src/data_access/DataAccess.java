@@ -23,6 +23,9 @@ public class DataAccess {
     private final String CREATE_TICKET = "createTicket";
     private final String GET_TICKET = "getTicket";
 
+ // Previous Line SG1?
+    //private final String STORE_CUSTOMER_DATA = "storeCustomerData";
+
     /**
      * DataAccess instantiates a new Database connectionand connects to that database
      */
@@ -79,8 +82,17 @@ public class DataAccess {
         return db.callNString(query, params);
     }
    
+//  TODO @ Dan Rory, Review against front end
     public int registerCustomer(String fname, String lname, String add_no, String add_st, String post_code) throws java.sql.SQLException {
+// Condensed to one line
+// Revised as below two lines
+    //public void registerCustomer(String fname, String lname, String add_no, String add_st, String post_code) {
+
         String query = "{call " + REGISTER_CUSTOMER + "(?, ?, ?, ?, ?)}";
+
+  //  public void storeCustomerData(String fname, String lname, String add_no, String add_st, String post_code) {
+   //     String query = "{call " + STORE_CUSTOMER_DATA + "(?, ?, ?, ?, ?)}";
+
         ArrayList<String> params = new ArrayList<String>();
         params.add(fname);
         params.add(lname);

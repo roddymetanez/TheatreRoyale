@@ -186,6 +186,8 @@ public class DBConnector {
                         String name = rsmd.getColumnLabel(i);
                         String data = rs.getString(i);
                         if (data == null) data =""; // Ensure data is a valid string
+                      // Conflicted line adapted as below
+//                        if (data == null) data =""; // If null, display empty string
                         firstColData.add(i-1, data);
                         
                         if (headerWidth > data.length())
@@ -202,7 +204,12 @@ public class DBConnector {
                     System.out.println();
                     for (int i = 1; i <= colCount; i++) {
                         String data = firstColData.get(i-1);
+
                         if (data == null) data =""; // Ensure data is a valid string
+// Duplicated line commented as below
+                      //  if (data == null) data =""; // If null, display empty string
+   //                     if (data == null) data =""; // If null, display empty string
+
                         colWidth = colWidths.get(i-1);
                         System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", data));
                         System.out.print(" ");                        
