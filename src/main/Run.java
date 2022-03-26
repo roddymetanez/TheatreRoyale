@@ -1,6 +1,6 @@
-package src.main;
+package main;
 
-import src.controller.Theatre;
+import controller.Theatre;
 
 public class Run {
 
@@ -8,5 +8,4 @@ public class Run {
         // Create a new Theatre object
         new Theatre();
     }
-
 }

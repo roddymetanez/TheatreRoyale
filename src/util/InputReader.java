@@ -1,4 +1,4 @@
-package src.util;
+package util;
 
 import java.util.Scanner;
 
@@ -17,7 +17,7 @@ public class InputReader {
 	 */
 	public int getNextInt(String message) {
 		System.out.print(message);
-		return scanner.nextInt();
+		return Integer.valueOf(scanner.nextLine());
 	}
 
 	/**
@@ -28,7 +28,6 @@ public class InputReader {
 	 */
 	public String getNextText(String message) {
 		System.out.print(message);
-		return scanner.next();
+		return scanner.nextLine();
 	}
-
 }

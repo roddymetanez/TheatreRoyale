@@ -6,29 +6,27 @@ package models;
 import java.util.ArrayList;
 
 /**
- * @author clayton
+ * @author Daniel
  *
  */
 public class Ticket {
 	private int customerID;
 	private int performanceID;
-	private ArrayList<Seat> seatingList;
-
+  private ArrayList<Seat> seatingList;
+	private double cost;
+	
 	public Ticket(int performanceID, int customerID) {
 		this.performanceID = performanceID;
 		this.setCustomerID(customerID);
 	}
 
 	/**
-	 * @return the Performace
+	 * @return the seatingList
 	 */
 	public int getPerformanceID() {
 		return performanceID;
 	}
-
-	/**
-	 * @return the seatingList
-	 */
+	
 	public void setPerformanceID(int performanceID) {
 		this.performanceID = performanceID;
 	}
@@ -61,4 +59,11 @@ public class Ticket {
 		this.seatingList = seatingList;
 	}
 
+	public double getCost() {
+		return cost;
+	}
+
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
 }
