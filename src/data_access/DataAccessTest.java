@@ -98,35 +98,31 @@ public class DataAccessTest
     }
     
     /**
-     * storeCustomerData tests that customer data is successfully stored in the database
+     * buyTicketTest tests that customer data is successfully stored in the database
      * by storing a set of customer data and then retrieving it
+
+     * createTicketTest tests that ticket bookings are successfully stored in the database
+     * by storing a booking and then rettrieving it
      */
     @Test
-    public void registerCustomerTest() {
+    public void buyTicketTest() {
         DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
         int CID = -1;
         CID = dataAccess.registerCustomer("Zoe", "Scott", "3", "Saturn Way", "CV37 7NE");
         assertNotSame(-1, CID);
-        /**
-//        ResultSet rs = dataAccess.getCustomerData(CID);
-//        assertNotNull(rs);
-//        db.printResult(rs);
-    }
-    
-    /**
-     * createTicketTest tests that ticket bookings are successfully stored in the database
-     * by storing a booking and then rettrieving it
-     
-    @Test
-    public void createTicketTest(){
-        DataAccess dataAccess = new DataAccess();
-        DBConnector db = dataAccess.getDb();
-        */
+        db.close();
+        db.connect();
+        ResultSet rs = dataAccess.getCustomerData(CID);
+        assertNotNull(rs);
+        db.printResult(rs);
+
         dataAccess.createTicket(1,1,2,3,true);
-//        ResultSet rs = dataAccess.getTicket(1);
-//        assertNotNull(rs);
-//        db.printResult(rs);
+        db.close();
+        db.connect();
+        rs = dataAccess.getTicket(1);
+        assertNotNull(rs);
+        db.printResult(rs);
     }
     
     /**
@@ -137,7 +133,7 @@ public class DataAccessTest
     public void updateAvailableSeatTest() {
     DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
-        int perfId = 1001;
+        int perfId = 1000;
         ResultSet rs = dataAccess.getAvailableSeats(perfId);
         assertNotNull(rs);
         int aStall = -1;

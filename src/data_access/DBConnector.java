@@ -22,13 +22,14 @@ public class DBConnector {
     private Connection conn;
     // connParams is the name of the file containing information required to make 
     // the connection
-    private static final boolean VERBOSE = true;
+    private static final boolean VERBOSE = false;
     private static final String connParams = "connParams.txt";
 
     public DBConnector() {
         conn = null;
     }
 
+    
     /**
      * connect will connect to the database using the address, username and password
      * specified in the connParams file
@@ -65,6 +66,7 @@ public class DBConnector {
         }
     }
 
+    
     public ResultSet runCall(CallableStatement cst) {
         try {
             ResultSet rs = cst.executeQuery();
@@ -135,7 +137,6 @@ public class DBConnector {
     /** 
      * runQuery will prepare an SQL statement taken from a file to run
      */
-
     public ResultSet runQuery(String sql) {
         // pst will hold the SQL query
         PreparedStatement pst = null;
@@ -229,6 +230,7 @@ public class DBConnector {
         }
     }
 
+    
     /**
      * Close will close the connection to the current database
      */
@@ -242,6 +244,7 @@ public class DBConnector {
         }
     }
 
+    
     /**
      * Prints out the name of the database connectd to
      */
@@ -254,6 +257,7 @@ public class DBConnector {
         }
     }
     
+    
     /**
      * getConn returns the 'handle' of the connected database
      * @return Connection - the 'handle' of the connected database
@@ -264,12 +268,10 @@ public class DBConnector {
     
     
     public void commit() {
-        try
-        {
+        try {
             conn.commit();
         }
-        catch (SQLException sqle)
-        {
+        catch (SQLException sqle) {
             sqle.printStackTrace();
         }
     }

@@ -98,7 +98,6 @@ public class DataAccess {
         params.add(add_st);
         params.add(post_code);
         ResultSet rs = db.callNString(query, params);
-        // if (rs == null) return -1; // No results suggesting failed to register
         try {
         if (rs.next())
             return rs.getInt("customerID");
