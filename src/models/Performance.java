@@ -1,25 +1,18 @@
 package models;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 public class Performance {
 
     private int ID;
-    private int duration;
-    private int seatsCircle;
-    private int seatsStalls;
-    
-    
+    private int showID;
+
     private Double price;
-    private LocalDateTime startDateTime;
+    private String startDateTime;
 
 
-    public Performance(String date, int duration) {
-        this.duration = duration;
-        this.startDateTime = LocalDateTime.parse(date);
-        this.seatsCircle = controller.Theatre.seatsCircle;
-        this.seatsStalls = controller.Theatre.seatsStalls;
+    public Performance(int ID, String date, double price) {
+    	this.ID = ID;
+        this.startDateTime = date;
+        this.price = price;
     }
 
     public int getID() {
@@ -30,14 +23,6 @@ public class Performance {
         ID = iD;
     }
 
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
     public Double getPrice() {
         return price;
     }
@@ -46,14 +31,21 @@ public class Performance {
         this.price = price;
     }
 
-    public LocalDateTime getStartDateTime() {
+    public String getStartDateTime() {
         return startDateTime;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(startDateTime);
+    public void setStartDateTime(String startDateTime) {
         this.startDateTime = startDateTime;
     }
+
+	public int getShowID() {
+		return showID;
+	}
+
+	public void setShowID(int showID) {
+		this.showID = showID;
+	}
     
     /**
      * Create a ticket for this performance
