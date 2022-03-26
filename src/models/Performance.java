@@ -9,8 +9,10 @@ public class Performance {
     private String startDateTime;
 
 
-    public Performance(String date) {
+    public Performance(int ID, String date, double price) {
+    	this.ID = ID;
         this.startDateTime = date;
+        this.price = price;
     }
 
     public int getID() {
