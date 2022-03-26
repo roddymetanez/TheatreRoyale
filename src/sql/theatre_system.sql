@@ -193,17 +193,17 @@ if (select 1=1 from Customer where first_name = fname and last_name = lname)
 END;$$
 DELIMITER ;
 
-#CALL registerCustomer('Zoe','Scott', '3', 'Saturn Way', 'CV37 7NE');
+CALL registerCustomer('Zoe','Scott', '3', 'Saturn Way', 'CV37 7NE');
 
 #SELECT * FROM Customer;
 
 DROP PROCEDURE IF EXISTS getCustomerData;
 delimiter $$
-CREATE PROCEDURE getCustomerData(in lname VARCHAR(25)) 
+CREATE PROCEDURE getCustomerData(in CID int) 
    BEGIN
 	select * from Customer
-    where Customer.last_name = lname;
+    where Customer.CustomerID = CID;
    END;$$
 DELIMITER ;
 
-#CALL getCustomerData('Scott'); 
+CALL getCustomerData(1); 

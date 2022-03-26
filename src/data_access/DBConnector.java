@@ -22,6 +22,7 @@ public class DBConnector {
     private Connection conn;
     // connParams is the name of the file containing information required to make 
     // the connection
+    private static final boolean VERBOSE = true;
     private static final String connParams = "connParams.txt";
 
     public DBConnector() {
@@ -51,13 +52,13 @@ public class DBConnector {
         } catch (SQLException e) {
             // inidicating that connection has failed for specified url, username and password
             System.out.println("Connection failed." + dburl + ", " + user + ", " + pass );
-            e.printStackTrace();
+            System.err.println(e.toString());
             return;
         }
 
         if (conn != null) {
             //indicating that connection has been made
-            System.out.println("Connection established.");
+            if (VERBOSE) System.out.println("Connection established.");
         } else {
             // indicating that connection attempt has timed out
             System.out.println("Connection null still.");
@@ -75,15 +76,15 @@ public class DBConnector {
                     results.beforeFirst(); // not rs.first() because the rs.next() later will move on, missing the first
                                             // element
                 }
-                System.out.println(cst.toString() + "\n Success.  Result set has " + rowcount + " rows");
+                if (VERBOSE) System.out.println(cst.toString() + "\n Success.  Result set has " + rowcount + " rows");
             } else {
-                System.out.println(cst.toString() + "\n Success.  No results returned");
+                if (VERBOSE) System.out.println(cst.toString() + "\n Success.  No results returned");
             }
             return results;
             
         } catch (SQLException e) {
             System.out.println(cst.toString() + "\n failed to run.");
-            e.printStackTrace();
+            System.err.println(e.toString());
             return null;
         }
     }
@@ -92,6 +93,7 @@ public class DBConnector {
     public ResultSet callNString(String query, ArrayList<String> params) {
         Connection conn = getConn();
         try {
+             if (VERBOSE) System.out.println(query + "\n" + toString() + " valid:" + conn.isValid(0));
             CallableStatement cst = conn.prepareCall(
                 query,
                 ResultSet.TYPE_SCROLL_SENSITIVE, // allows us to move forward and back in the ResultSet
@@ -103,7 +105,7 @@ public class DBConnector {
             return runCall(cst);
         } catch (SQLException e) {
             System.out.println(query + "\n failed to run.");
-            e.printStackTrace();
+            System.err.println(e.toString());
             return null;
         }
     }
@@ -112,7 +114,8 @@ public class DBConnector {
     public ResultSet callNInt(String query, ArrayList<Integer> params) {
         Connection conn = getConn();
         try {
-            CallableStatement cst = conn.prepareCall(
+             if (VERBOSE) System.out.println(query + "\n" + toString() + " valid:" + conn.isValid(0));
+             CallableStatement cst = conn.prepareCall(
                 query,
                 ResultSet.TYPE_SCROLL_SENSITIVE, // allows us to move forward and back in the ResultSet
                 ResultSet.CONCUR_UPDATABLE);
@@ -123,7 +126,7 @@ public class DBConnector {
             return runCall(cst);
         } catch (SQLException e) {
             System.out.println(query + "\n failed to run.");
-            e.printStackTrace();
+            System.err.println(e.toString());
             return null;
         }
     }
@@ -149,14 +152,14 @@ public class DBConnector {
                     results.beforeFirst(); // not rs.first() because the rs.next() later will move on, missing the first
                                             // element
                 }
-                System.out.println(sql + "\n Success.  Result set has " + rowcount + " rows");
+                if (VERBOSE) System.out.println(sql + "\n Success.  Result set has " + rowcount + " rows");
             } else {
-                System.out.println(sql + "\n Success.  No results returned");
+                if (VERBOSE) System.out.println(sql + "\n Success.  No results returned");
             }
             return results;
         } catch (SQLException e) {
             System.out.println(sql + "\n failed to run.");
-            e.printStackTrace();
+            System.err.println(e.toString());
             return null;
         }
     }
@@ -222,7 +225,7 @@ public class DBConnector {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println(e.toString());
         }
     }
 
@@ -232,10 +235,10 @@ public class DBConnector {
     public void close() {
         try {
             conn.close();
-            System.out.println("Connection closed.");
+            if (VERBOSE) System.out.println("Connection closed.");
         } catch (SQLException e) {
             System.out.println("Connection not closed.");
-            e.printStackTrace();
+            System.err.println(e.toString());
         }
     }
 
@@ -246,7 +249,7 @@ public class DBConnector {
         try {
             return conn.getCatalog();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println(e.toString());
             return "Invalid Connection.";
         }
     }
@@ -257,5 +260,17 @@ public class DBConnector {
      */
     public Connection getConn() {
         return conn;
+    }
+    
+    
+    public void commit() {
+        try
+        {
+            conn.commit();
+        }
+        catch (SQLException sqle)
+        {
+            sqle.printStackTrace();
+        }
     }
 }
