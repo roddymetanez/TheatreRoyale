@@ -1,12 +1,7 @@
-package src.data_access;
+package data_access;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-
-import src.data_access.DBConnector;
-import src.util.Parser;
 
 /**
  * DataAccess

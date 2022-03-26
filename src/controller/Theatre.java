@@ -1,9 +1,10 @@
-package src.controller;
+package controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 
+import data_access.DataAccess;
 import util.InputReader;
 
 public class Theatre {

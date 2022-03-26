@@ -11,8 +11,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import controller.DataAccess;
-import util.DBConnector;
+import data_access.DataAccess;
+import data_access.DBConnector;
 
 
 /**
