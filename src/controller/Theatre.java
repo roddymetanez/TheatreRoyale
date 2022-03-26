@@ -19,8 +19,13 @@ public class Theatre {
 
     private final InputReader inputReader;
     
+    // The patron that is currently using the application
     private Patron patron;
 
+    /**
+     * Theatre constructor
+     * Initialtizes global variables and calls displayInterface() to print out the main menu
+     */
     public Theatre() {
     	this.dataAccess = new DataAccess();
         this.inputReader = new InputReader();
@@ -29,6 +34,12 @@ public class Theatre {
         displayInterface();
     }
 
+    /**
+     * Print out the main menu interface and prompt the user to enter an option from within the menu.
+     * The corresponding method will be called from the option the user entered, or the application will exit.
+     * 
+     * This menu is the initial display for this application, and will be available until the application is closed or exited with the menu option.
+     */
     private void displayInterface() {
         int option;
         boolean exit = false;
@@ -97,7 +108,7 @@ public class Theatre {
      * method to print them to the console.
      */
     private void findShowsByDate() {
-    	
+    	// Method to be updated to agree with the new date/time format
     	String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for [dd-MM-yy]\n> ");
         ResultSet rs = dataAccess.getShowByDate(date.toString());
         
@@ -105,16 +116,19 @@ public class Theatre {
     }
 
     /**
-     * Print out the results of the provided ResultSet
+     * Print out the results of the provided ResultSet in as a formatted string
+     * 
+     * Create and store each result as a performance and initialize the object variables.
+     * 
+     * Once all results have been printed, call addToBasket() to prompt the user to add to basket, or return to the main menu
      * 
      * @param rs ResultSet to print
      */
     private boolean printResults(ResultSet rs) {
-    	// Iterate through all elements within the ResultSet and print them to the console. 
-    	ArrayList<Integer> performanceIDsInSearch = new ArrayList<>();
-    	ArrayList<Performance> performancsInSearch = new ArrayList<>();
+    	ArrayList<Performance> performancsInSearch = new ArrayList<>(); // All performances found in this search result will be stored here
     	try {    			
     		while (rs.next()) {
+    	    	// Iterate through all elements within the ResultSet and print them to the console. 
     			System.out.println("\n[Name: " + rs.getString("show_title") +
     					"\n Description: " + rs.getString("show_description") +
     					"\n Date: " + rs.getString("perf_date") +
@@ -123,12 +137,11 @@ public class Theatre {
     					"\n Ticket cost: £" + rs.getString("show_ticketPrice") + 
     					"\n ID: " + rs.getInt("perfID") + "]\n");
     			
-    			Performance performance = new Performance(rs.getString("perf_date"));
-    			performance.setPrice(rs.getDouble("show_ticketPrice"));
-    			performance.setID(rs.getInt("perfID"));
+    			// Create a performance object and initialize variables
+    			Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),rs.getDouble("show_ticketPrice")); 
+    			// perfID needs to be returned from the SQL procedure
     			
     			performancsInSearch.add(performance);
-    			performanceIDsInSearch.add(Integer.valueOf(rs.getString("perfID")));
     		}
     	} catch (SQLException e) {
     		e.printStackTrace();
@@ -146,12 +159,14 @@ public class Theatre {
      * ** Customer ID can NOT YET be stored **
      */
     private void registerCustomer() {
+    	// Prompt user to enter their details
     	String fname = inputReader.getNextText("> Enter your first name..");
     	String lname = inputReader.getNextText("> Enter your last name..");
     	String houseNo = inputReader.getNextText("> Enter your house number..");
     	String streetName = inputReader.getNextText("> Enter your street name..");
     	String postalCode = inputReader.getNextText("> Enter your postal code..");
     	
+    	// Attempts to store the details in the database
     	try {
     		dataAccess.registerCustomer(fname, lname, houseNo, streetName, postalCode);
     	}catch (SQLException e) {
@@ -159,6 +174,7 @@ public class Theatre {
     	}
     	
     	
+    	// Initialize patron variables with the values entered above
     	patron.setfName(fname);
     	patron.setlName(lname);
     	patron.setAddress_no(houseNo);
@@ -178,13 +194,15 @@ public class Theatre {
     }
     
     /**
-     * Adds a performance if it exists from the parameter ArrayList to the users basket 
+     * Prompts the user to enter a performanceID to add a performance to their basket, or return to the main menu.
+     * Adds a performance if it exists from the search results ArrayList to the users basket 
      * 
      * @param performanceIDs search results from last search
      */
     private void addToBasket(ArrayList<Performance> performanceIDs) {
     	int idSelected = 0;
 		try {
+			// ID to be selected from the performanceIDs ArrayLisy
 			idSelected = inputReader.getNextInt("> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n");
 		}catch (NumberFormatException e) {
 			System.out.println("Returning to the menu");
@@ -194,18 +212,25 @@ public class Theatre {
 		// Ensure the performanceID is within the users search results
 		for (Performance performance : performanceIDs) {
 			if (performance.getID() == idSelected) {
+				// ID user entered is equal to this performance, add it to basket and return
 				patron.addToBasket(performance);
 				return;
 			}
-		} 
+		}
+		// ID user entered did not equal any of the performanceIDs within their search results
+		System.out.println("There is no performance with this ID in your search results..");
+		addToBasket(performanceIDs); // Recall this method to prompt the user to enter another ID or return to the main menu
     }
     
     /**
+     * Calls the printBasket() method to print out all tickets within a users basket to the screen
+     * 
      * Prints the Basket Menu, and calls the method the user selects
      * If a customer is NOT registered in the system when "Checking out", they will be promoted to enter their details.
      */
     private void printBasketMenu() {
-    	patron.printBasket();
+    	
+    	patron.printBasket(); // Prints out all tickets within a users basket
     	
         System.out.println("===========================================");
         System.out.println("| Enter the number to select an option..  |");
@@ -215,16 +240,15 @@ public class Theatre {
         System.out.println("| 3 - Return to main menu                 |");
         System.out.println("| 						                  |");
         System.out.println("===========================================");
-        patron.getID();
-    	int option = inputReader.getNextInt("");
-    	
+        
+    	int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
     	switch (option) {
     	case 1:
-    		patron.removeFromBasketByID(option);
+    		patron.removeFromBasketByID(option); // Remove a ticket from the users basket
     		break;
     	case 2:
-    		if (patron.getfName() == null) {
-    			registerCustomer();
+    		if (patron.getfName() == null) { // Check if the current user has already entered their details
+    			registerCustomer(); // Prompt user to enter their details
     		}
     		patron.checkoutBasket(); // Empty method, to be implemented
     		break;
