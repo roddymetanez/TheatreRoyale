@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.ResultSetMetaData;
 import java.util.Scanner;
+import java.nio.file.Files;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -21,12 +22,14 @@ public class DBConnector {
     private Connection conn;
     // connParams is the name of the file containing information required to make 
     // the connection
+    private static final boolean VERBOSE = false;
     private static final String connParams = "connParams.txt";
 
     public DBConnector() {
         conn = null;
     }
 
+    
     /**
      * connect will connect to the database using the address, username and password
      * specified in the connParams file
@@ -50,79 +53,98 @@ public class DBConnector {
         } catch (SQLException e) {
             // inidicating that connection has failed for specified url, username and password
             System.out.println("Connection failed." + dburl + ", " + user + ", " + pass );
-            e.printStackTrace();
+            System.err.println(e.toString());
             return;
         }
 
         if (conn != null) {
             //indicating that connection has been made
-            System.out.println("Connection established.");
+            if (VERBOSE) System.out.println("Connection established.");
         } else {
             // indicating that connection attempt has timed out
             System.out.println("Connection null still.");
         }
     }
 
+    
     public ResultSet runCall(CallableStatement cst) {
         try {
-            ResultSet rs = cst.executeQuery();
-            ResultSet results = cst.getResultSet();
-            if (results != null) {
-                int rowcount = 0;
-                if (results.last()) {
-                    rowcount = results.getRow();
-                    results.beforeFirst(); // not rs.first() because the rs.next() later will move on, missing the first
-                                            // element
+            boolean hadResults = cst.execute();
+            if (hadResults) {
+                ResultSet results = cst.getResultSet();
+                if (results != null) {
+                    int rowcount = 0;
+                    if (results.last()) {
+                        rowcount = results.getRow();
+                        results.beforeFirst(); // not rs.first() because the rs.next() later will move on, missing the first
+                                                // element
+                    }
+                    if (VERBOSE)
+                        System.out.println(cst.toString() + "\n Success.  Result set has " + rowcount + " rows");
+                } else {
+                    if (VERBOSE)
+                        System.out.println(cst.toString() + "\n Success.  No results returned");
                 }
-                System.out.println(cst.toString() + "\n Success.  Result set has " + rowcount + " rows");
+                return results;
             } else {
-                System.out.println(cst.toString() + "\n Success.  No results returned");
+                if (VERBOSE)
+                    System.out.println(cst.toString() + "\nUpdate count:"+ cst.getUpdateCount());
+                return null;
             }
-            return results;
             
         } catch (SQLException e) {
             System.out.println(cst.toString() + "\n failed to run.");
-            e.printStackTrace();
+            System.err.println(e.toString());
             return null;
         }
     }
     
 
     public ResultSet callNString(String query, ArrayList<String> params) {
-        Connection conn = getConn();
         try {
-            CallableStatement cst = conn.prepareCall(
-                query,
-                ResultSet.TYPE_SCROLL_SENSITIVE, // allows us to move forward and back in the ResultSet
-                ResultSet.CONCUR_UPDATABLE);
-            int paramNum = 1;
-            for (String param: params){
-                cst.setString(paramNum++, param);
+            if (conn.isValid(0)) {
+                if (VERBOSE) System.out.println(query + "\n" + toString());
+                CallableStatement cst = conn.prepareCall(
+                    query,
+                    ResultSet.TYPE_SCROLL_SENSITIVE, // allows us to move forward and back in the ResultSet
+                    ResultSet.CONCUR_UPDATABLE);
+                int paramNum = 1;
+                for (String param: params){
+                    cst.setString(paramNum++, param);
+                }
+                return runCall(cst);
+            } else {
+                return null;
             }
-            return runCall(cst);
         } catch (SQLException e) {
             System.out.println(query + "\n failed to run.");
-            e.printStackTrace();
+            System.err.println(e.toString());
             return null;
         }
     }
     
     
     public ResultSet callNInt(String query, ArrayList<Integer> params) {
-        Connection conn = getConn();
+        close();
+        connect();
         try {
-            CallableStatement cst = conn.prepareCall(
-                query,
-                ResultSet.TYPE_SCROLL_SENSITIVE, // allows us to move forward and back in the ResultSet
-                ResultSet.CONCUR_UPDATABLE);
-            int paramNum = 1;
-            for (int param: params){
-                cst.setInt(paramNum++, param);
+            if (conn.isValid(0)) {
+                if (VERBOSE) System.out.println(query + "\n" + toString());
+                CallableStatement cst = conn.prepareCall(
+                    query,
+                    ResultSet.TYPE_SCROLL_SENSITIVE, // allows us to move forward and back in the ResultSet
+                    ResultSet.CONCUR_UPDATABLE);
+                for (int paramNum = 0; paramNum < params.size(); paramNum++) {
+                    int param = params.get(paramNum);
+                    cst.setInt(paramNum + 1, param);
+                }
+                return runCall(cst);
+            } else {
+                return null;
             }
-            return runCall(cst);
         } catch (SQLException e) {
             System.out.println(query + "\n failed to run.");
-            e.printStackTrace();
+            System.err.println(e.toString());
             return null;
         }
     }
@@ -131,7 +153,6 @@ public class DBConnector {
     /** 
      * runQuery will prepare an SQL statement taken from a file to run
      */
-
     public ResultSet runQuery(String sql) {
         // pst will hold the SQL query
         PreparedStatement pst = null;
@@ -148,14 +169,14 @@ public class DBConnector {
                     results.beforeFirst(); // not rs.first() because the rs.next() later will move on, missing the first
                                             // element
                 }
-                System.out.println(sql + "\n Success.  Result set has " + rowcount + " rows");
+                if (VERBOSE) System.out.println(sql + "\n Success.  Result set has " + rowcount + " rows");
             } else {
-                System.out.println(sql + "\n Success.  No results returned");
+                if (VERBOSE) System.out.println(sql + "\n Success.  No results returned");
             }
             return results;
         } catch (SQLException e) {
             System.out.println(sql + "\n failed to run.");
-            e.printStackTrace();
+            System.err.println(e.toString());
             return null;
         }
     }
@@ -185,8 +206,6 @@ public class DBConnector {
                         String name = rsmd.getColumnLabel(i);
                         String data = rs.getString(i);
                         if (data == null) data =""; // Ensure data is a valid string
-                      // Conflicted line adapted as below
-//                        if (data == null) data =""; // If null, display empty string
                         firstColData.add(i-1, data);
                         
                         if (headerWidth > data.length())
@@ -203,12 +222,7 @@ public class DBConnector {
                     System.out.println();
                     for (int i = 1; i <= colCount; i++) {
                         String data = firstColData.get(i-1);
-
                         if (data == null) data =""; // Ensure data is a valid string
-// Duplicated line commented as below
-                      //  if (data == null) data =""; // If null, display empty string
-   //                     if (data == null) data =""; // If null, display empty string
-
                         colWidth = colWidths.get(i-1);
                         System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", data));
                         System.out.print(" ");                        
@@ -227,24 +241,27 @@ public class DBConnector {
                     System.out.println();
                 }
             }
+            rs.beforeFirst();  // reset ResultsSet cursor ready for reading again
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println(e.toString());
         }
     }
 
+    
     /**
      * Close will close the connection to the current database
      */
     public void close() {
         try {
             conn.close();
-            System.out.println("Connection closed.");
+            if (VERBOSE) System.out.println("Connection closed.");
         } catch (SQLException e) {
             System.out.println("Connection not closed.");
-            e.printStackTrace();
+            System.err.println(e.toString());
         }
     }
 
+    
     /**
      * Prints out the name of the database connectd to
      */
@@ -252,10 +269,11 @@ public class DBConnector {
         try {
             return conn.getCatalog();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println(e.toString());
             return "Invalid Connection.";
         }
     }
+    
     
     /**
      * getConn returns the 'handle' of the connected database
@@ -263,5 +281,15 @@ public class DBConnector {
      */
     public Connection getConn() {
         return conn;
+    }
+    
+    
+    public void commit() {
+        try {
+            conn.commit();
+        }
+        catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
     }
 }

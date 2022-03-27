@@ -12,8 +12,8 @@ import util.InputReader;
 
 public class Theatre {
 
-	public final static int seatsCircle = 80;
-	public final static int seatsStalls = 120;
+    public final static int seatsCircle = 80;
+    public final static int seatsStalls = 120;
     
     private DataAccess dataAccess;
 
@@ -27,7 +27,7 @@ public class Theatre {
      * Initialtizes global variables and calls displayInterface() to print out the main menu
      */
     public Theatre() {
-    	this.dataAccess = new DataAccess();
+        this.dataAccess = new DataAccess();
         this.inputReader = new InputReader();
         this.patron = new Patron();
         
@@ -44,8 +44,8 @@ public class Theatre {
         int option;
         boolean exit = false;
         do {
-        	
-        	// Interface displayed to the user through the console window
+            
+            // Interface displayed to the user through the console window
             System.out.println("===========================================");
             System.out.println("| Enter the number to select an option..  |");
             System.out.println("|                                         |");
@@ -68,11 +68,11 @@ public class Theatre {
             // Switch the option and call the correct method, or exit.
             dataAccess = new DataAccess(); // Reopen the database connection
             switch (option) {
-                case 1 -> browseShows();
-                case 2 -> findShowByName();
-                case 3 -> findShowsByDate();
-                case 4 -> printBasketMenu();
-                case 5 -> exit = true;
+                case 1 : browseShows();break;
+                case 2 : findShowByName();break;
+                case 3 : findShowsByDate();break;
+                case 4 : printBasketMenu();break;
+                case 5 : exit = true;break;
             }
         } while (!exit);
 
@@ -86,9 +86,9 @@ public class Theatre {
      * method to print them to the console.
      */
     private void browseShows() {
-    	
-    	ResultSet rs = dataAccess.getShows();
-    	printResults(rs);
+        
+        ResultSet rs = dataAccess.getShows();
+        printResults(rs);
     }
 
     /**
@@ -96,11 +96,11 @@ public class Theatre {
      * method to print them to the console.
      */
     private void findShowByName() {
-    	
-    	String name = inputReader.getNextText("\nEnter the show name:\n> ");
-    	ResultSet rs = dataAccess.getShowByName(name);
+        
+        String name = inputReader.getNextText("\nEnter the show name:\n> ");
+        ResultSet rs = dataAccess.getShowByName(name);
 
-    	printResults(rs);
+        printResults(rs);
     }
 
     /**
@@ -108,11 +108,11 @@ public class Theatre {
      * method to print them to the console.
      */
     private void findShowsByDate() {
-    	// Method to be updated to agree with the new date/time format
-    	String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for [dd-MM-yy]\n> ");
+        // Method to be updated to agree with the new date/time format
+        String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for [dd-MM-yy]\n> ");
         ResultSet rs = dataAccess.getShowByDate(date.toString());
         
-    	printResults(rs);
+        printResults(rs);
     }
 
     /**
@@ -125,31 +125,31 @@ public class Theatre {
      * @param rs ResultSet to print
      */
     private boolean printResults(ResultSet rs) {
-    	ArrayList<Performance> performancsInSearch = new ArrayList<>(); // All performances found in this search result will be stored here
-    	try {    			
-    		while (rs.next()) {
-    	    	// Iterate through all elements within the ResultSet and print them to the console. 
-    			System.out.println("\n[Name: " + rs.getString("show_title") +
-    					"\n Description: " + rs.getString("show_description") +
-    					"\n Date: " + rs.getString("perf_date") +
-    					"\n Genre: " + rs.getString("show_genre") +
-    					"\n Language: " + rs.getString("primary_language") +
-    					"\n Ticket cost: £" + rs.getString("show_ticketPrice") + 
-    					"\n ID: " + rs.getInt("perfID") + "]\n");
-    			
-    			// Create a performance object and initialize variables
-    			Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),rs.getDouble("show_ticketPrice")); 
-    			// perfID needs to be returned from the SQL procedure
-    			
-    			performancsInSearch.add(performance);
-    		}
-    	} catch (SQLException e) {
-    		e.printStackTrace();
-    	}
-   	
-		addToBasket(performancsInSearch);
-    	dataAccess.close(); // Close the connection to the database
-    	return true;
+        ArrayList<Performance> performancsInSearch = new ArrayList<>(); // All performances found in this search result will be stored here
+        try {                
+            while (rs.next()) {
+                // Iterate through all elements within the ResultSet and print them to the console. 
+                System.out.println("\n[Name: " + rs.getString("show_title") +
+                        "\n Description: " + rs.getString("show_description") +
+                        "\n Date: " + rs.getString("perf_date") +
+                        "\n Genre: " + rs.getString("show_genre") +
+                        "\n Language: " + rs.getString("primary_language") +
+                        "\n Ticket cost: ï¿½" + rs.getString("show_ticketPrice") + 
+                        "\n ID: " + rs.getInt("perfID") + "]\n");
+                
+                // Create a performance object and initialize variables
+                Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),rs.getDouble("show_ticketPrice")); 
+                // perfID needs to be returned from the SQL procedure
+                
+                performancsInSearch.add(performance);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+       
+        addToBasket(performancsInSearch);
+        dataAccess.close(); // Close the connection to the database
+        return true;
     }
     
     /**
@@ -159,38 +159,36 @@ public class Theatre {
      * ** Customer ID can NOT YET be stored **
      */
     private void registerCustomer() {
-    	// Prompt user to enter their details
-    	String fname = inputReader.getNextText("> Enter your first name..");
-    	String lname = inputReader.getNextText("> Enter your last name..");
-    	String houseNo = inputReader.getNextText("> Enter your house number..");
-    	String streetName = inputReader.getNextText("> Enter your street name..");
-    	String postalCode = inputReader.getNextText("> Enter your postal code..");
-    	
-    	// Attempts to store the details in the database
-    	try {
-    		dataAccess.registerCustomer(fname, lname, houseNo, streetName, postalCode);
-    	}catch (SQLException e) {
-    		System.out.println("Failed to register.");
-    	}
-    	
-    	
-    	// Initialize patron variables with the values entered above
-    	patron.setfName(fname);
-    	patron.setlName(lname);
-    	patron.setAddress_no(houseNo);
-    	patron.setAddress_st(streetName);
-    	patron.setPost_code(postalCode);
-    	
-    	// Retrive the information for this customer and store the ID inside the object.
-    	
-    	// Below cannot be used until users details can be stored
-    	
-    	//ResultSet rs = dataAccess.getCustomerData(lname);
-//    	try {
-//    		patron.setID(rs.getInt("customerID"));
-//    	} catch(SQLException e) {
-//    		e.printStackTrace();
-//    	}
+        // Prompt user to enter their details
+        String fname = inputReader.getNextText("> Enter your first name..");
+        String lname = inputReader.getNextText("> Enter your last name..");
+        String houseNo = inputReader.getNextText("> Enter your house number..");
+        String streetName = inputReader.getNextText("> Enter your street name..");
+        String postalCode = inputReader.getNextText("> Enter your postal code..");
+        
+        // Attempts to store the details in the database
+        int CID = -1;
+        CID = dataAccess.registerCustomer(fname, lname, houseNo, streetName, postalCode);
+        if (CID < 0) System.out.println("Failed to register.");
+        
+        
+        // Initialize patron variables with the values entered above
+        patron.setfName(fname);
+        patron.setlName(lname);
+        patron.setAddress_no(houseNo);
+        patron.setAddress_st(streetName);
+        patron.setPost_code(postalCode);
+        
+        // Retrive the information for this customer and store the ID inside the object.
+        
+        // Below cannot be used until users details can be stored
+        
+        ResultSet rs = dataAccess.getCustomerData(CID);
+        try {
+            patron.setID(rs.getInt("customerID"));
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -200,26 +198,26 @@ public class Theatre {
      * @param performanceIDs search results from last search
      */
     private void addToBasket(ArrayList<Performance> performanceIDs) {
-    	int idSelected = 0;
-		try {
-			// ID to be selected from the performanceIDs ArrayLisy
-			idSelected = inputReader.getNextInt("> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n");
-		}catch (NumberFormatException e) {
-			System.out.println("Returning to the menu");
-			return;
-		}
-		
-		// Ensure the performanceID is within the users search results
-		for (Performance performance : performanceIDs) {
-			if (performance.getID() == idSelected) {
-				// ID user entered is equal to this performance, add it to basket and return
-				patron.addToBasket(performance);
-				return;
-			}
-		}
-		// ID user entered did not equal any of the performanceIDs within their search results
-		System.out.println("There is no performance with this ID in your search results..");
-		addToBasket(performanceIDs); // Recall this method to prompt the user to enter another ID or return to the main menu
+        int idSelected = 0;
+        try {
+            // ID to be selected from the performanceIDs ArrayLisy
+            idSelected = inputReader.getNextInt("> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n");
+        }catch (NumberFormatException e) {
+            System.out.println("Returning to the menu");
+            return;
+        }
+        
+        // Ensure the performanceID is within the users search results
+        for (Performance performance : performanceIDs) {
+            if (performance.getID() == idSelected) {
+                // ID user entered is equal to this performance, add it to basket and return
+                patron.addToBasket(performance);
+                return;
+            }
+        }
+        // ID user entered did not equal any of the performanceIDs within their search results
+        System.out.println("There is no performance with this ID in your search results..");
+        addToBasket(performanceIDs); // Recall this method to prompt the user to enter another ID or return to the main menu
     }
     
     /**
@@ -229,37 +227,37 @@ public class Theatre {
      * If a customer is NOT registered in the system when "Checking out", they will be promoted to enter their details.
      */
     private void printBasketMenu() {
-    	
-    	patron.printBasket(); // Prints out all tickets within a users basket
-    	
+        
+        patron.printBasket(); // Prints out all tickets within a users basket
+        
         System.out.println("===========================================");
         System.out.println("| Enter the number to select an option..  |");
         System.out.println("|                                         |");
         System.out.println("| 1 - Remove a ticket from basket         |");
         System.out.println("| 2 - Checkout your basket                |");
         System.out.println("| 3 - Return to main menu                 |");
-        System.out.println("| 						                  |");
+        System.out.println("|                                           |");
         System.out.println("===========================================");
         
-    	int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
-    	switch (option) {
-    	case 1:
-    		patron.removeFromBasketByID(option); // Remove a ticket from the users basket
-    		break;
-    	case 2:
-    		if (patron.getfName() == null) { // Check if the current user has already entered their details
-    			registerCustomer(); // Prompt user to enter their details
-    		}
-    		patron.checkoutBasket(); // Empty method, to be implemented
-    		break;
-    	}
+        int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
+        switch (option) {
+        case 1:
+            patron.removeFromBasketByID(option); // Remove a ticket from the users basket
+            break;
+        case 2:
+            if (patron.getfName() == null) { // Check if the current user has already entered their details
+                registerCustomer(); // Prompt user to enter their details
+            }
+            patron.checkoutBasket(); // Empty method, to be implemented
+            break;
+        }
     }
 
-	public int getSeatsCircle() {
-		return seatsCircle;
-	}
+    public int getSeatsCircle() {
+        return seatsCircle;
+    }
 
-	public int getSeatsStalls() {
-		return seatsStalls;
-	}
+    public int getSeatsStalls() {
+        return seatsStalls;
+    }
 }

@@ -4,8 +4,14 @@ USE Theatre;
 
 --
 
-DROP TABLE IF EXISTS Performance; 
-CREATE TABLE Performance (perfID INT primary key, SID INT, perf_date DATETIME, seats_circle INT, seats_stall INT); 
+DROP TABLE IF EXISTS Performance;
+CREATE TABLE Performance (
+    perfID INT PRIMARY KEY,
+    SID INT,
+    perf_date DATETIME,
+    seats_circle INT,
+    seats_stall INT
+); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (01001-001, 001, '2022-03-31  19:30:00', 80, 120); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (01002-001, 001, '2022-04-01  19:30:00', 80, 120); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (01003-001, 001, '2022-04-01 01:30:00', 80, 120); 
@@ -44,7 +50,7 @@ INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VAL
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (04008-004, 004, '2022-04-28 01:30:00', 80, 120); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (04009-004, 004, '2022-04-29  19:30:00', 80, 120); 
 
-DROP TABLE IF EXISTS Show_details; 
+DROP TABLE IF EXISTS Show_details;
 CREATE TABLE Show_details (
     SID INT NOT NULL PRIMARY KEY,
     show_ticketPrice DOUBLE,
@@ -54,7 +60,7 @@ CREATE TABLE Show_details (
     show_genre VARCHAR(50),
     primary_language VARCHAR(50),
     show_live_music TINYINT(1),
-    show_duration INT, -- number of calendar days the show will run for
+    show_duration INT,
     show_runlength INT
 );
 
@@ -78,7 +84,7 @@ CREATE PROCEDURE
 	getShows()  -- Provides Display Data for all scheduled shows
 BEGIN
 	SELECT
-    show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language,
+    perfID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language,
     show_duration, perf_date, seats_circle, seats_stall
     from Show_details, Performance
     where Performance.SID = Show_details.SID
@@ -86,7 +92,7 @@ BEGIN
 END;$$
 DELIMITER ;
 
-#CALL getShows();
+CALL getShows();
 
 DROP PROCEDURE IF EXISTS getShowByName;
 DELIMITER %
@@ -193,17 +199,17 @@ if (select 1=1 from Customer where first_name = fname and last_name = lname)
 END;$$
 DELIMITER ;
 
-#CALL registerCustomer('Zoe','Scott', '3', 'Saturn Way', 'CV37 7NE');
+CALL registerCustomer('Zoe','Scott', '3', 'Saturn Way', 'CV37 7NE');
 
 #SELECT * FROM Customer;
 
 DROP PROCEDURE IF EXISTS getCustomerData;
 delimiter $$
-CREATE PROCEDURE getCustomerData(in lname VARCHAR(25)) 
+CREATE PROCEDURE getCustomerData(in CID int) 
    BEGIN
 	select * from Customer
-    where Customer.last_name = lname;
+    where Customer.CustomerID = CID;
    END;$$
 DELIMITER ;
 
-#CALL getCustomerData('Scott'); 
+CALL getCustomerData(1); 

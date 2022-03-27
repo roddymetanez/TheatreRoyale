@@ -10,6 +10,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import data_access.DataAccess;
+import data_access.DBConnector;
+
 
 /**
  * The test class DataAccessTest.
@@ -76,9 +79,10 @@ public class DataAccessTest
     public void getShowByNameTest() {
         DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
-        ResultSet rs = dataAccess.getShowByName("Aladdin");// NameChange
+        ResultSet rs = dataAccess.getShowByName("Aladdin");
         assertNotNull(rs);
         db.printResult(rs);
+        dataAccess.close();
     }
     
     /**
@@ -89,47 +93,38 @@ public class DataAccessTest
     public void getShowByDateTest() {
         DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
-// TODO Check Acceptable Revised to DATETIME
-        ResultSet rs = dataAccess.getShowByDate("2022-04-29 19:30:00");// NameChange
-        // ResultSet rs = dataAccess.getShowByDate("01-04-22");
+        ResultSet rs = dataAccess.getShowByDate("2022-04-29 19:30:00");
         assertNotNull(rs);
         db.printResult(rs);
     }
     
     /**
-     * storeCustomerData tests that customer data is successfully stored in the database
+     * buyTicketTest tests that customer data is successfully stored in the database
      * by storing a set of customer data and then retrieving it
-     */
-    @Test
 
-    public void registerCustomerTest() throws SQLException{
-
-        DataAccess dataAccess = new DataAccess();
-        DBConnector db = dataAccess.getDb();
-        dataAccess.registerCustomer("Zoe", "Scott", "3", "Saturn Way", "CV37 7NE");
-
-    //public void storeCustomerDataTest(){
-     //   DataAccess dataAccess = new DataAccess();
-     //   DBConnector db = dataAccess.getDb();
-     //   dataAccess.storeCustomerData("Zoe", "Scott", "3", "Saturn Way", "CV37 7NE");
-
-        ResultSet rs = dataAccess.getCustomerData("Scott");
-        assertNotNull(rs);
-        db.printResult(rs);
-    }
-    
-    /**
      * createTicketTest tests that ticket bookings are successfully stored in the database
      * by storing a booking and then rettrieving it
      */
     @Test
-    public void createTicketTest(){
+    public void buyTicketTest() {
         DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
-        dataAccess.createTicket(1,1,2,3,true);
-        ResultSet rs = dataAccess.getTicket(1);
+        int CID = -1;
+        CID = dataAccess.registerCustomer("Zoe", "Scott", "3", "Saturn Way", "CV37 7NE");
+        assertNotSame(-1, CID);
+//        db.close();
+//        db.connect();
+        ResultSet rs = dataAccess.getCustomerData(CID);
         assertNotNull(rs);
         db.printResult(rs);
+
+        dataAccess.createTicket(1,1,2,3,true);
+//        db.close();
+//        db.connect();
+        rs = dataAccess.getTicket(1);
+        assertNotNull(rs);
+        db.printResult(rs);
+        dataAccess.close();
     }
     
     /**
@@ -137,29 +132,40 @@ public class DataAccessTest
      * tests that the remaining number of seats is correct
      */
     @Test 
-     public void updateAvailableSeatTest() throws SQLException {
+    public void updateAvailableSeatTest() {
     DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
-        int perfId = 01001-001;
+        int perfId = 1000;
         ResultSet rs = dataAccess.getAvailableSeats(perfId);
         assertNotNull(rs);
         int aStall = -1;
         int aCircle = -1;
+        ResultSet rs1 = null;
         try
         {
+            assertTrue(rs.next());
             aCircle = rs.getInt("seats_circle");
             aStall = rs.getInt("seats_stall");
+            //db.close();
+            //db.connect();
+            boolean success = dataAccess.updateAvailableSeats(perfId, aStall, aCircle);
+            assertTrue(success);
+            //db.close();
+            //db.connect();
+            rs1 = dataAccess.getAvailableSeats(perfId);
+            //if (rs1 != null) db.printResult(rs1);
+            assertNotNull(rs1);
+            assertTrue(rs1.next());
+            assertEquals(rs1.getInt("seats_circle"),0);
+            assertEquals(rs1.getInt("seats_stall"),0);
+            db.printResult(rs1);
         }
-        catch (SQLException sqle)
-        {
+        catch (SQLException sqle) {
             sqle.printStackTrace();
+            if (rs != null) db.printResult(rs);
+            if (rs1 != null) db.printResult(rs1);
         }
-        dataAccess.updateAvailableSeats(perfId, aStall, aCircle);
-        ResultSet rs1 = dataAccess.getAvailableSeats(perfId);
-        assertNotNull(rs1);
-        assertEquals(rs1.getInt("seats_stall"),0);
-        assertEquals(rs1.getInt("seats_circle"),0);        
-        db.printResult(rs1);
+        dataAccess.close();
     }
     /**
      * closeTest shows that the current database connection will be closed, by closing the connection and 
@@ -172,8 +178,8 @@ public class DataAccessTest
         Connection conn = dataAccess.getDb().getConn();
         try {
             assertTrue(conn.isClosed());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException sqle) {
+            System.err.println(sqle.toString());
         }
     }
 }
