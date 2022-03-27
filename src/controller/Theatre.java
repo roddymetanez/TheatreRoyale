@@ -134,11 +134,11 @@ public class Theatre {
                         "\n Date: " + rs.getString("perf_date") +
                         "\n Genre: " + rs.getString("show_genre") +
                         "\n Language: " + rs.getString("primary_language") +
-                        "\n Ticket cost: ï¿½" + rs.getString("show_ticketPrice") + 
-                        "\n ID: " + rs.getInt("perfID") + "]\n");
+                        "\n Ticket cost: £" + rs.getString("show_ticketPrice") + 
+                        "\n ID: " + rs.getString("perfID") + "]\n");
                 
                 // Create a performance object and initialize variables
-                Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),rs.getDouble("show_ticketPrice")); 
+                Performance performance = new Performance(rs.getString("perfID"), rs.getString("perf_date"),rs.getDouble("show_ticketPrice")); 
                 // perfID needs to be returned from the SQL procedure
                 
                 performancsInSearch.add(performance);
@@ -169,9 +169,12 @@ public class Theatre {
         // Attempts to store the details in the database
         int CID = -1;
         CID = dataAccess.registerCustomer(fname, lname, houseNo, streetName, postalCode);
-        if (CID < 0) System.out.println("Failed to register.");
+        if (CID < 0) {
+        	System.out.println("Failed to register.");
+        	return;
+        }
         
-        
+        dataAccess = new DataAccess();
         // Initialize patron variables with the values entered above
         patron.setfName(fname);
         patron.setlName(lname);
@@ -206,10 +209,10 @@ public class Theatre {
             System.out.println("Returning to the menu");
             return;
         }
-        
+        String idSelected1 = "";
         // Ensure the performanceID is within the users search results
         for (Performance performance : performanceIDs) {
-            if (performance.getID() == idSelected) {
+            if (performance.getID() == idSelected1) { 
                 // ID user entered is equal to this performance, add it to basket and return
                 patron.addToBasket(performance);
                 return;

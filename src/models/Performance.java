@@ -2,24 +2,24 @@ package models;
 
 public class Performance {
 
-    private int ID;
+    private String ID;
     private int showID;
 
     private Double price;
     private String startDateTime;
 
 
-    public Performance(int ID, String date, double price) {
+    public Performance(String ID, String date, double price) {
     	this.ID = ID;
         this.startDateTime = date;
         this.price = price;
     }
 
-    public int getID() {
+    public String getID() {
         return ID;
     }
 
-    public void setID(int iD) {
+    public void setID(String iD) {
         ID = iD;
     }
 
