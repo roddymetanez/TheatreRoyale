@@ -3,6 +3,8 @@ package data_access;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import java.util.ArrayList;
 
 import data_access.DBConnector;
@@ -22,9 +24,6 @@ public class DataAccess {
     private final String UPDATE_AVAILABLE_SEATS = "updateAvailableSeats";
     private final String CREATE_TICKET = "createTicket";
     private final String GET_TICKET = "getTicket";
-
- // Previous Line SG1?
-    //private final String STORE_CUSTOMER_DATA = "storeCustomerData";
 
     /**
      * DataAccess instantiates a new Database connectionand connects to that database
@@ -82,17 +81,16 @@ public class DataAccess {
         return db.callNString(query, params);
     }
    
-//  TODO @ Dan Rory, Review against front end
-    public int registerCustomer(String fname, String lname, String add_no, String add_st, String post_code) throws java.sql.SQLException {
-// Condensed to one line
-// Revised as below two lines
-    //public void registerCustomer(String fname, String lname, String add_no, String add_st, String post_code) {
-
+    
+    /**
+     * registerCustomer will add a new Customer to the database
+     * @params fname,lname,add_no,add_st,post_code all the Customer data that we wish to store
+     * There is provision within th database to store addition information if that is required 
+     * in future versions
+     * @return int the customerID for the customer added
+     */
+    public int registerCustomer(String fname, String lname, String add_no, String add_st, String post_code) {
         String query = "{call " + REGISTER_CUSTOMER + "(?, ?, ?, ?, ?)}";
-
-  //  public void storeCustomerData(String fname, String lname, String add_no, String add_st, String post_code) {
-   //     String query = "{call " + STORE_CUSTOMER_DATA + "(?, ?, ?, ?, ?)}";
-
         ArrayList<String> params = new ArrayList<String>();
         params.add(fname);
         params.add(lname);
@@ -100,39 +98,61 @@ public class DataAccess {
         params.add(add_st);
         params.add(post_code);
         ResultSet rs = db.callNString(query, params);
-        if (rs == null) return -1; // No results suggesting failed to register
-        return rs.getInt("customerID");
+        int retVal = -1;
+        try {
+            if (rs.next())
+                retVal = rs.getInt("customerID");
+        } catch (SQLException sqle) {
+            //System.err.println(sqle.toString());
+            sqle.printStackTrace();
+        }
+//        db.close();
+//        db.connect();
+        return retVal;
     }
-   
-    public ResultSet getCustomerData(String lname) {
+   /**
+    * getCustomerData gets all the data stored for a specified Customer
+    * @param CID integer the CustomerID
+    * @return ResultSet of all the Customer Data
+    */
+    public ResultSet getCustomerData(int CID) {
         String query = "{call " + GET_CUSTOMER_DATA + "(?)}";
-        ArrayList<String> params = new ArrayList<String>();
-        params.add(lname);
-        return db.callNString(query, params);
+        ArrayList<Integer> params = new ArrayList<Integer>();
+        params.add(CID);
+        return db.callNInt(query, params);
     }
      
     
+    /**
+     * buyTicket records a ticket purchase in the database
+     * Register the Customer buying the ticket 
+     * Create a new entry in the ticket table
+     * @param fname,lname,add_no,add_st,post_code String -  The name, address and phone of the Customer
+     * @param perfId, stall,circle,post int - The details of the tickets purchased
+     * @ return bookingMade Boolean - an indication of whether the booking has succeeded
+     */
     public Boolean buyTicket(String fname, String lname, String add_no, String add_st, String post_code, 
-                                int perfId, int stall,int circle, boolean post) throws java.sql.SQLException {
-    ResultSet rs = getCustomerData(lname);
-    int custId = -1;
-    if (rs == null) { custId = registerCustomer(fname,lname,add_no,add_st, post_code); }
-    boolean bookingMade = updateAvailableSeats(perfId,stall,circle);
-    if (bookingMade) { createTicket(custId, perfId,stall, circle,post); }
-    return bookingMade;
-}
-        
+                                int perfId, int stall,int circle, boolean post) {
+        //ResultSet rs = getCustomerData(lname);
+        int custId = -1;
+        //if (rs == null) {
+        custId = registerCustomer(fname,lname,add_no,add_st, post_code);
+        //}
+        boolean bookingMade = updateAvailableSeats(perfId,stall,circle);
+        if (bookingMade) { createTicket(custId, perfId,stall, circle,post); }
+        return bookingMade;
+    }    
     
                                 
     /**
      * createTicket will create a record if the customer having made a booking
      * @param custID int the customer who made the booking
      * @param perfId int the performance the booking has been made for
-     * @param circle int the number of circle seats booked
      * @param stall int the number of stall seats booked
+     * @param circle int the number of circle seats booked
      * @param post boolean indicates whether the tickets are to be posted
     */
-    public void createTicket(int custID, int perfID, int circle,int stall, boolean post) {
+    public void createTicket(int custID, int perfID, int stall,int circle, boolean post) {
         int newPost = 0;
         // converting the boolean to an integer for MySQL 0 is false
         if (post) newPost = 1; 
@@ -144,8 +164,13 @@ public class DataAccess {
         params.add(circle);
         params.add(newPost);
         db.callNInt(query, params);      
-        
     }
+    
+    /**
+     * getTicket will get all th stored tickets for a specified customer
+     * @param custID int - the customerID (from the Customer Database Table) 
+     * @return ResultSet - all the tickets that customer has purchased
+     */
     public ResultSet getTicket(int custID) {
          String query = "{call " + GET_TICKET + "(?)}";
         ArrayList<Integer> params = new ArrayList<Integer>();
@@ -161,31 +186,53 @@ public class DataAccess {
      * @return boolean an indication that there are not enough seats for that booking
      */
     
-    public boolean updateAvailableSeats(int perfId, int stall, int circle) throws java.sql.SQLException {
-       // Check the seats are available
-       ResultSet rs = getAvailableSeats(perfId);
-       int newStall = rs.getInt("seats_stall") - stall;
-       int newCircle = rs.getInt("seats_circle") - circle;
-         if ((newStall >= 0)&&(newCircle >=0))
-         // Update the available seats for the performance
+    public boolean updateAvailableSeats(int perfId, int stall, int circle) {
+        // Check the seats are available
+        ResultSet rs = getAvailableSeats(perfId);
+        int newStall = 0;
+        int newCircle = 0;
+        boolean bookingMade = false;
+        try {
+            if (rs.next()) {
+                newStall = rs.getInt("seats_stall") - stall;
+                newCircle = rs.getInt("seats_circle") - circle;
+            }
+        } catch (SQLException sqle) {
+            //System.err.println(sqle.toString());
+            if (rs != null) db.printResult(rs);
+            sqle.printStackTrace();
+
+        }
+
+        if ((newStall >= 0)&&(newCircle >=0))
+        // Update the available seats for the performance
         {   String query = "{call " + UPDATE_AVAILABLE_SEATS + "(?,?,?)}";
             ArrayList<Integer> params = new ArrayList<Integer>();
             params.add(perfId);
             params.add(newStall);
             params.add(newCircle);
             db.callNInt(query, params);
-            return true;
+            bookingMade = true;
         }
-        else return false;
+        db.close();
+        db.connect();
+        return bookingMade;
     }
     
+    /** 
+     * getAvailableSeats will retrieve all avaible seats for a given performance
+     * @param perfID int - the performance required
+     * @return ResultSet -all the stored information for that performance , which includes the 
+     * fields seats_stall and seats_cricle
+     */
     public ResultSet getAvailableSeats(int perfId) {
-
-       String query = "{call " + GET_AVAILABLE_SEATS + "(?)}";
+        String query = "{call " + GET_AVAILABLE_SEATS + "(?)}";
         ArrayList<Integer> params = new ArrayList<Integer>();
         params.add(perfId);
         return db.callNInt(query, params);
     }
+    
+    
     /**
      * close will close the connection to the current database
      */
