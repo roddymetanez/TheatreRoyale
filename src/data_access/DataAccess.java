@@ -214,8 +214,8 @@ public class DataAccess {
             db.callNInt(query, params);
             bookingMade = true;
         }
-        db.close();
-        db.connect();
+        //db.close();
+        //db.connect();
         return bookingMade;
     }
     
