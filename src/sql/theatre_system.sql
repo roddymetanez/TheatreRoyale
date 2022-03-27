@@ -43,6 +43,7 @@ INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VAL
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (04007-004, 004, '2022-04-28  19:30:00', 80, 120); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (04008-004, 004, '2022-04-28 01:30:00', 80, 120); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (04009-004, 004, '2022-04-29  19:30:00', 80, 120); 
+-- test
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (99999-999, 999, '2025-01-01  23:59:99', 80, 120); 
 
 DROP TABLE IF EXISTS Show_details; 
@@ -64,8 +65,8 @@ INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, sho
 INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)  VALUES (3, 10, "Chris Corkmann & Organ", "Couer en Hiver", "Thead into boot the gamera and tale use Swift’s in Gulliams form for the sames compositinged tank becomes a biting up as a bition ", "Cinema with live Bontempi organ", "French with English Subtitles", 1, 1, 167); 
 INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)  VALUES (4, 12, "Azariah Montgomery", "A Chorus Line ", "Leah Brobding DIY quickly illives musical grows worth scentled surgeone ents Gulliams first sing plus back tone wellers could is leaves to be lead with therheatre Leah Brothe changed taking use ", "Pantomime", "English", 0, 14, 110); 
 INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)  VALUES (5, 20, "Brynn Moore", "Babes in Arms ", "Jacoba Williver audience and design by Jaz Woodcock-Stewart their cames combines first easy appear of here imax against sing and fantle as the our and cle and sectiver’s hightnes fourney inger lon", "Musical", "English", 0, 6, 120); 
-INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)  
-VALUES (99, 1, "Klingon", "Klingon", "Gort Klaatu Barada Nikto", "Klingon", "Klingon", 0, 9, 999); 
+-- test
+INSERT INTO Show_details (SID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language, show_live_music, show_duration, show_runlength)  VALUES (99, 1, "Klingon", "Klingon", "Gort Klaatu Barada Nikto", "Klingon", "Klingon", 0, 9, 999);
 
 
 DROP TABLE IF EXISTS Customer; 

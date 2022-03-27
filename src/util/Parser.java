@@ -1,7 +1,7 @@
 package util;
 import java.io.File;
-import java.util.Scanner;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 
 /**
@@ -24,18 +24,18 @@ public class Parser
     public void open(String queryFile) {
         try {
         scanner = new Scanner(new File(queryFile));}
-        catch (FileNotFoundException e) { 
+        catch (FileNotFoundException e) {
             System.out.println("No such File");
             return;
         }
         // setting the delimiter between strings to ';'
         scanner.useDelimiter(";");
     }
-    
+
     /**
-     * getQuery will get the next SQL query from the open file 
+     * getQuery will get the next SQL query from the open file
      * or return null if the end has been reached
-     * @return String - the next SQL statement from the file 
+     * @return String - the next SQL statement from the file
      */
     public String getQuery() {
         String query = null;
@@ -47,7 +47,7 @@ public class Parser
         }
         return query;
     }
-    
+
     /**
      * close will close the file
      */

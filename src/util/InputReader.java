@@ -4,14 +4,15 @@ import java.util.Scanner;
 
 public class InputReader {
 	private Scanner scanner;
-	
-	public InputReader(){
+
+	public InputReader() {
 		this.scanner = new Scanner(System.in);
 	}
-	
+
 	/**
-	 * Print a message to the console and return the next integer value entered by the user
-	 * 
+	 * Print a message to the console and return the next integer value entered by
+	 * the user
+	 *
 	 * @param message to print to console
 	 * @return integer user inputs
 	 */
@@ -21,8 +22,9 @@ public class InputReader {
 	}
 
 	/**
-	 * Print a message to the console and return the next string value entered by the user
-	 * 
+	 * Print a message to the console and return the next string value entered by
+	 * the user
+	 *
 	 * @param message to print to console
 	 * @return String user inputs
 	 */
@@ -30,4 +32,6 @@ public class InputReader {
 		System.out.print(message);
 		return scanner.nextLine();
 	}
+
+	// public Date
 }

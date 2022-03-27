@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package models;
 
@@ -16,7 +16,7 @@ public class Seat {
 
 	public enum seatLoc {
 		Circle, Stall
-	};
+	}
 
 	public Seat(Performance perf, seatLoc seatType, double concession) {
 		setPerformance(perf);

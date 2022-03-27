@@ -1,6 +1,8 @@
 package data_access;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -42,7 +44,7 @@ public class DataAccessTest
     public void tearDown()
     {
     }
-    
+
     /**
      * constructorTest tests that the connection has been correctly constructed
      */
@@ -54,7 +56,7 @@ public class DataAccessTest
         System.out.println(db);
 
     }
-    
+
     /**
      * getShowsTest tests that a table of show information is returned from the database query (a visual
      * test from the terminal window)
@@ -67,10 +69,10 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
+
     /**
      * getShowByNameTest tests that show information is returned from a database query
-     * by show name (a visual test from the terminal window) 
+     * by show name (a visual test from the terminal window)
      */
     @Test
     public void getShowByNameTest() {
@@ -80,10 +82,10 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
+
     /**
-     * getShowByDate Test tests that show information is returned from a database query 
-     * by date (a visual test from the terminal window ) 
+     * getShowByDate Test tests that show information is returned from a database query
+     * by date (a visual test from the terminal window )
      */
     @Test
     public void getShowByDateTest() {
@@ -95,7 +97,7 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
+
     /**
      * storeCustomerData tests that customer data is successfully stored in the database
      * by storing a set of customer data and then retrieving it
@@ -117,7 +119,7 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
+
     /**
      * createTicketTest tests that ticket bookings are successfully stored in the database
      * by storing a booking and then rettrieving it
@@ -131,12 +133,12 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
+
     /**
-     * updateAvailableSeatTest updates the number of seats for a performance and then 
+     * updateAvailableSeatTest updates the number of seats for a performance and then
      * tests that the remaining number of seats is correct
      */
-    @Test 
+    @Test
      public void updateAvailableSeatTest() throws SQLException {
     DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
@@ -158,11 +160,11 @@ public class DataAccessTest
         ResultSet rs1 = dataAccess.getAvailableSeats(perfId);
         assertNotNull(rs1);
         assertEquals(rs1.getInt("seats_stall"),0);
-        assertEquals(rs1.getInt("seats_circle"),0);        
+        assertEquals(rs1.getInt("seats_circle"),0);
         db.printResult(rs1);
     }
     /**
-     * closeTest shows that the current database connection will be closed, by closing the connection and 
+     * closeTest shows that the current database connection will be closed, by closing the connection and
      * testing to see if it is still available
      */
     @Test

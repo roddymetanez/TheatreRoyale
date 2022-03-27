@@ -58,7 +58,7 @@ public class DataAccessTest
         System.out.println(db);
 
     }
-    
+
     @Test
     public void getShowsTest() {
         DataAccess dataAccess = new DataAccess();
@@ -67,7 +67,7 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
+
     @Test
     public void getShowByNameTest() {
         DataAccess dataAccess = new DataAccess();
@@ -76,7 +76,7 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
+
     @Test
     public void getShowByDateTest() {
         DataAccess dataAccess = new DataAccess();
@@ -85,7 +85,7 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
+
     @Test
     public void closeTest() {
         DataAccess dataAccess = new DataAccess();

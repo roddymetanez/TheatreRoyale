@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package models;
 
@@ -20,7 +20,7 @@ public class Ticket {
 	public Ticket(Performance performance, Patron patron) {
 		this.performance = performance;
 		this.patron = patron;
-		this.performanceID = performance.getID();
+		this.performanceID = performance.getPerfID();
 		this.setCustomerID(patron.getID());
 	}
 
@@ -71,6 +71,7 @@ public class Ticket {
 		this.cost = cost;
 	}
 
+	// TODO Dan - is this ok?
 	public double computeCost(ArrayList<Seat> seatingList) {
 		double ticketCost = 0;
 		for (Seat tmpSeat : seatingList) {
@@ -80,9 +81,16 @@ public class Ticket {
 
 	}
 
+//	public Integer getPostage() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+
 	public double getPostage() {
+		performance.getStartDateTime();
 		int postageCost = 0;
 		String tmpDate = performance.getStartDateTime();
-		if (tmpDate < Date) return null;
+		// if (LocalDate. < LocalDate.) {}
+		return 0;
 	}
 }
