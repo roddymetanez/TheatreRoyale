@@ -22,7 +22,7 @@ public class DBConnector {
     private Connection conn;
     // connParams is the name of the file containing information required to make 
     // the connection
-    private static final boolean VERBOSE = true;
+    private static final boolean VERBOSE = false;
     private static final String connParams = "connParams.txt";
 
     public DBConnector() {
