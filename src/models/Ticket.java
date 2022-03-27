@@ -10,14 +10,18 @@ import java.util.ArrayList;
  *
  */
 public class Ticket {
+	private Performance performance;
+	private Patron patron;
 	private int customerID;
 	private int performanceID;
-  private ArrayList<Seat> seatingList;
+	private ArrayList<Seat> seatingList;
 	private double cost;
-	
-	public Ticket(int performanceID, int customerID) {
-		this.performanceID = performanceID;
-		this.setCustomerID(customerID);
+
+	public Ticket(Performance performance, Patron patron) {
+		this.performance = performance;
+		this.patron = patron;
+		this.performanceID = performance.getID();
+		this.setCustomerID(patron.getID());
 	}
 
 	/**
@@ -26,7 +30,7 @@ public class Ticket {
 	public int getPerformanceID() {
 		return performanceID;
 	}
-	
+
 	public void setPerformanceID(int performanceID) {
 		this.performanceID = performanceID;
 	}
@@ -65,5 +69,20 @@ public class Ticket {
 
 	public void setCost(double cost) {
 		this.cost = cost;
+	}
+
+	public double computeCost(ArrayList<Seat> seatingList) {
+		double ticketCost = 0;
+		for (Seat tmpSeat : seatingList) {
+			ticketCost = ticketCost + tmpSeat.getSeatCost();
+		}
+		return cost;
+
+	}
+
+	public double getPostage() {
+		int postageCost = 0;
+		String tmpDate = performance.getStartDateTime();
+		if (tmpDate < Date) return null;
 	}
 }
