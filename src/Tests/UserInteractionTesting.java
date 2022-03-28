@@ -1,10 +1,5 @@
 package Tests;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -32,9 +27,10 @@ class UserInteractionTesting {
 	void setUp() throws Exception {
 		dtConv = new DateTimeConverter();
 		nowNow = LocalDateTime.now().toString();
-		testPerformance = new Performance(999, nowNow, 1);
+		testPerformance = new Performance(99990999, nowNow, 1);
 		Patron albert = new Patron();
-		testPerformance.setPrice(19.99);
+		testPerformance.getPrice();
+		// testPerformance.setPrice(19.99);
 		testSeats = new ArrayList<>();
 		for (int i = 0; i < 3; i++) {
 			testSeat = new Seat(testPerformance, seatLoc.Stall, 0);
@@ -43,6 +39,7 @@ class UserInteractionTesting {
 		System.out.println("perf before assignment " + testPerformance.getPrice());
 		testTicket = new Ticket(testPerformance, albert);
 		testTicket.setSeatingList(testSeats);
+		testTicket.ReComputeCost();
 		System.out.println("perf after assignment " + testPerformance.getPrice());
 		System.out.println("ticket after " + testTicket.getCost());
 	}
@@ -50,21 +47,6 @@ class UserInteractionTesting {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-
-//	private void stagingForTest() {
-//		dtConv = new DateTimeConverter();
-//		nowNow = LocalDateTime.now().toString();
-//		testPerformance = new Performance(999, nowNow, 1);
-//		Patron albert = new Patron();
-//		testSeat = new Seat(testPerformance, seatLoc.Stall, 0);
-//		testPerformance.setPrice(19.99);
-//		testSeats = new ArrayList<>();
-//		for (int i = 0; i < 3; i++) {
-//			testSeats.add(testSeat);
-//		}
-//		testTicket = new Ticket(testPerformance, albert);
-//		testTicket.setSeatingList(testSeats);
-//	}
 
 	@Test
 	public void seatTest() {
@@ -80,19 +62,28 @@ class UserInteractionTesting {
 		assertEquals(59.97, testTicket.getCost());
 	}
 
-	@Test
-	public void timeTestFromPerformance() throws ParseException {
-		SimpleDateFormat tmpDate = dtConv.stringToSqLDate(testPerformance.getStartDateTime());
-		String tmpStr = tmpDate.toString();
-		assertEquals("'2025-01-01  23:59:99'", tmpStr);
-
-	}
-
-	@Test
-	public void postageTest() {
-		testPerformance.setStartDateTime(nowNow);
-
-		assertEquals(0, testTicket.getPostage());
-
-	}
+//	@Test
+////	public void timeTestFromPerformance() throws ParseException {
+//	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+//
+//	sdf.parse(testPerformance.getStartDateTime());
+//
+////		String tmpStr = sdf .format("YYYY-MM-DD HH:MM:DD").toString();
+//	assertEquals("'2025-01-01  23:59:99'", sdf.toString());
+//
+//	}
+//
+//	String strDate = "2011-12-31 00:00:00";
+//
+//	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+//	java.util.Date date = sdf.parse(strDate);
+//	java.sql.Date sqlDate = new Date(date.getTime());System.out.println("String converted to java.sql.Date :"+sqlDate);
+//
+//	@Test
+//	public void postageTest() {
+//		testPerformance.setStartDateTime(nowNow);
+//
+//		assertEquals(0, testTicket.getPostage());
+//
+//	}
 }

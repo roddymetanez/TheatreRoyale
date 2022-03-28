@@ -72,12 +72,24 @@ public class Ticket {
 	}
 
 	// TODO Dan - is this ok?
+	public double ReComputeCost() {
+		double ticketCost = 0;
+		for (Seat tmpSeat : seatingList) {
+			ticketCost = ticketCost + tmpSeat.getSeatCost();
+		}
+		setCost(ticketCost);
+		return ticketCost;
+
+	}
+
+	// TODO Dan - is this ok?
 	public double computeCost(ArrayList<Seat> seatingList) {
 		double ticketCost = 0;
 		for (Seat tmpSeat : seatingList) {
 			ticketCost = ticketCost + tmpSeat.getSeatCost();
 		}
-		return cost;
+		setCost(ticketCost);
+		return ticketCost;
 
 	}
 

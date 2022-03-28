@@ -9,6 +9,7 @@ public class Performance {
 	private String startDateTime;
 
 	public Performance(int perfID, String date, double price) {
+
 		this.perfID = perfID;
 		this.startDateTime = date;
 		this.price = price;
