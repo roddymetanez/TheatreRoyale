@@ -169,7 +169,11 @@ public class Theatre {
         // Attempts to store the details in the database
         int CID = -1;
         CID = dataAccess.registerCustomer(fname, lname, houseNo, streetName, postalCode);
-        if (CID < 0) System.out.println("Failed to register.");
+        if (CID < 0) {
+            // The customer could NOT be registered, return to the main menu - The customer MUST be registered to continue here.
+            System.out.println("Failed to register.");
+            return;
+        }
         
         
         // Initialize patron variables with the values entered above
