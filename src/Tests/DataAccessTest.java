@@ -109,7 +109,7 @@ public class DataAccessTest
         DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
         int CID = -1;
-        CID = dataAccess.registerCustomer("Zoe", "Scott", "3", "Saturn Way", "CV37 7NE");
+        CID = dataAccess.registerCustomer("Zoe", "Scott", "10", "Downing Street", "SW1A 2AB");
         assertNotSame(-1, CID);
         db.close();
         db.connect();

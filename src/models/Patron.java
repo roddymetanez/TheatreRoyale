@@ -94,14 +94,12 @@ public class Patron {
 	 * @param id
 	 * @return
 	 */
-	public boolean removeFromBasketByID(int id) {
-		for (Ticket ticket : usersBasket.getTicketsInBasket()) {
-			if (ticket.getPerformanceID() == id) {
-				return usersBasket.removeFromBasket(ticket);
-			}
+	public void removeFromBasketByID(int perfID) {
+		if (usersBasket.removeFromBasket(perfID)) {
+			System.out.println("Ticket has been removed from your basket.");
+		} else {
+			System.out.println("Ticket could not be removed, or does not exist in your basket.");
 		}
-		System.out.println("Ticket does not exist in your basket");
-		return false;
 	}
 	
 	/**
