@@ -9,7 +9,7 @@ USE Theatre;
 
 
 DROP TABLE IF EXISTS Performance; 
-CREATE TABLE Performance 		(perfID INT, primary key, SID VARCHAR(3), perf_date DATETIME, seats_circle INT, seats_stall INT); 
+CREATE TABLE Performance 		(perfID INT primary key, SID VARCHAR(3), perf_date DATETIME, seats_circle INT, seats_stall INT); 
 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (01001-001, 001, '2022-03-31 19:30:00', 80, 120); 
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (01002-001, 001, '2022-04-01 19:30:00', 80, 120); 
