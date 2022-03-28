@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
@@ -68,11 +69,11 @@ public class Theatre {
             // Switch the option and call the correct method, or exit.
             dataAccess = new DataAccess(); // Reopen the database connection
             switch (option) {
-                case 1 : browseShows();break;
-                case 2 : findShowByName();break;
-                case 3 : findShowsByDate();break;
-                case 4 : printBasketMenu();break;
-                case 5 : exit = true;break;
+                case 1 -> browseShows();
+                case 2 -> findShowByName();
+                case 3 -> findShowsByDate();
+                case 4 -> printBasketMenu();
+                case 5 -> exit = true;
             }
         } while (!exit);
 
@@ -135,10 +136,10 @@ public class Theatre {
                         "\n Genre: " + rs.getString("show_genre") +
                         "\n Language: " + rs.getString("primary_language") +
                         "\n Ticket cost: £" + rs.getString("show_ticketPrice") + 
-                        "\n ID: " + rs.getString("perfID") + "]\n");
+                        "\n ID: " + rs.getInt("perfID") + "]\n");
                 
                 // Create a performance object and initialize variables
-                Performance performance = new Performance(rs.getString("perfID"), rs.getString("perf_date"),rs.getDouble("show_ticketPrice")); 
+                Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),rs.getDouble("show_ticketPrice")); 
                 // perfID needs to be returned from the SQL procedure
                 
                 performancsInSearch.add(performance);
@@ -147,6 +148,9 @@ public class Theatre {
             e.printStackTrace();
         }
        
+        String date_time = "11/27/2020 05:35:00";
+        SimpleDateFormat dateParser = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
+        
         addToBasket(performancsInSearch);
         dataAccess.close(); // Close the connection to the database
         return true;
@@ -180,7 +184,7 @@ public class Theatre {
         patron.setlName(lname);
         patron.setAddress_no(houseNo);
         patron.setAddress_st(streetName);
-        patron.setPost_code(postalCode);
+        patron.setPost_code(postalCode); 
         
         // Retrive the information for this customer and store the ID inside the object.
         
@@ -209,10 +213,10 @@ public class Theatre {
             System.out.println("Returning to the menu");
             return;
         }
-        String idSelected1 = "";
+        
         // Ensure the performanceID is within the users search results
         for (Performance performance : performanceIDs) {
-            if (performance.getID() == idSelected1) { 
+            if (performance.getID() == idSelected) { 
                 // ID user entered is equal to this performance, add it to basket and return
                 patron.addToBasket(performance);
                 return;
@@ -239,13 +243,13 @@ public class Theatre {
         System.out.println("| 1 - Remove a ticket from basket         |");
         System.out.println("| 2 - Checkout your basket                |");
         System.out.println("| 3 - Return to main menu                 |");
-        System.out.println("|                                           |");
+        System.out.println("|                                         |");
         System.out.println("===========================================");
         
         int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
         switch (option) {
         case 1:
-            patron.removeFromBasketByID(option); // Remove a ticket from the users basket
+            patron.removeFromBasketByID(inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n")); // Remove a ticket from the users basket
             break;
         case 2:
             if (patron.getfName() == null) { // Check if the current user has already entered their details
