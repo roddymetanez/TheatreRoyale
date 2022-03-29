@@ -282,14 +282,4 @@ public class DBConnector {
     public Connection getConn() {
         return conn;
     }
-    
-    
-    public void commit() {
-        try {
-            conn.commit();
-        }
-        catch (SQLException sqle) {
-            sqle.printStackTrace();
-        }
-    }
 }

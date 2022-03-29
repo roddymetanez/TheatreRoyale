@@ -103,11 +103,8 @@ public class DataAccess {
             if (rs.next())
                 retVal = rs.getInt("customerID");
         } catch (SQLException sqle) {
-            //System.err.println(sqle.toString());
             sqle.printStackTrace();
         }
-//        db.close();
-//        db.connect();
         return retVal;
     }
    /**
@@ -133,11 +130,8 @@ public class DataAccess {
      */
     public Boolean buyTicket(String fname, String lname, String add_no, String add_st, String post_code, 
                                 int perfId, int stall,int circle, boolean post) {
-        //ResultSet rs = getCustomerData(lname);
         int custId = -1;
-        //if (rs == null) {
         custId = registerCustomer(fname,lname,add_no,add_st, post_code);
-        //}
         boolean bookingMade = updateAvailableSeats(perfId,stall,circle);
         if (bookingMade) { createTicket(custId, perfId,stall, circle,post); }
         return bookingMade;
@@ -154,7 +148,8 @@ public class DataAccess {
     */
     public void createTicket(int custID, int perfID, int stall,int circle, boolean post) {
         int newPost = 0;
-        // converting the boolean to an integer for MySQL 0 is false
+        // post == 0 inidicates that no ticket postage required
+        // converting the boolean to an integer for MySQL 0
         if (post) newPost = 1; 
          String query = "{call " + CREATE_TICKET + "(?, ?, ?, ?, ?)}";
         ArrayList<Integer> params = new ArrayList<Integer>();
@@ -179,7 +174,7 @@ public class DataAccess {
     }
     /**
      * updateAvailableSeats will check that seats are available and will record that any seats
-     * booked are no longer available
+     * booked are no longer available, providing a valid performance ID has been given
      * @param perfId int the performance the seats are relevant to
      * @param circle intthe number of circle seats
      * @param stall in the number of stall seats
@@ -193,17 +188,18 @@ public class DataAccess {
         int newCircle = 0;
         boolean bookingMade = false;
         try {
+            // check that perfID is valid and calculate the remaining available seats
             if (rs.next()) {
                 newStall = rs.getInt("seats_stall") - stall;
                 newCircle = rs.getInt("seats_circle") - circle;
             }
         } catch (SQLException sqle) {
-            //System.err.println(sqle.toString());
             if (rs != null) db.printResult(rs);
             sqle.printStackTrace();
 
         }
-
+        
+        // Check that the seats are still available before updating
         if ((newStall >= 0)&&(newCircle >=0))
         // Update the available seats for the performance
         {   String query = "{call " + UPDATE_AVAILABLE_SEATS + "(?,?,?)}";
@@ -214,8 +210,6 @@ public class DataAccess {
             db.callNInt(query, params);
             bookingMade = true;
         }
-        //db.close();
-        //db.connect();
         return bookingMade;
     }
     
