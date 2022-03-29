@@ -3,12 +3,6 @@
  */
 package models;
 
-import java.util.ArrayList;
-
-/**
- * @author Daniel
- *
- */
 public class Ticket {
 	private Performance performance;
 	private Patron patron;
@@ -22,11 +16,9 @@ public class Ticket {
 		this.patron = patron;
 		this.performanceID = performance.getPerfID();
 		this.setCustomerID(patron.getID());
+
 	}
 
-	/**
-	 * @return the seatingList
-	 */
 	public int getPerformanceID() {
 		return performanceID;
 	}
@@ -35,32 +27,12 @@ public class Ticket {
 		this.performanceID = performanceID;
 	}
 
-	/**
-	 * @return the seatingList
-	 */
 	public int getCustomerID() {
 		return customerID;
 	}
 
-	/**
-	 * @return the seatingList
-	 */
 	public void setCustomerID(int customerID) {
 		this.customerID = customerID;
-	}
-
-	/**
-	 * @return the seatingList
-	 */
-	public ArrayList<Seat> getSeatingList() {
-		return seatingList;
-	}
-
-	/**
-	 * @param seatingList the seatingList to set
-	 */
-	public void setSeatingList(ArrayList<Seat> seatingList) {
-		this.seatingList = seatingList;
 	}
 
 	public double getCost() {

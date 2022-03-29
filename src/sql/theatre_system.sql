@@ -51,7 +51,6 @@ INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VAL
 -- test
 INSERT INTO Performance (perfID, SID, perf_date, seats_circle, seats_stall)  VALUES (99990999, 999, '2025-01-01 23:59:59', 80, 120); 
 
-
 DROP TABLE IF EXISTS Show_details;
 CREATE TABLE Show_details (
     SID INT NOT NULL PRIMARY KEY,
@@ -95,7 +94,7 @@ BEGIN
 END;$$
 DELIMITER ;
 
---  CALL getShows();
+CALL getShows();
 
 DROP PROCEDURE IF EXISTS getShowByName;
 DELIMITER %
@@ -131,7 +130,7 @@ BEGIN
 END;$$
 DELIMITER ;
 
- CALL getShowByDate('2022-04-08');
+-- CALL getShowByDate('2022-04-08');
 
 DROP PROCEDURE IF EXISTS getShowByPerfID; -- Rory added this bit
 DELIMITER %
@@ -187,7 +186,6 @@ DELIMITER ;
 --  CALL createTicket(1, 1000, 2, 2, 0);
 --  select * from Tickets;
 
-
 DROP PROCEDURE IF EXISTS getTicket;
 DELIMITER $$
 CREATE PROCEDURE
@@ -199,7 +197,6 @@ END;$$
 DELIMITER ;
 
 --  call getTicket(1);
-
 
 DROP PROCEDURE IF EXISTS registerCustomer;
 delimiter $$
@@ -222,7 +219,6 @@ if (select 1=1 from Customer where first_name = fname and last_name = lname)
 END;$$
 DELIMITER ;
 
-
 --  CALL registerCustomer('Zoe','Scott', '10', 'Downing Street', 'SW1A 2AB');
 
 --  SELECT * FROM Customer;
@@ -232,8 +228,9 @@ delimiter $$
 CREATE PROCEDURE getCustomerData(in CID int) 
    BEGIN
     select * from Customer
+
     where Customer.CustomerID = CID;
    END;$$
 DELIMITER ;
 
---  CALL getCustomerData(1); 
+CALL getCustomerData(1); 

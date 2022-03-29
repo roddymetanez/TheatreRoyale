@@ -313,7 +313,7 @@ public class Theatre {
 		System.out.println("| 1 - Remove a ticket from basket         |");
 		System.out.println("| 2 - Checkout your basket                |");
 		System.out.println("| 3 - Return to main menu                 |");
-		System.out.println("|                                           |");
+		System.out.println("|                                         |");
 		System.out.println("===========================================");
 
 		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
@@ -330,9 +330,9 @@ public class Theatre {
 		}
 	}
 
-	public int getSeatsCircle() {
-		return seatsCircle;
-	}
+    public int getSeatsCircle() {
+        return seatsCircle;
+    }
 
 	public int getSeatsStalls() {
 		return seatsStalls;
