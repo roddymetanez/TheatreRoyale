@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -244,6 +245,7 @@ public class Theatre {
             break;
         }
     }
+
 
     public int getSeatsCircle() {
         return seatsCircle;
