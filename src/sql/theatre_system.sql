@@ -100,30 +100,37 @@ CREATE PROCEDURE
 	getShowByName(in aName varchar(20))  -- Provides Display Data for specified show
 BEGIN
 	select
-	show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language,
+	perfid, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language,
     show_duration, perf_date, seats_circle, seats_stall
     from Show_details, Performance
     where show_title = aName
+    and Performance.SID = Show_details.SID
     order by perf_date;
 	END;%
 DELIMITER ;
 
-#CALL getShowByName('Aladdin');
+CALL getShowByName('Aladdin');
 
 DROP PROCEDURE IF EXISTS getShowByDate;
 DELIMITER $$
 CREATE PROCEDURE
-	getShowByDate(in aDate varchar(19))  -- format 'YYYY-MM-DD hh:mm:ss'
+	getShowByDate(in aDate date)  -- format 'YYYY-MM-DD'
 BEGIN
+	declare aDateStartTime, aDateEndTime datetime;
+	set aDateStartTime = concat(aDate, ' 00:00:00');
+	set aDateEndTime = concat(date_add(aDate, interval 1 day), ' 00:00:00');
 	SELECT
-		show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language,
-    show_duration, perf_date, seats_circle, seats_stall
+		perfID, show_ticketPrice, show_performer, show_title, show_description, show_genre, primary_language,
+		show_duration, perf_date, seats_circle, seats_stall
     from Show_details, Performance
-    where perf_date = aDate; 
+    where perf_date >= aDateStartTime
+    and perf_date < aDateEndTime
+    and Performance.SID = Show_details.SID;
 END;$$
 DELIMITER ;
 
-#CALL getShowByDate('2020-07-01 19:30:00');
+CALL getShowByDate('2022-04-27 19:30:00');
+CALL getShowByDate('2022-04-01');
 
 
 DROP PROCEDURE IF EXISTS updateAvailableSeats;
