@@ -17,7 +17,7 @@ public class Basket {
 
 	public void addToBasket(Ticket ticket) {
 		ticketsInBasket.add(ticket);
-		ticket.computeCost(ticketsInBasket);
+		//ticket.computeCost(ticketsInBasket);
 	}
 
 	public boolean removeFromBasket(int perfID) {
@@ -28,7 +28,8 @@ public class Basket {
  			}
  		}
  		return false;
-
+	}
+	
 	public double getBasketTotalCost() {
 		double total = 0;
 

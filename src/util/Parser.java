@@ -1,8 +1,8 @@
 package util;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
 
 /**
  *  Parser provides an intereface to  file

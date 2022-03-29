@@ -3,6 +3,8 @@
  */
 package models;
 
+import java.util.ArrayList;
+
 public class Ticket {
 	private Performance performance;
 	private Patron patron;

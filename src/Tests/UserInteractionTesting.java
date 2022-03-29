@@ -48,12 +48,9 @@ class UserInteractionTesting {
 			testSeat = new Seat(testPerformance, seatLoc.Stall, 0);
 			testSeats.add(testSeat);
 		}
-		// System.out.println("perf before assignment " + testPerformance.getPrice());
 		testTicket = new Ticket(testPerformance, albert);
 		testTicket.setSeatingList(testSeats);
 		testTicket.ReComputeCost();
-		// System.out.println("perf after assignment " + testPerformance.getPrice());
-		// System.out.println("ticket after " + testTicket.getCost());
 	}
 
 	@AfterEach
@@ -73,13 +70,13 @@ class UserInteractionTesting {
 	}
 
 	@Test
-	public void timeTestFromPerformance() {
+	public void testPerformanceStartDateTime() {
 		String sdf = testPerformance.getStartDateTime();
 		assertEquals("2025-01-01 23:59:59", sdf.toString());
 	}
 
 	@Test
-	public void getPerformanceTime() {
+	public void getPerformanceByDate() {
 		performancesInSearch.clear();
 		testTheatre.findShowsByDate_Test("01-01-25");
 		performancesInSearch = testTheatre.getPerformancesInSearch();
