@@ -3,45 +3,37 @@ package controller;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
 import data_access.DataAccess;
 import models.Patron;
 import models.Performance;
-import util.DateTimeConverter;
 import util.InputReader;
 
 public class Theatre {
 
-	public final static int seatsCircle = 80;
-	public final static int seatsStalls = 120;
+    public final static int seatsCircle = 80;
+    public final static int seatsStalls = 120;
+    
+    private DataAccess dataAccess;
 
-	private DataAccess dataAccess;
-	private ArrayList<Performance> performancesInSearch = new ArrayList<>(); // All performances found in this search
-	private boolean testMode = false; 
+    private final InputReader inputReader;
+    
+    // The patron that is currently using the application
+    private Patron patron;
 
-	private final InputReader inputReader;
-
-	// The patron that is currently using the application
-	private Patron patron;
-
-	/**
-	 * Theatre constructor Initialtizes global variables and calls
-	 * displayInterface() to print out the main menu
-	 */
-	public Theatre(boolean testMode) {
-		this.testMode = testMode;
-		this.dataAccess = new DataAccess();
-		this.inputReader = new InputReader();
-		this.patron = new Patron();
-
-		if (!testMode) {
-			displayInterface();
-		}
-	}
+    /**
+     * Theatre constructor
+     * Initialtizes global variables and calls displayInterface() to print out the main menu
+     */
+    public Theatre() {
+        this.dataAccess = new DataAccess();
+        this.inputReader = new InputReader();
+        this.patron = new Patron();
+        
+        displayInterface();
+    }
 
     /**
      * Print out the main menu interface and prompt the user to enter an option from within the menu.
@@ -89,6 +81,41 @@ public class Theatre {
         System.exit(0); // Exit the program
     }
 
+
+    /**
+     * Call the procedure to retrieve all currently scheduled shows, and pass them to the printResults
+     * method to print them to the console.
+     */
+    private void browseShows() {
+        
+        ResultSet rs = dataAccess.getShows();
+        printResults(rs);
+    }
+
+    /**
+     * Call the procedure to retrieve all scheduled shows by name, and pass them to the printResults
+     * method to print them to the console.
+     */
+    private void findShowByName() {
+        
+        String name = inputReader.getNextText("\nEnter the show name:\n> ");
+        ResultSet rs = dataAccess.getShowByName(name);
+
+        printResults(rs);
+    }
+
+    /**
+     * Call the procedure to retrieve all scheduled shows on a specific date, and pass them to the printResults
+     * method to print them to the console.
+     */
+    private void findShowsByDate() {
+        // Method to be updated to agree with the new date/time format
+        String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for [dd-MM-yy]\n> ");
+        ResultSet rs = dataAccess.getShowByDate(date.toString());
+        
+        printResults(rs);
+    }
+
     /**
      * Print out the results of the provided ResultSet in as a formatted string
      * 
@@ -108,7 +135,7 @@ public class Theatre {
                         "\n Date: " + rs.getString("perf_date") +
                         "\n Genre: " + rs.getString("show_genre") +
                         "\n Language: " + rs.getString("primary_language") +
-                        "\n Ticket cost: £" + rs.getString("show_ticketPrice") + 
+                        "\n Ticket cost: �" + rs.getString("show_ticketPrice") + 
                         "\n ID: " + rs.getInt("perfID") + "]\n");
                 
                 // Create a performance object and initialize variables
@@ -120,6 +147,9 @@ public class Theatre {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+       
+        String date_time = "11/27/2020 05:35:00";
+        SimpleDateFormat dateParser = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
         
         addToBasket(performancsInSearch);
         dataAccess.close(); // Close the connection to the database
@@ -230,20 +260,11 @@ public class Theatre {
         }
     }
 
-
     public int getSeatsCircle() {
         return seatsCircle;
     }
 
-	public int getSeatsStalls() {
-		return seatsStalls;
-	}
-
-	public ArrayList<Performance> getPerformancesInSearch() {
-		return performancesInSearch;
-	}
-
-	public void setPerformancesInSearch(ArrayList<Performance> performancesInSearch) {
-		this.performancesInSearch = performancesInSearch;
-	}
+    public int getSeatsStalls() {
+        return seatsStalls;
+    }
 }
