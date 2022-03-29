@@ -19,9 +19,15 @@ public class Basket {
 		ticketsInBasket.add(ticket);
 		ticket.computeCost(ticketsInBasket);
 	}
-
-	public boolean removeFromBasket(Ticket ticket) {
-		return ticketsInBasket.remove(ticket);
+	
+	public boolean removeFromBasket(int perfID) {
+		for (Ticket ticket : ticketsInBasket) {
+			if (ticket.getPerformanceID() == perfID) {
+				ticketsInBasket.remove(ticket);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public double getBasketTotalCost() {
