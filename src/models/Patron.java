@@ -74,7 +74,7 @@ public class Patron {
 	// sold out, and B: Check the performanceID is valid.
 	public void addToBasket(Performance performance) {
 		usersBasket.addToBasket(createTicket(performance));
-		System.out.println("\nSuccessfully added performance [" + performance.getID() + "] to your basket\n");
+		System.out.println("\nSuccessfully added performance [" + performance.getPerfID() + "] to your basket\n");
 	}
 
 	/**
@@ -97,10 +97,10 @@ public class Patron {
 	 * @return
 	 */
 	public void removeFromBasketByID(int perfID) {
-		if (usersBasket.removeFromBasket(perfID)) {
-			System.out.println("Ticket has been removed from your basket.");
-		} else {
-			System.out.println("Ticket could not be removed, or does not exist in your basket.");
+ 		if (usersBasket.removeFromBasket(perfID)) {
+ 			System.out.println("Ticket has been removed from your basket.");
+ 		} else {
+ 			System.out.println("Ticket could not be removed, or does not exist in your basket.");
 		}
 	}
 

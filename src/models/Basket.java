@@ -17,20 +17,19 @@ public class Basket {
 
 	public void addToBasket(Ticket ticket) {
 		ticketsInBasket.add(ticket);
-		ticket.computeCost(ticketsInBasket);
+		//ticket.computeCost(ticketsInBasket);
+	}
+
+	public boolean removeFromBasket(int perfID) {
+ 		for (Ticket ticket : ticketsInBasket) {
+ 			if (ticket.getPerformanceID() == perfID) {
+ 				ticketsInBasket.remove(ticket);
+ 				return true;
+ 			}
+ 		}
+ 		return false;
 	}
 	
-	public boolean removeFromBasket(int perfID) {
-		for (Ticket ticket : ticketsInBasket) {
-			if (ticket.getPerformanceID() == perfID) {
-				ticketsInBasket.remove(ticket);
-				return true;
-			}
-		}
-		return false;
-	}
-
-
 	public double getBasketTotalCost() {
 		double total = 0;
 
