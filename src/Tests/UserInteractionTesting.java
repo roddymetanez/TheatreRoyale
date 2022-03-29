@@ -73,13 +73,13 @@ class UserInteractionTesting {
 	}
 
 	@Test
-	public void performanceStartDateTimeTest() {
+	public void timeTestFromPerformance() {
 		String sdf = testPerformance.getStartDateTime();
 		assertEquals("2025-01-01 23:59:59", sdf.toString());
 	}
 
 	@Test
-	public void getPerformancesByDate() {
+	public void getPerformanceTime() {
 		performancesInSearch.clear();
 		testTheatre.findShowsByDate_Test("01-01-25");
 		performancesInSearch = testTheatre.getPerformancesInSearch();
