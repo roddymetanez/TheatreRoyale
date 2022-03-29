@@ -2,7 +2,6 @@ package controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -80,7 +79,7 @@ public class Theatre {
 			// Switch the option and call the correct method, or exit.
 			dataAccess = new DataAccess(); // Reopen the database connection
 			switch (option) {
-                case 1 -> browseShows();
+                 case 1 -> browseShows();
                  case 2 -> findShowByName();
                  case 3 -> findShowsByDate();
                  case 4 -> printBasketMenu();
@@ -183,13 +182,12 @@ public class Theatre {
 				// Iterate through all elements within the ResultSet and print them to the
 				// console.
 				System.out.println("\n[Name: " + rs.getString("show_title") +
-                        "\n Description: " + rs.getString("show_description") +
-                         "\n Date: " + rs.getString("perf_date") +
-                         "\n Genre: " + rs.getString("show_genre") +
-                         "\n Language: " + rs.getString("primary_language") +
-                         "\n Ticket cost: ï¿½" + rs.getString("show_ticketPrice") + 
-                         "\n Ticket cost: Â£" + rs.getString("show_ticketPrice") + 
-                         "\n ID: " + rs.getInt("perfID") + "]\n");
+                        "\n [Description: " + rs.getString("show_description") + "]" +
+                         "\n [Date: " + rs.getString("perf_date") + "]" +
+                         "\n [Genre: " + rs.getString("show_genre") +
+                         "\t Language: " + rs.getString("primary_language") +
+                         "\t Ticket cost: £" + rs.getString("show_ticketPrice") + "]" + 
+                         "\n [ID: " + rs.getInt("perfID") + "]\n");
 
 				// Create a performance object and initialize variables
 				Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),
@@ -202,8 +200,6 @@ public class Theatre {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		String date_time = "11/27/2020 05:35:00";
-         	SimpleDateFormat dateParser = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
 
 		if (!testMode) {
 			addToBasket(performancesInSearch);
@@ -250,12 +246,16 @@ public class Theatre {
 		// Below cannot be used until users details can be stored
 
 		ResultSet rs = dataAccess.getCustomerData(CID);
+		
 		try {
-			patron.setID(rs.getInt("customerID"));
-		}
-		catch (SQLException e) {
+			if (rs.next()) {
+				patron.setID(rs.getInt("customerID"));
+			}
+		}catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		System.out.print(patron.getID());
 	}
 
 	/**

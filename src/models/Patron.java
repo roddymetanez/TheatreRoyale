@@ -74,7 +74,7 @@ public class Patron {
 	// sold out, and B: Check the performanceID is valid.
 	public void addToBasket(Performance performance) {
 		usersBasket.addToBasket(createTicket(performance));
-		System.out.println("\nSuccessfully added performance [" + performance.getID() + "] to your basket\n");
+		System.out.println("\nSuccessfully added performance [" + performance.getPerfID() + "] to your basket\n");
 	}
 
 	/**
