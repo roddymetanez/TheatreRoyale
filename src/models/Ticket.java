@@ -34,6 +34,21 @@ public class Ticket {
 	public void setCustomerID(int customerID) {
 		this.customerID = customerID;
 	}
+	
+	/**
+	 * @return the seatingList
+	 */
+	public ArrayList<Seat> getSeatingList() {
+		return seatingList;
+	}
+
+	/**
+	 * @param seatingList the seatingList to set
+	 */
+	public void setSeatingList(ArrayList<Seat> seatingList) {
+		this.seatingList = seatingList;
+	}
+
 
 	public double getCost() {
 		return cost;
