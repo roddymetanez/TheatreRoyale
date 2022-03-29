@@ -30,5 +30,4 @@ public class InputReader {
         System.out.print(message);
         return scanner.next();
     }
-
 }

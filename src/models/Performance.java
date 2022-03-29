@@ -2,42 +2,43 @@ package models;
 
 public class Performance {
 
-    private int ID;
-    private int showID;
+	private int perfID;
+	private int showID;
+	private String title;
+	private Double price;
+	private String startDateTime;
 
-    private Double price;
-    private String startDateTime;
+	public Performance(int perfID, String date, double price, String title) {
 
+		this.perfID = perfID;
+		this.startDateTime = date;
+		this.price = price;
+		this.setTitle(title);
+	}
 
-    public Performance(int ID, String date, double price) {
-    	this.ID = ID;
-        this.startDateTime = date;
-        this.price = price;
-    }
+	public int getPerfID() {
+		return perfID;
+	}
 
-    public int getID() {
-        return ID;
-    }
+	public void setPerfID(int iD) {
+		perfID = iD;
+	}
 
-    public void setID(int iD) {
-        ID = iD;
-    }
+	public Double getPrice() {
+		return price;
+	}
 
-    public Double getPrice() {
-        return price;
-    }
+	public void setPrice(Double price) {
+		this.price = price;
+	}
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
+	public String getStartDateTime() {
+		return startDateTime;
+	}
 
-    public String getStartDateTime() {
-        return startDateTime;
-    }
-
-    public void setStartDateTime(String startDateTime) {
-        this.startDateTime = startDateTime;
-    }
+	public void setStartDateTime(String startDateTime) {
+		this.startDateTime = startDateTime;
+	}
 
 	public int getShowID() {
 		return showID;
@@ -46,13 +47,27 @@ public class Performance {
 	public void setShowID(int showID) {
 		this.showID = showID;
 	}
-    
-    /**
-     * Create a ticket for this performance
-     * 
-     * @return Ticket created for this show
-     */
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * Create a ticket for this performance
+	 *
+	 * @return Ticket created for this show
+	 */
 //    public Ticket createTicket() {
-//    	return new Ticket(this.ID, this.price, this);
+//    	return new Ticket(this.perfID, this.price, this);
 //    }
 }

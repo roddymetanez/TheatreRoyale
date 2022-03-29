@@ -4,8 +4,8 @@ import controller.Theatre;
 
 public class Run {
 
-    public static void main(String[] args) {
-        // Create a new Theatre object
-        new Theatre();
-    }
+	public static void main(String[] args) {
+		// Create a new Theatre object - testing mode set to false
+		new Theatre(false);
+	}
 }

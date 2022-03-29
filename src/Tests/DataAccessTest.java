@@ -1,7 +1,7 @@
 package Tests;
 
-import static org.junit.jupiter.api.Assertions.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -57,11 +57,11 @@ public class DataAccessTest
         System.out.println(db);
 
     }
-    
     /**
      * getShowsTest tests that a table of show information is returned from the database query (a visual
      * test from the terminal window)
      */
+
     @Test
     public void getShowsTest() {
         DataAccess dataAccess = new DataAccess();
@@ -70,11 +70,11 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
     /**
      * getShowByNameTest tests that show information is returned from a database query
      * by show name (a visual test from the terminal window) 
      */
+
     @Test
     public void getShowByNameTest() {
         DataAccess dataAccess = new DataAccess();
@@ -83,7 +83,6 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
     /**
      * getShowByDate Test tests that show information is returned from a database query 
      * by date (a visual test from the terminal window ) 
@@ -124,7 +123,6 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
     /**
      * updateAvailableSeatTest updates the number of seats for a performance and then 
      * tests that the remaining number of seats is correct
@@ -164,6 +162,7 @@ public class DataAccessTest
             if (rs1 != null) db.printResult(rs1);
         }
     }
+  
     /**
      * closeTest shows that the current database connection will be closed, by closing the connection and 
      * testing to see if it is still available

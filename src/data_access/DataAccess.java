@@ -1,14 +1,8 @@
 package data_access;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
-
-import data_access.DBConnector;
-import util.Parser;
 
 /**
  * DataAccess
@@ -79,9 +73,24 @@ public class DataAccess {
         ArrayList<String> params = new ArrayList<String>();
         params.add(date);
         return db.callNString(query, params);
-    }
+		// TODO add cast to the SQL to enforce conversion of YYYYMMDD into datetime
+	}
+
+	/**
+	 * getShowByPerfID runs the database query to provide all information on shows
+	 * on a particular performance ID // RMT
+	 *
+	 * @param int eight digit sequence used by the show the information is requested
+	 *            for
+	 * @return ResultSet - the information for the requested date
+	 */
+	public ResultSet getShowByPerfID(int performanceID) {
+		String query = "{call " + GET_SHOW_BY_PERF_ID + "(?)}";
+		ArrayList<Integer> params = new ArrayList<>();
+		params.add(performanceID);
+		return db.callNInt(query, params);
+	}
    
-    
     /**
      * registerCustomer will add a new Customer to the database
      * @params fname,lname,add_no,add_st,post_code all the Customer data that we wish to store

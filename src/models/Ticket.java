@@ -1,20 +1,28 @@
+/**
+ *
+ */
 package models;
 
 public class Ticket {
+	private Performance performance;
+	private Patron patron;
 	private int customerID;
 	private int performanceID;
+	private ArrayList<Seat> seatingList;
 	private double cost;
-	
 
-	public Ticket(int performanceID, int customerID) {
-		this.performanceID = performanceID;
-		this.setCustomerID(customerID);
+	public Ticket(Performance performance, Patron patron) {
+		this.performance = performance;
+		this.patron = patron;
+		this.performanceID = performance.getPerfID();
+		this.setCustomerID(patron.getID());
+
 	}
 
 	public int getPerformanceID() {
 		return performanceID;
 	}
-	
+
 	public void setPerformanceID(int performanceID) {
 		this.performanceID = performanceID;
 	}
@@ -33,5 +41,40 @@ public class Ticket {
 
 	public void setCost(double cost) {
 		this.cost = cost;
+	}
+
+	// TODO Dan - is this ok?
+	public double ReComputeCost() {
+		double ticketCost = 0;
+		for (Seat tmpSeat : seatingList) {
+			ticketCost = ticketCost + tmpSeat.getSeatCost();
+		}
+		setCost(ticketCost);
+		return ticketCost;
+
+	}
+
+	// TODO Dan - is this ok?
+	public double computeCost(ArrayList<Seat> seatingList) {
+		double ticketCost = 0;
+		for (Seat tmpSeat : seatingList) {
+			ticketCost = ticketCost + tmpSeat.getSeatCost();
+		}
+		setCost(ticketCost);
+		return ticketCost;
+
+	}
+
+//	public Integer getPostage() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+
+	public double getPostage() {
+		performance.getStartDateTime();
+		int postageCost = 0;
+		String tmpDate = performance.getStartDateTime();
+		// if (LocalDate. < LocalDate.) {}
+		return 0;
 	}
 }

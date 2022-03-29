@@ -1,17 +1,20 @@
 package data_access;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.nio.file.Files;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * DBConnector provides an interface to the Database.
@@ -20,7 +23,7 @@ import java.util.ArrayList;
 public class DBConnector {
     // conn is the database connection
     private Connection conn;
-    // connParams is the name of the file containing information required to make 
+    // connParams is the name of the file containing information required to make
     // the connection
     private static final boolean VERBOSE = false;
     private static final String connParams = "connParams.txt";
@@ -39,7 +42,7 @@ public class DBConnector {
         try {
             // instantiate a scanner to scan the defined file
             scanner = new Scanner(new File(connParams));}
-        catch (FileNotFoundException e) { 
+        catch (FileNotFoundException e) {
             System.out.println("No such File");
             return;
         }
@@ -91,14 +94,14 @@ public class DBConnector {
                     System.out.println(cst.toString() + "\nUpdate count:"+ cst.getUpdateCount());
                 return null;
             }
-            
+            return results;
         } catch (SQLException e) {
             System.out.println(cst.toString() + "\n failed to run.");
             System.err.println(e.toString());
             return null;
         }
     }
-    
+
 
     public ResultSet callNString(String query, ArrayList<String> params) {
         try {
@@ -122,8 +125,8 @@ public class DBConnector {
             return null;
         }
     }
-    
-    
+
+
     public ResultSet callNInt(String query, ArrayList<Integer> params) {
         close();
         connect();
@@ -148,9 +151,9 @@ public class DBConnector {
             return null;
         }
     }
-    
-    
-    /** 
+
+
+    /**
      * runQuery will prepare an SQL statement taken from a file to run
      */
     public ResultSet runQuery(String sql) {
@@ -181,7 +184,7 @@ public class DBConnector {
         }
     }
 
-    
+
     /**
      * printResults will print a formatted table of the query statement results
      * @param rs ResultSet the result of the query which has been made
@@ -193,10 +196,10 @@ public class DBConnector {
             int colWidth = 0;
             int colCount = rsmd.getColumnCount();
             // format and print column headings
-            ArrayList<Integer> colWidths = new ArrayList<Integer>();
-            ArrayList<String> firstColData = new ArrayList<String>();
-            
-            Boolean heading =true;
+            ArrayList<Integer> colWidths = new ArrayList<>();
+            ArrayList<String> firstColData = new ArrayList<>();
+
+            boolean heading =true;
             // while there is another row, format and print that row
             while (rs.next()) {
                 if (heading) {
@@ -207,7 +210,7 @@ public class DBConnector {
                         String data = rs.getString(i);
                         if (data == null) data =""; // Ensure data is a valid string
                         firstColData.add(i-1, data);
-                        
+
                         if (headerWidth > data.length())
                             colWidth = headerWidth;
                         else
@@ -225,7 +228,7 @@ public class DBConnector {
                         if (data == null) data =""; // Ensure data is a valid string
                         colWidth = colWidths.get(i-1);
                         System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", data));
-                        System.out.print(" ");                        
+                        System.out.print(" ");
                     }
                     System.out.println();
                     heading = false;
@@ -234,10 +237,10 @@ public class DBConnector {
                         //to make the columns line up
                         String data = rs.getString(i);
                         if (data == null) data =""; // Ensure data is a valid string
-                        colWidth = colWidths.get(i-1);  
+                        colWidth = colWidths.get(i-1);
                         System.out.print(String.format("%-" + colWidth + "." + colWidth + "s", data));
                         System.out.print(" ");
-                    }      
+                    }
                     System.out.println();
                 }
             }
@@ -265,7 +268,8 @@ public class DBConnector {
     /**
      * Prints out the name of the database connectd to
      */
-    public String toString(){
+    @Override
+	public String toString(){
         try {
             return conn.getCatalog();
         } catch (SQLException e) {
@@ -273,8 +277,7 @@ public class DBConnector {
             return "Invalid Connection.";
         }
     }
-    
-    
+  
     /**
      * getConn returns the 'handle' of the connected database
      * @return Connection - the 'handle' of the connected database
