@@ -21,8 +21,28 @@ public class Theatre {
 
 	private DataAccess dataAccess;
 	private ArrayList<Performance> performancesInSearch = new ArrayList<>(); // All performances found in this search
-	private boolean testMode = false; // result
-	// will be stored here
+	private boolean testMode = false; 
+
+	private final InputReader inputReader;
+
+	// The patron that is currently using the application
+	private Patron patron;
+
+	/**
+	 * Theatre constructor Initialtizes global variables and calls
+	 * displayInterface() to print out the main menu
+	 */
+	public Theatre(boolean testMode) {
+		this.testMode = testMode;
+		this.dataAccess = new DataAccess();
+		this.inputReader = new InputReader();
+		this.patron = new Patron();
+
+		if (!testMode) {
+			displayInterface();
+		}
+	}
+
     /**
      * Print out the main menu interface and prompt the user to enter an option from within the menu.
      * The corresponding method will be called from the option the user entered, or the application will exit.
@@ -69,39 +89,6 @@ public class Theatre {
         System.exit(0); // Exit the program
     }
 
-	private final InputReader inputReader;
-
-	// The patron that is currently using the application
-	private Patron patron;
-
-	/**
-	 * Theatre constructor Initialtizes global variables and calls
-	 * displayInterface() to print out the main menu
-	 */
-	public Theatre(boolean testMode) {
-		this.testMode = testMode;
-		this.dataAccess = new DataAccess();
-		this.inputReader = new InputReader();
-		this.patron = new Patron();
-
-		if (!testMode) {
-			displayInterface();
-		}
-	}
-
-	/**
-	 * Print out the main menu interface and prompt the user to enter an option from
-	 * within the menu. The corresponding method will be called from the option the
-	 * user entered, or the application will exit.
-	 *
-	 * This menu is the initial display for this application, and will be available
-	 * until the application is closed or exited with the menu option.
-	 */
-	private void displayInterface() {
-		int option;
-		boolean exit = false;
-		do {
-
     /**
      * Print out the results of the provided ResultSet in as a formatted string
      * 
@@ -121,7 +108,7 @@ public class Theatre {
                         "\n Date: " + rs.getString("perf_date") +
                         "\n Genre: " + rs.getString("show_genre") +
                         "\n Language: " + rs.getString("primary_language") +
-                        "\n Ticket cost: �" + rs.getString("show_ticketPrice") + 
+                        "\n Ticket cost: £" + rs.getString("show_ticketPrice") + 
                         "\n ID: " + rs.getInt("perfID") + "]\n");
                 
                 // Create a performance object and initialize variables
