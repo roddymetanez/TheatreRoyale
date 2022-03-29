@@ -133,9 +133,6 @@ public class Theatre {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-       
-        String date_time = "11/27/2020 05:35:00";
-        SimpleDateFormat dateParser = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
         
         addToBasket(performancsInSearch);
         dataAccess.close(); // Close the connection to the database
