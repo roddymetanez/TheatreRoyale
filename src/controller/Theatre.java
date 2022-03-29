@@ -186,7 +186,7 @@ public class Theatre {
                          "\n [Date: " + rs.getString("perf_date") + "]" +
                          "\n [Genre: " + rs.getString("show_genre") +
                          "\t Language: " + rs.getString("primary_language") +
-                         "\t Ticket cost: £" + rs.getString("show_ticketPrice") + "]" + 
+                         "\t Ticket cost: ï¿½" + rs.getString("show_ticketPrice") + "]" + 
                          "\n [ID: " + rs.getInt("perfID") + "]\n");
 
 				// Create a performance object and initialize variables
@@ -252,10 +252,9 @@ public class Theatre {
 				patron.setID(rs.getInt("customerID"));
 			}
 		}catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("Failed to register.");
+            registerCustomer();
 		}
-		
-		System.out.print(patron.getID());
 	}
 
 	/**
