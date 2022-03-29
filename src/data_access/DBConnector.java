@@ -10,11 +10,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.nio.file.Files;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * DBConnector provides an interface to the Database.
@@ -72,9 +68,10 @@ public class DBConnector {
     
     public ResultSet runCall(CallableStatement cst) {
         try {
+        	ResultSet results;
             boolean hadResults = cst.execute();
             if (hadResults) {
-                ResultSet results = cst.getResultSet();
+                results = cst.getResultSet();
                 if (results != null) {
                     int rowcount = 0;
                     if (results.last()) {
@@ -94,7 +91,6 @@ public class DBConnector {
                     System.out.println(cst.toString() + "\nUpdate count:"+ cst.getUpdateCount());
                 return null;
             }
-            return results;
         } catch (SQLException e) {
             System.out.println(cst.toString() + "\n failed to run.");
             System.err.println(e.toString());

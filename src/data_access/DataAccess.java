@@ -13,6 +13,7 @@ public class DataAccess {
     private final String GET_SHOWS = "getShows";
     private final String GET_SHOW_BY_DATE = "getShowByDate";
     private final String GET_SHOW_BY_NAME = "getShowByName";
+    private final String GET_SHOW_BY_PERF_ID = "getShowByPerfID";
     private final String REGISTER_CUSTOMER = "registerCustomer";
     private final String GET_AVAILABLE_SEATS = "getAvailableSeats";
     private final String UPDATE_AVAILABLE_SEATS = "updateAvailableSeats";
@@ -73,7 +74,6 @@ public class DataAccess {
         ArrayList<String> params = new ArrayList<String>();
         params.add(date);
         return db.callNString(query, params);
-		// TODO add cast to the SQL to enforce conversion of YYYYMMDD into datetime
 	}
 
 	/**
