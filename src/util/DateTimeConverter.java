@@ -6,54 +6,64 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateTimeConverter {
+	private SimpleDateFormat DDMMYY_DateType = new SimpleDateFormat("dd-MM-yy");
+	private SimpleDateFormat YYYYMMDD_DateType = new SimpleDateFormat("yyyy-MM-dd");
+	private DateFormat YYYYMMDD_DateFmt = YYYYMMDD_DateType;
+	private DateFormat DDMMYYDateFmt = DDMMYY_DateType;
 
 	public DateTimeConverter() {
 		// empty constructor
 	}
 
 	/**
-	 * Date parser - String into date
+	 * Date parser - String of YY-MM-DD into String of DD-MM-YY and vice versa
 	 *
 	 * @param strDate
 	 * @return Date format
 	 * @throws ParseException
 	 */
-	public Date stringToDate(String strDate) throws ParseException {
-		Date date1 = null;
-		date1 = new SimpleDateFormat("dd/MM/yyyy").parse(strDate);
-		return date1;
+	public String stringToDate(String strDate) throws ParseException {
+		if (strDate.isEmpty()) {
+			return null;
+		}
+		if (strDate.length() > 8) {
+			return YYYYMMDD_to_DDMMYY_Date(strDate).toString();
+		}
+		if (strDate.length() <= 8) {
+			return DDMMYY_to_YYYYMMDD_Date(strDate).toString();
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
-	 * Sql date parser - String into SQL date to match the tables
-	 *
+	 * Sql date parser - YYYYMMDD date to match the tables DD - MM - YY DD
+	 * 
 	 * @param strDate
 	 * @return
 	 * @throws ParseException
 	 */
-	public static SimpleDateFormat stringToSqLDate(String strDate) throws ParseException {
-		SimpleDateFormat date1 = null;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-		DateFormat date = DateFormat.getDateInstance();
-		// LocalDateTime date = sdf.parse(strDate) parse(strDate); // Deleted as not
-		// sure if required
-		System.out.println(date);
-		// Date sqlDate = new Date(date.getTime());
-		return sdf;
+	public String YYYYMMDD_to_DDMMYY_Date(String strDate) throws ParseException {
+		Date tmpDate = YYYYMMDD_DateFmt.parse(strDate);
+		String convDateStr = DDMMYYDateFmt.format(tmpDate);
+		return convDateStr;
 	}
 
-//	public SimpleDateFormat stringToCalendar(String strDate) throws ParseException {
-//
-//		//https://stackoverflow.com/questions/29750861/convert-between-localdate-and-sql-date
-//
-//		strDate.getTimestamp("value").toLocalDateTime()
-//
-//
-//
-//		sql.Date.toLocalDate
-//		time.Calendar calendar = Calendar.getInstance();
-//		Date newDate = calendar.setTime(strDate);
-//
-//	}
+	/**
+	 * Sql date parser - DDMMYY into String date to match the tables DD - MM - YY DD
+	 * 
+	 * @param strDate
+	 * @return
+	 * @throws ParseException
+	 */
+	public String DDMMYY_to_YYYYMMDD_Date(String strDate) throws ParseException {
+		Date tmpDate = DDMMYY_DateType.parse(strDate);
+		String convDateStr = YYYYMMDD_DateType.format(tmpDate);
+		// This is a kludge as the proper way to do it seems very complex
+		// https://stackoverflow.com/a/10732308/14775100
+		convDateStr.replaceFirst("-(\\d{2})$", "-20$1");
+		return convDateStr;
 
+	}
 }

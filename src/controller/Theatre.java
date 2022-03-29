@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
@@ -17,24 +18,28 @@ public class Theatre {
 	public final static int seatsStalls = 120;
 
 	private DataAccess dataAccess;
+	private ArrayList<Performance> performancesInSearch = new ArrayList<>(); // All performances found in this search
+	private boolean testMode = false; // result
+	// will be stored here
 
 	private final InputReader inputReader;
 
 	// The patron that is currently using the application
 	private Patron patron;
-	private DateTimeConverter dtConv;
 
 	/**
 	 * Theatre constructor Initialtizes global variables and calls
 	 * displayInterface() to print out the main menu
 	 */
-	public Theatre() {
+	public Theatre(boolean testMode) {
+		this.testMode = testMode;
 		this.dataAccess = new DataAccess();
 		this.inputReader = new InputReader();
 		this.patron = new Patron();
-		this.dtConv = new DateTimeConverter();
 
-		displayInterface();
+		if (!testMode) {
+			displayInterface();
+		}
 	}
 
 	/**
@@ -74,11 +79,21 @@ public class Theatre {
 			// Switch the option and call the correct method, or exit.
 			dataAccess = new DataAccess(); // Reopen the database connection
 			switch (option) {
-			case 1 -> browseShows();
-			case 2 -> findShowByName();
-			case 3 -> findShowsByDate();
-			case 4 -> printBasketMenu();
-			case 5 -> exit = true;
+			case 1:
+				browseShows();
+				break;
+			case 2:
+				findShowByName();
+				break;
+			case 3:
+				findShowsByDate();
+				break;
+			case 4:
+				printBasketMenu();
+				break;
+			case 5:
+				exit = true;
+				break;
 			}
 		}
 		while (!exit);
@@ -114,11 +129,50 @@ public class Theatre {
 	 * pass them to the printResults method to print them to the console.
 	 */
 	private void findShowsByDate() {
-		// Method to be updated to agree with the new date/time format
-		String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for [dd-MM-yy]\n> ");
-		ResultSet rs = dataAccess.getShowByDate(date.toString());
 
+		DateTimeConverter findByDate = new DateTimeConverter();
+//		String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for \t [dd-MM-yy]\n> ");
+		String date = null;
+		try {
+			date = findByDate.stringToDate(
+					inputReader.getNextText("\nEnter the date of which you'd like to see shows for \t [dd-MM-yy]\n> "));
+			ResultSet rs = dataAccess.getShowByDate(date);
+			printResults(rs);
+		}
+		catch (ParseException improperlyFormattedDate) {
+			improperlyFormattedDate.printStackTrace();
+		}
+	}
+
+	/**
+	 * Utility testing method to check for selection by date method
+	 * 
+	 * @param testDate
+	 */
+	public void findShowsByDate_Test(String testDate) {
+
+		DateTimeConverter findByDate = new DateTimeConverter();
+		try {
+			testDate = findByDate.stringToDate(testDate);
+		}
+		catch (ParseException improperlyFormattedDate) {
+			improperlyFormattedDate.printStackTrace();
+		}
+		// System.out.println("findShowsByDate_Test " + testDate);
+		ResultSet rs = dataAccess.getShowByDate(testDate);
 		printResults(rs);
+
+	}
+
+	/**
+	 * Utility testing method to get individual performances of shows
+	 *
+	 * @param performance ID
+	 */
+	public void getShowByPerformanceID(int testPerfID) {
+		ResultSet rs = dataAccess.getShowByPerfID(testPerfID);
+		printResults(rs);
+
 	}
 
 	/**
@@ -133,8 +187,6 @@ public class Theatre {
 	 * @param rs ResultSet to print
 	 */
 	private boolean printResults(ResultSet rs) {
-		ArrayList<Performance> performancsInSearch = new ArrayList<>(); // All performances found in this search result
-																		// will be stored here
 		try {
 			while (rs.next()) {
 				// Iterate through all elements within the ResultSet and print them to the
@@ -147,23 +199,25 @@ public class Theatre {
 
 				// Create a performance object and initialize variables
 				Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),
-						rs.getDouble("show_ticketPrice"));
+						rs.getDouble("show_ticketPrice"), rs.getString("show_title"));
 				// perfID needs to be returned from the SQL procedure
 
-				performancsInSearch.add(performance);
+				performancesInSearch.add(performance);
 			}
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		addToBasket(performancsInSearch);
-		dataAccess.close(); // Close the connection to the database
+		if (!testMode) {
+			addToBasket(performancesInSearch);
+			dataAccess.close(); // Close the connection to the database
+//			return true;
+		}
 		return true;
 	}
 
 	/**
-	 * Promts the user to enter their details in order to use the checkout system
+	 * Prompts the user to enter their details in order to use the checkout system
 	 * Registers the customer in the database, as well and initalizing the patron
 	 * object properties.
 	 *
@@ -178,11 +232,13 @@ public class Theatre {
 		String postalCode = inputReader.getNextText("> Enter your postal code..");
 
 		// Attempts to store the details in the database
-		try {
-			dataAccess.registerCustomer(fname, lname, houseNo, streetName, postalCode);
-		}
-		catch (SQLException e) {
+		int CID = -1;
+		CID = dataAccess.registerCustomer(fname, lname, houseNo, streetName, postalCode);
+		if (CID < 0) {
+			// The customer could NOT be registered, return to the main menu - The customer
+			// MUST be registered to continue here.
 			System.out.println("Failed to register.");
+			return;
 		}
 
 		// Initialize patron variables with the values entered above
@@ -192,16 +248,17 @@ public class Theatre {
 		patron.setAddress_st(streetName);
 		patron.setPost_code(postalCode);
 
-		// Retrive the information for this customer and store the ID inside the object.
-
+		// Retrieve the information for this customer and store the ID inside the
+		// object.
 		// Below cannot be used until users details can be stored
 
-		// ResultSet rs = dataAccess.getCustomerData(lname);
-//    	try {
-//    		patron.setID(rs.getInt("customerID"));
-//    	} catch(SQLException e) {
-//    		e.printStackTrace();
-//    	}
+		ResultSet rs = dataAccess.getCustomerData(CID);
+		try {
+			patron.setID(rs.getInt("customerID"));
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -225,7 +282,7 @@ public class Theatre {
 
 		// Ensure the performanceID is within the users search results
 		for (Performance performance : performanceIDs) {
-			if (performance.getID() == idSelected) {
+			if (performance.getPerfID() == idSelected) {
 				// ID user entered is equal to this performance, add it to basket and return
 				patron.addToBasket(performance);
 				return;
@@ -256,7 +313,7 @@ public class Theatre {
 		System.out.println("| 1 - Remove a ticket from basket         |");
 		System.out.println("| 2 - Checkout your basket                |");
 		System.out.println("| 3 - Return to main menu                 |");
-		System.out.println("| 						                  |");
+		System.out.println("|                                           |");
 		System.out.println("===========================================");
 
 		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
@@ -279,5 +336,13 @@ public class Theatre {
 
 	public int getSeatsStalls() {
 		return seatsStalls;
+	}
+
+	public ArrayList<Performance> getPerformancesInSearch() {
+		return performancesInSearch;
+	}
+
+	public void setPerformancesInSearch(ArrayList<Performance> performancesInSearch) {
+		this.performancesInSearch = performancesInSearch;
 	}
 }

@@ -76,6 +76,7 @@ public class DataAccess {
 		ArrayList<String> params = new ArrayList<>();
 		params.add(date);
 		return db.callNString(query, params);
+		// TODO add cast to the SQL to enforce conversion of YYYYMMDD into datetime
 	}
 
 	/**

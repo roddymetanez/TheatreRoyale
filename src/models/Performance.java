@@ -4,15 +4,16 @@ public class Performance {
 
 	private int perfID;
 	private int showID;
-
+	private String title;
 	private Double price;
 	private String startDateTime;
 
-	public Performance(int perfID, String date, double price) {
+	public Performance(int perfID, String date, double price, String title) {
 
 		this.perfID = perfID;
 		this.startDateTime = date;
 		this.price = price;
+		this.setTitle(title);
 	}
 
 	public int getPerfID() {
@@ -45,6 +46,20 @@ public class Performance {
 
 	public void setShowID(int showID) {
 		this.showID = showID;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	/**
