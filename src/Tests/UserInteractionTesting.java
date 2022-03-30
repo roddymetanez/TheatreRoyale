@@ -40,15 +40,9 @@ class UserInteractionTesting {
 		nowNow = LocalDateTime.now().toString();
 		testTheatre.getShowByPerformanceID(99990999);
 		performancesInSearch = testTheatre.getPerformancesInSearch();
-//		System.out.println("number: " + performancesInSearch.size());
 		testPerformance = performancesInSearch.get(0);
 		albert = new Patron();
 		testPerformance.getPrice();
-//		testSeats = new ArrayList<>();
-//		for (int i = 0; i < 3; i++) {
-//			testSeat = new Seat(testPerformance, seatLoc.Stall, 0);
-//			testSeats.add(testSeat);
-//		}
 		testTicket = new Ticket(testPerformance, albert);
 		testTicket.addSeatsToTicket(5, 3);
 		testTicket.calcCost();
