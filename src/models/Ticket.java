@@ -69,7 +69,7 @@ public class Ticket {
 		System.out.println("|  Please select the seats you want       |");
 		System.out.println("|                                         |");
 		System.out.println("|  How many regular and concessionary     |");
-		System.out.println("|  tickets would you like? " + tot + " left          |");
+		System.out.println("|  tickets would you like? " + tot + " left       |");
 		System.out.println("|                                         |");
 		System.out.println("|  How many regular tickets?              |");
 		System.out.println("|                                         |");
@@ -81,7 +81,7 @@ public class Ticket {
 		System.out.println("|  Please select the seats you want       |");
 		System.out.println("|                                         |");
 		System.out.println("|  How many regular and concessionary     |");
-		System.out.println("|  tickets would you like? " + tot + " left          |");
+		System.out.println("|  tickets would you like? " + tot + " left       |");
 		System.out.println("|                                         |");
 		System.out.println("|  How many concessionary tickets?        |");
 		System.out.println("|                                         |");
@@ -97,7 +97,7 @@ public class Ticket {
 		int[] seatTkts = { optionReg, optionConc };
 		int tot = optionConc + optionReg;
 		if (performance.getStallSeats() < 1 || performance.getCircleSeats() < 1 - tot) {
-			System.out.println("There are not enougn seats left");
+			System.out.println("There are not enough seats left");
 			return false;
 		}
 		for (int tktype : seatTkts) {
