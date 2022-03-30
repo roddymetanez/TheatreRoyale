@@ -269,8 +269,7 @@ public class Theatre {
 		int idSelected = 0;
 		try {
 			// ID to be selected from the performanceIDs ArrayLisy
-			idSelected = inputReader.getNextInt(
-					"> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n");
+			idSelected = Integer.valueOf(inputReader.getNextText("> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n"));
 		}
 		catch (NumberFormatException e) {
 			System.out.println("Returning to the menu");
