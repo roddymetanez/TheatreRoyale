@@ -135,6 +135,7 @@ public class Patron {
 			System.out.println("\nPlease try again as seats are limited for that performance");
 			return false;
 		}
+	}
 	// Method needs to be updated to ensure A: Ticket is available for purchase/not
 	// sold out, and B: Check the performanceID is valid.
 	public void addToBasket(Performance performance) {

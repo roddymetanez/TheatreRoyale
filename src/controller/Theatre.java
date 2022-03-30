@@ -54,7 +54,6 @@ public class Theatre {
 		int option = 0;
 		boolean exit = false;
 		do {
-
 			// Interface displayed to the user through the console window
 			System.out.println("===========================================");
 			System.out.println("| Enter the number to select an option..  |");
@@ -74,21 +73,20 @@ public class Theatre {
 			}
 			catch (InputMismatchException e) {
 				System.out.println("Error: You must enter a digit");
-				displayInterface();
-        return;
+				return;
 			}
 			// Switch the option and call the correct method, or exit.
 			dataAccess = new DataAccess(); // Reopen the database connection
 			switch (option) {
-			case 1 -> browseShows();
-			case 2 -> findShowByName();
-			case 3 -> findShowsByDate();
-			case 4 -> printBasketMenu();
-			case 5 -> exit = true;
+				case 1 -> browseShows();
+				case 2 -> findShowByName();
+				case 3 -> findShowsByDate();
+				case 4 -> printBasketMenu();
+				case 5 -> exit = true;
 			}
 		}
 		while (!exit);
-
+		
 		System.out.println("Closing..");
 		System.exit(0); // Exit the program
 	}
@@ -180,7 +178,7 @@ public class Theatre {
 		try {
 			if (rs.next() == false) {
 				System.out.println("No show of that record");
-				displayInterface();
+				return;
 			}
 			else {
 				do {
@@ -212,14 +210,10 @@ public class Theatre {
 		if (!testMode) {
 			if (selectForBasket(performancesInSearch)) {
 				dataAccess.close(); // Close the connection to the database
-				displayInterface(); // Return
-        return;
+				return;
 			}
 		}
 		dataAccess.close(); // Close the connection to the database
-		if (!testMode) {
-			displayInterface(); // Return
-		}
 	}
 
 	/**
@@ -282,8 +276,7 @@ public class Theatre {
 		int idSelected = 0;
 		try {
 			// ID to be selected from the performanceIDs ArrayLisy
-			idSelected = Integer.valueOf(inputReader.getNextInt(
-					"> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n"));
+			idSelected = Integer.valueOf(inputReader.getNextInt("> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n"));
 		}
 		catch (NumberFormatException e) {
 			System.out.println("Returning to the menu");
