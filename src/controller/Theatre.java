@@ -323,13 +323,8 @@ public class Theatre {
 		switch (option) {
 		case 1:
 			patron.removeFromBasketByID(
-					inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n")); // Remove
-																														// a
-																														// ticket
-																														// from
-																														// the
-																														// users
-																														// basket
+					// Remove a ticket from the users basket
+					inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n"));
 			break;
 		case 2:
 			if (patron.getfName() == null) { // Check if the current user has already entered their details
