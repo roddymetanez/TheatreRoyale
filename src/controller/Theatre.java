@@ -79,11 +79,11 @@ public class Theatre {
 			// Switch the option and call the correct method, or exit.
 			dataAccess = new DataAccess(); // Reopen the database connection
 			switch (option) {
-                 case 1 -> browseShows();
-                 case 2 -> findShowByName();
-                 case 3 -> findShowsByDate();
-                 case 4 -> printBasketMenu();
-                 case 5 -> exit = true;
+			case 1 -> browseShows();
+			case 2 -> findShowByName();
+			case 3 -> findShowsByDate();
+			case 4 -> printBasketMenu();
+			case 5 -> exit = true;
 			}
 		}
 		while (!exit);
@@ -181,17 +181,16 @@ public class Theatre {
 			while (rs.next()) {
 				// Iterate through all elements within the ResultSet and print them to the
 				// console.
-				System.out.println("\n[Name: " + rs.getString("show_title") +
-                        "\n [Description: " + rs.getString("show_description") + "]" +
-                         "\n [Date: " + rs.getString("perf_date") + "]" +
-                         "\n [Genre: " + rs.getString("show_genre") +
-                         "\t Language: " + rs.getString("primary_language") +
-                         "\t Ticket cost: �" + rs.getString("show_ticketPrice") + "]" + 
-                         "\n [ID: " + rs.getInt("perfID") + "]\n");
+				System.out.println("\n[Name: " + rs.getString("show_title") + "\n [Description: "
+						+ rs.getString("show_description") + "]" + "\n [Date: " + rs.getString("perf_date") + "]"
+						+ "\n [Genre: " + rs.getString("show_genre") + "\t Language: "
+						+ rs.getString("primary_language") + "\t Ticket cost: �" + rs.getString("show_ticketPrice")
+						+ "]" + "\n [ID: " + rs.getInt("perfID") + "]\n");
 
 				// Create a performance object and initialize variables
 				Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),
-						rs.getDouble("show_ticketPrice"), rs.getString("show_title"));
+						rs.getDouble("show_ticketPrice"), rs.getString("show_title"), rs.getInt("seats_circle"),
+						rs.getInt("seatsStalls"));
 				// perfID needs to be returned from the SQL procedure
 
 				performancesInSearch.add(performance);
@@ -202,10 +201,14 @@ public class Theatre {
 		}
 
 		if (!testMode) {
-			addToBasket(performancesInSearch);
-			dataAccess.close(); // Close the connection to the database
+			boolean tktSale = selectForBasket(performancesInSearch);
+			if (tktSale) {
+				dataAccess.close(); // Close the connection to the database
+				return true;
+			}
 //			return true;
 		}
+		dataAccess.close(); // Close the connection to the database
 		return true;
 	}
 
@@ -246,14 +249,15 @@ public class Theatre {
 		// Below cannot be used until users details can be stored
 
 		ResultSet rs = dataAccess.getCustomerData(CID);
-		
+
 		try {
 			if (rs.next()) {
 				patron.setID(rs.getInt("customerID"));
 			}
-		}catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			System.out.println("Failed to register.");
-            registerCustomer();
+			registerCustomer();
 		}
 	}
 
@@ -263,8 +267,9 @@ public class Theatre {
 	 * search results ArrayList to the users basket
 	 *
 	 * @param performanceIDs search results from last search
+	 * @return
 	 */
-	private void addToBasket(ArrayList<Performance> performanceIDs) {
+	private boolean selectForBasket(ArrayList<Performance> performanceIDs) {
 		int idSelected = 0;
 		try {
 			// ID to be selected from the performanceIDs ArrayLisy
@@ -273,22 +278,23 @@ public class Theatre {
 		}
 		catch (NumberFormatException e) {
 			System.out.println("Returning to the menu");
-			return;
+			return false; // fail
 		}
 
 		// Ensure the performanceID is within the users search results
 		for (Performance performance : performanceIDs) {
 			if (performance.getPerfID() == idSelected) {
 				// ID user entered is equal to this performance, add it to basket and return
-				patron.addToBasket(performance);
-				return;
+				boolean tktSale = patron.addToBasket(performance);
+
+				return true; // success
 			}
 		}
 		// ID user entered did not equal any of the performanceIDs within their search
 		// results
 		System.out.println("There is no performance with this ID in your search results..");
-		addToBasket(performanceIDs); // Recall this method to prompt the user to enter another ID or return to the
-										// main menu
+		selectForBasket(performanceIDs); // Recall this method to prompt the user to enter another ID or return to the
+		return false; // main menu, but never used
 	}
 
 	/**
@@ -316,7 +322,14 @@ public class Theatre {
 		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
 		switch (option) {
 		case 1:
-			patron.removeFromBasketByID(inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n")); // Remove a ticket from the users basket
+			patron.removeFromBasketByID(
+					inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n")); // Remove
+																														// a
+																														// ticket
+																														// from
+																														// the
+																														// users
+																														// basket
 			break;
 		case 2:
 			if (patron.getfName() == null) { // Check if the current user has already entered their details
@@ -327,9 +340,9 @@ public class Theatre {
 		}
 	}
 
-    public int getSeatsCircle() {
-        return seatsCircle;
-    }
+	public int getSeatsCircle() {
+		return seatsCircle;
+	}
 
 	public int getSeatsStalls() {
 		return seatsStalls;
@@ -341,5 +354,14 @@ public class Theatre {
 
 	public void setPerformancesInSearch(ArrayList<Performance> performancesInSearch) {
 		this.performancesInSearch = performancesInSearch;
+	}
+
+	/**
+	 * gets the patron for the purposes of basket filling
+	 * 
+	 * @return the Patron
+	 */
+	public Patron getPatron() {
+		return patron;
 	}
 }

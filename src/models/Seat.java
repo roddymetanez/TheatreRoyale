@@ -53,4 +53,10 @@ public class Seat {
 		seatLoc = seatType;
 	}
 
+	/**
+	 * @return the concession
+	 */
+	public boolean isConcession() {
+		return concession;
+	}
 }

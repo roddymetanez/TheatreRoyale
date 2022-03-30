@@ -64,6 +64,10 @@ public class DateTimeConverter {
 		// https://stackoverflow.com/a/10732308/14775100
 		convDateStr.replaceFirst("-(\\d{2})$", "-20$1");
 		return convDateStr;
+	}
 
+	public Date getDateFromSql(String dateStr) throws ParseException {
+		Date tmpDate = YYYYMMDD_DateFmt.parse(dateStr);
+		return tmpDate;
 	}
 }

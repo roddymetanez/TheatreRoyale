@@ -7,13 +7,17 @@ public class Performance {
 	private String title;
 	private Double price;
 	private String startDateTime;
+	private int stallSeats;
+	private int circleSeats;
 
-	public Performance(int perfID, String date, double price, String title) {
+	public Performance(int perfID, String date, double price, String title, int stallSeats, int circleSeats) {
 
 		this.perfID = perfID;
 		this.startDateTime = date;
 		this.price = price;
 		this.setTitle(title);
+		this.stallSeats = stallSeats;
+		this.circleSeats = circleSeats;
 	}
 
 	public int getPerfID() {
@@ -60,6 +64,34 @@ public class Performance {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/**
+	 * @return the stallSeats
+	 */
+	public int getStallSeats() {
+		return stallSeats;
+	}
+
+	/**
+	 * @param stallSeats the stallSeats to set
+	 */
+	public void setStallSeats(int stallSeats) {
+		this.stallSeats = stallSeats;
+	}
+
+	/**
+	 * @return the circleSeats
+	 */
+	public int getCircleSeats() {
+		return circleSeats;
+	}
+
+	/**
+	 * @param circleSeats the circleSeats to set
+	 */
+	public void setCircleSeats(int circleSeats) {
+		this.circleSeats = circleSeats;
 	}
 
 	/**

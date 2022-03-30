@@ -49,8 +49,7 @@ class UserInteractionTesting {
 			testSeats.add(testSeat);
 		}
 		testTicket = new Ticket(testPerformance, albert);
-		testTicket.setSeatingList(testSeats);
-		testTicket.ReComputeCost();
+		testTicket.calcCost();
 	}
 
 	@AfterEach
@@ -86,8 +85,42 @@ class UserInteractionTesting {
 	}
 
 	@Test
+	public void addTicketsToBasketTest() {
+		// get the patron
+		Patron albert = testTheatre.getPatron();
+		// get the performance
+		albert.selectForBasket(testTicket);
+		// get the the seats
+		testTicket.addSeatsToTicket(5, 3);
+		// get the price on the ticket
+		testTicket.calcCost();
+		// say no to postage
+		testTicket.checkPostage(testPerformance);
+		testTicket.acceptPostage();
+		// process basket
+		albert.acceptTicketToBasket(testTicket);
+		// end the test
+		double tmpTotal = albert.getBasket().getTotal();
+
+		assertEquals(0, tmpTotal);
+
+	}
+
+	@Test
+	public void subtractTicketsFromBasket() {
+		// get the patron
+		// get the performance
+		// get the the seats
+		// get the price on the ticket
+		// say no to postage
+		// // remove tickets
+		// process basket
+		// end the test
+	}
+
+	@Test
 	public void postageTest() {
-//		testPerformance.setStartDateTime(nowNow);
+		testPerformance.setStartDateTime(nowNow);
 		assertEquals(0, testTicket.getPostage());
 
 	}
