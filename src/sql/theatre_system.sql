@@ -124,13 +124,13 @@ BEGIN
     from Show_details as s right join Performance as p
     on s.SID = p.SID 
      where  
-     perf_date > (SELECT STR_TO_DATE(adate,'%Y-%m-%d')) AND perf_date < (SELECT STR_TO_DATE(adate,'%Y-%m-%d')) + INTERVAL 1 DAY
+     perf_date > ((SELECT STR_TO_DATE(adate,'%Y-%m-%d')) - INTERVAL 1 HOUR) AND perf_date < ((SELECT STR_TO_DATE(adate,'%Y-%m-%d')) + INTERVAL 1 DAY)
      order by p.perf_date;
 
 END;$$
 DELIMITER ;
 
--- CALL getShowByDate('2022-04-08');
+ -- CALL getShowByDate('2022-04-08');
 
 DROP PROCEDURE IF EXISTS getShowByPerfID; -- Rory added this bit
 DELIMITER %
