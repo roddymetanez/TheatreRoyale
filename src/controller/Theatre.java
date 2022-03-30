@@ -75,6 +75,7 @@ public class Theatre {
 			catch (InputMismatchException e) {
 				System.out.println("Error: You must enter a digit");
 				displayInterface();
+        return;
 			}
 			// Switch the option and call the correct method, or exit.
 			dataAccess = new DataAccess(); // Reopen the database connection
@@ -148,7 +149,6 @@ public class Theatre {
 		catch (ParseException improperlyFormattedDate) {
 			improperlyFormattedDate.printStackTrace();
 		}
-		System.out.println("findShowsByDate_Test " + testDate);
 		ResultSet rs = dataAccess.getShowByDate(testDate);
 		printResults(rs);
 
@@ -213,14 +213,13 @@ public class Theatre {
 			if (selectForBasket(performancesInSearch)) {
 				dataAccess.close(); // Close the connection to the database
 				displayInterface(); // Return
+        return;
 			}
-//			return true;
 		}
 		dataAccess.close(); // Close the connection to the database
 		if (!testMode) {
 			displayInterface(); // Return
 		}
-
 	}
 
 	/**
@@ -260,7 +259,6 @@ public class Theatre {
 		// Below cannot be used until users details can be stored
 
 		ResultSet rs = dataAccess.getCustomerData(CID);
-
 		try {
 			if (rs.next()) {
 				patron.setID(rs.getInt("customerID"));
@@ -330,9 +328,7 @@ public class Theatre {
 		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
 		switch (option) {
 		case 1:
-			patron.removeFromBasketByID(
-					// Remove a ticket from the users basket
-					inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n"));
+			patron.removeFromBasketByID(inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n")); // Remove a ticket from the users basket
 			break;
 		case 2:
 			if (patron.getfName() == null) { // Check if the current user has already entered their details
