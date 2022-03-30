@@ -2,6 +2,8 @@ package models;
 
 import java.util.ArrayList;
 
+import util.InputReader;
+
 public class Patron {
 
 	private int id;
@@ -15,10 +17,12 @@ public class Patron {
 
 	private double balance;
 
+	private final InputReader inputReader;
 	private Basket usersBasket;
 
 	public Patron() {
 		// Constructor
+		this.inputReader = new InputReader();
 		this.usersBasket = new Basket();
 		this.balance = 125.00; // TODO, why this value? All about the benjies...
 	}
@@ -71,21 +75,54 @@ public class Patron {
 		this.post_code = post_code;
 	}
 
+	/**
+	 * @return the balance
+	 */
+	public double getBalance() {
+		return balance;
+	}
+
+	/**
+	 * @param balance the balance to set
+	 */
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	/**
+	 * @return the usersBasket
+	 */
+	public Basket getBasket() {
+		return usersBasket;
+	}
+
+	/**
+	 * @param usersBasket the usersBasket to set
+	 */
+	public void setBasket(Basket usersBasket) {
+		this.usersBasket = usersBasket;
+	}
+
 	// Method needs to be updated to ensure A:
 	// Ticket is available for purchase/not
 	// sold out, and
 	// B: Check the performanceID is valid.
-	public boolean addToBasket(Performance performance) {
+	public boolean holdForBasket(Performance performance) {
 		selectForBasket(ticket = createTicket(performance));
 		boolean tktSale = ticket.setSeatingList();
 		if (tktSale) {
 			System.out.println("\nSuccessfully added performance [" + performance.getPerfID() + "] to your basket\n");
 			ticket.calcCost();
 			if (ticket.checkPostage(performance)) {
-				System.out.println("\nWould you like postage for your tickets?");
-				ticket.acceptPostage();
+				String postAccept = inputReader.getNextText("\nWould you like postage for your tickets?");
+				if (postAccept.toLowerCase() == "y") {
+					ticket.acceptPostage();
+				}
+				String ticketAccept = inputReader.getNextText("\nComplete sale?");
+				if (postAccept.toLowerCase() == "y") {
+					acceptTicketToBasket(ticket);
+				}
 			}
-
 			return true;
 		}
 		else {
@@ -102,9 +139,7 @@ public class Patron {
 	 */
 	private Ticket createTicket(Performance performance) {
 		ticket = new Ticket(performance, this);
-
 		ticket.setCost(performance.getPrice());
-
 		return ticket;
 	}
 
@@ -126,13 +161,24 @@ public class Patron {
 	/**
 	 * Method to be updated
 	 */
-	public void checkoutBasket() {
-
+	public void checkoutBasket(boolean menu) {
+		if (menu) {
+			double bsktPrice = usersBasket.getBasketTotalCost();
+			printBasket();
+			System.out.println("===========================================");
+			System.out.println("|                                         |");
+			System.out.println("|                                         |");
+			System.out.println("|                                         |");
+			System.out.println("|                                         |");
+			System.out.println("|                                         |");
+			System.out.println("|                                         |");
+			System.out.println("===========================================");
+		}
 	}
 
 	// Method to be updated
 	/**
-	 * Prints on the size of the users basket, aswell as the contents
+	 * Prints on the size of the users basket, as well as the contents
 	 */
 	public void printBasket() {
 		ArrayList<Ticket> inBasket = usersBasket.getTicketsInBasket();
@@ -144,7 +190,9 @@ public class Patron {
 			return;
 		}
 		inBasket.forEach(ticket -> {
-			System.out.println("Performance ID: " + ticket.getPerformanceID());
+			System.out.println("Performance ID: " + ticket.getPerformanceID() + "\t Show Title: "
+					+ ticket.getPerformance().getTitle() + "\t Show Time: " + ticket.getPerformance().getStartDateTime()
+					+ "\t Price: " + ticket.getPerformance().getPrice());
 		});
 	}
 
@@ -153,13 +201,11 @@ public class Patron {
 	 * 
 	 * @param testTicket
 	 */
-	public void selectForBasket(Ticket testTicket) {
-
+	public void selectForBasket(Ticket ticket) {
 	}
 
-	public void acceptTicketToBasket(Ticket testTicket) {
-		// TODO Auto-generated method stub
-
+	public void acceptTicketToBasket(Ticket ticket) {
+		usersBasket.addToBasket(ticket);
 	}
 
 }

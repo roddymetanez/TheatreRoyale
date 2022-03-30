@@ -51,7 +51,7 @@ public class Theatre {
 	 * until the application is closed or exited with the menu option.
 	 */
 	private void displayInterface() {
-		int option;
+		int option = 0;
 		boolean exit = false;
 		do {
 
@@ -74,7 +74,7 @@ public class Theatre {
 			}
 			catch (InputMismatchException e) {
 				System.out.println("Error: You must enter a digit");
-				return;
+				displayInterface();
 			}
 			// Switch the option and call the correct method, or exit.
 			dataAccess = new DataAccess(); // Reopen the database connection
@@ -148,7 +148,7 @@ public class Theatre {
 		catch (ParseException improperlyFormattedDate) {
 			improperlyFormattedDate.printStackTrace();
 		}
-		// System.out.println("findShowsByDate_Test " + testDate);
+		System.out.println("findShowsByDate_Test " + testDate);
 		ResultSet rs = dataAccess.getShowByDate(testDate);
 		printResults(rs);
 
@@ -176,24 +176,33 @@ public class Theatre {
 	 *
 	 * @param rs ResultSet to print
 	 */
-	private boolean printResults(ResultSet rs) {
+	private void printResults(ResultSet rs) {
 		try {
-			while (rs.next()) {
-				// Iterate through all elements within the ResultSet and print them to the
-				// console.
-				System.out.println("\n[Name: " + rs.getString("show_title") + "\n [Description: "
-						+ rs.getString("show_description") + "]" + "\n [Date: " + rs.getString("perf_date") + "]"
-						+ "\n [Genre: " + rs.getString("show_genre") + "\t Language: "
-						+ rs.getString("primary_language") + "\t Ticket cost: �" + rs.getString("show_ticketPrice")
-						+ "]" + "\n [ID: " + rs.getInt("perfID") + "]\n");
+			if (rs.next() == false) {
+				System.out.println("No show of that record");
+				displayInterface();
+			}
+			else {
+				do {
 
-				// Create a performance object and initialize variables
-				Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),
-						rs.getDouble("show_ticketPrice"), rs.getString("show_title"), rs.getInt("seats_circle"),
-						rs.getInt("seatsStalls"));
-				// perfID needs to be returned from the SQL procedure
+					// while (rs.next()) {
+					// Iterate through all elements within the ResultSet and print them to the
+					// console.
+					System.out.println("\n[Name: " + rs.getString("show_title") + "\n [Description: "
+							+ rs.getString("show_description") + "]" + "\n [Date: " + rs.getString("perf_date") + "]"
+							+ "\n [Genre: " + rs.getString("show_genre") + "\t Language: "
+							+ rs.getString("primary_language") + "\t Ticket cost: �" + rs.getString("show_ticketPrice")
+							+ "]" + "\n [ID: " + rs.getInt("perfID") + "]\n");
 
-				performancesInSearch.add(performance);
+					// Create a performance object and initialize variables
+					Performance performance = new Performance(rs.getInt("perfID"), rs.getString("perf_date"),
+							rs.getDouble("show_ticketPrice"), rs.getString("show_title"), rs.getInt("seats_circle"),
+							rs.getInt("seats_stall"));
+					// perfID needs to be returned from the SQL procedure
+
+					performancesInSearch.add(performance);
+				}
+				while (rs.next());
 			}
 		}
 		catch (SQLException e) {
@@ -201,15 +210,17 @@ public class Theatre {
 		}
 
 		if (!testMode) {
-			boolean tktSale = selectForBasket(performancesInSearch);
-			if (tktSale) {
+			if (selectForBasket(performancesInSearch)) {
 				dataAccess.close(); // Close the connection to the database
-				return true;
+				displayInterface(); // Return
 			}
 //			return true;
 		}
 		dataAccess.close(); // Close the connection to the database
-		return true;
+		if (!testMode) {
+			displayInterface(); // Return
+		}
+
 	}
 
 	/**
@@ -285,9 +296,7 @@ public class Theatre {
 		for (Performance performance : performanceIDs) {
 			if (performance.getPerfID() == idSelected) {
 				// ID user entered is equal to this performance, add it to basket and return
-				boolean tktSale = patron.addToBasket(performance);
-
-				return true; // success
+				return patron.holdForBasket(performance);
 			}
 		}
 		// ID user entered did not equal any of the performanceIDs within their search
@@ -316,7 +325,6 @@ public class Theatre {
 		System.out.println("| 2 - Checkout your basket                |");
 		System.out.println("| 3 - Return to main menu                 |");
 		System.out.println("|                                         |");
-		System.out.println("|                                         |");
 		System.out.println("===========================================");
 
 		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
@@ -330,7 +338,7 @@ public class Theatre {
 			if (patron.getfName() == null) { // Check if the current user has already entered their details
 				registerCustomer(); // Prompt user to enter their details
 			}
-			patron.checkoutBasket(); // Empty method, to be implemented
+			patron.checkoutBasket(testMode); // Empty method, to be implemented
 			break;
 		}
 	}

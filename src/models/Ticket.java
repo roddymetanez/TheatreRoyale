@@ -3,10 +3,11 @@
  */
 package models;
 
-import java.time.LocalDate;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import models.Seat.seatLoc;
+import util.DateTimeConverter;
 import util.InputReader;
 
 public class Ticket {
@@ -18,6 +19,7 @@ public class Ticket {
 	private double cost;
 	private InputReader inputReader;
 	private final double PostFee = 1.00;
+	private DateTimeConverter dateTimeConverter;
 
 	public Ticket(Performance performance, Patron patron) {
 		this.performance = performance;
@@ -25,6 +27,9 @@ public class Ticket {
 		this.performanceID = performance.getPerfID();
 		this.inputReader = new InputReader();
 		this.setCustomerID(patron.getID());
+
+		seatingList = new ArrayList<>();
+		dateTimeConverter = new DateTimeConverter();
 
 	}
 
@@ -114,8 +119,7 @@ public class Ticket {
 		return seatLoc.Circle;
 	}
 
-	private Performance getPerformance() {
-		// TODO Auto-generated method stub
+	public Performance getPerformance() {
 		return performance;
 	}
 
@@ -154,10 +158,8 @@ public class Ticket {
 //		return null;
 //	}
 
-	public boolean checkPostage(Performance performance) {
-		String date = performance.getStartDateTime();
-		LocalDate sevenDaysHence = LocalDate.parse(date).plusDays(7);
-		return (sevenDaysHence.isAfter(LocalDate.now()));
+	public boolean checkPostage(Performance performance) throws ParseException {
+		return dateTimeConverter.compareDate7dyHence(performance.getStartDateTime());
 	}
 
 	public void acceptPostage() {
