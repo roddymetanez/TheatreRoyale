@@ -186,7 +186,7 @@ public class Theatre {
                          "\n [Date: " + rs.getString("perf_date") + "]" +
                          "\n [Genre: " + rs.getString("show_genre") +
                          "\t Language: " + rs.getString("primary_language") +
-                         "\t Ticket cost: �" + rs.getString("show_ticketPrice") + "]" + 
+                         "\t Ticket cost: £" + rs.getString("show_ticketPrice") + "]" + 
                          "\n [ID: " + rs.getInt("perfID") + "]\n");
 
 				// Create a performance object and initialize variables
@@ -268,8 +268,7 @@ public class Theatre {
 		int idSelected = 0;
 		try {
 			// ID to be selected from the performanceIDs ArrayLisy
-			idSelected = inputReader.getNextInt(
-					"> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n");
+			idSelected = Integer.valueOf(inputReader.getNextText("> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n"));
 		}
 		catch (NumberFormatException e) {
 			System.out.println("Returning to the menu");
