@@ -1,5 +1,6 @@
 package models;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import util.InputReader;
@@ -74,7 +75,7 @@ public class Patron {
 	public void setPost_code(String post_code) {
 		this.post_code = post_code;
 	}
-
+  
 	/**
 	 * @return the balance
 	 */
@@ -108,20 +109,25 @@ public class Patron {
 	// sold out, and
 	// B: Check the performanceID is valid.
 	public boolean holdForBasket(Performance performance) {
-		selectForBasket(ticket = createTicket(performance));
+		selectForBasket(ticket = createTicket(performance)); // Empty method
 		boolean tktSale = ticket.setSeatingList();
 		if (tktSale) {
-			System.out.println("\nSuccessfully added performance [" + performance.getPerfID() + "] to your basket\n");
 			ticket.calcCost();
-			if (ticket.checkPostage(performance)) {
-				String postAccept = inputReader.getNextText("\nWould you like postage for your tickets?");
-				if (postAccept.toLowerCase() == "y") {
-					ticket.acceptPostage();
+			try {
+				if (ticket.checkPostage(performance)) {
+					String postAccept = inputReader.getNextText("\nWould you like postage for your tickets? [Y = Yes, N = No]");
+					if (postAccept.equalsIgnoreCase("y")) {
+						ticket.acceptPostage();
+					}
+					String ticketAccept = inputReader.getNextText("\nComplete sale?  [Y = Yes, N = No]");
+					if (ticketAccept.equalsIgnoreCase("y")) {
+						System.out.println("\nSuccessfully added performance [" + performance.getPerfID() + "] to your basket\n");
+						acceptTicketToBasket(ticket);
+					}
 				}
-				String ticketAccept = inputReader.getNextText("\nComplete sale?");
-				if (postAccept.toLowerCase() == "y") {
-					acceptTicketToBasket(ticket);
-				}
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			return true;
 		}
@@ -129,6 +135,12 @@ public class Patron {
 			System.out.println("\nPlease try again as seats are limited for that performance");
 			return false;
 		}
+	}
+	// Method needs to be updated to ensure A: Ticket is available for purchase/not
+	// sold out, and B: Check the performanceID is valid.
+	public void addToBasket(Performance performance) {
+		usersBasket.addToBasket(createTicket(performance));
+		System.out.println("\nSuccessfully added performance [" + performance.getPerfID() + "] to your basket\n");
 	}
 
 	/**
@@ -150,11 +162,10 @@ public class Patron {
 	 * @return
 	 */
 	public void removeFromBasketByID(int perfID) {
-		if (usersBasket.removeFromBasket(perfID)) {
-			System.out.println("Ticket has been removed from your basket.");
-		}
-		else {
-			System.out.println("Ticket could not be removed, or does not exist in your basket.");
+ 		if (usersBasket.removeFromBasket(perfID)) {
+ 			System.out.println("Ticket has been removed from your basket.");
+ 		} else {
+ 			System.out.println("Ticket could not be removed, or does not exist in your basket.");
 		}
 	}
 

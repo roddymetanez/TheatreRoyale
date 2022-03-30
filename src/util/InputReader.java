@@ -18,7 +18,12 @@ public class InputReader {
 	 */
 	public int getNextInt(String message) {
 		System.out.print(message);
-		return scanner.nextInt();
+		
+		try {
+			return Integer.valueOf(scanner.next());
+		}catch (NumberFormatException e) {
+			throw new NumberFormatException();
+		}
 	}
 
 	/**
