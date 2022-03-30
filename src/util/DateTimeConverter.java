@@ -3,11 +3,13 @@ package util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class DateTimeConverter {
-	private SimpleDateFormat DDMMYY_DateType = new SimpleDateFormat("dd-MM-yy");
-	private SimpleDateFormat YYYYMMDD_DateType = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat DDMMYY_DateType = new SimpleDateFormat("dd-MM-yy");
+	private static final SimpleDateFormat YYYYMMDD_DateType = new SimpleDateFormat("yyyy-MM-dd");
 	private DateFormat YYYYMMDD_DateFmt = YYYYMMDD_DateType;
 	private DateFormat DDMMYYDateFmt = DDMMYY_DateType;
 
@@ -16,7 +18,8 @@ public class DateTimeConverter {
 	}
 
 	/**
-	 * Date parser - String of YY-MM-DD into String of DD-MM-YY and vice versa
+	 * Date parser - String of YY-MM-DD hh:mm:ss into String of DD-MM-YY and vice
+	 * versa Selected on length,
 	 *
 	 * @param strDate
 	 * @return Date format
@@ -38,7 +41,7 @@ public class DateTimeConverter {
 	}
 
 	/**
-	 * Sql date parser - YYYYMMDD date to match the tables DD - MM - YY DD
+	 * Sql date parser - turns YYYYMMDD date to match the tables DD - MM - YY DD
 	 * 
 	 * @param strDate
 	 * @return
@@ -51,7 +54,8 @@ public class DateTimeConverter {
 	}
 
 	/**
-	 * Sql date parser - DDMMYY into String date to match the tables DD - MM - YY DD
+	 * Sql date parser - turns DDMMYY into String date to match the tables DD - MM -
+	 * YY DD
 	 * 
 	 * @param strDate
 	 * @return
@@ -64,6 +68,33 @@ public class DateTimeConverter {
 		// https://stackoverflow.com/a/10732308/14775100
 		convDateStr.replaceFirst("-(\\d{2})$", "-20$1");
 		return convDateStr;
+	}
 
+	/**
+	 * get Date from SQL string, returning a java.util.date type object
+	 * 
+	 * @param strDate
+	 * @return
+	 * @throws ParseException
+	 */
+	public Date getDateFromSql(String strDate) throws ParseException {
+		Date tmpDate = YYYYMMDD_DateFmt.parse(strDate);
+		return tmpDate;
+	}
+
+	/**
+	 * check to see if date (as String) is 7 days hence from localDate time of NOW
+	 * 
+	 * @param strDate
+	 * @return
+	 * @throws ParseException
+	 */
+	public boolean compareDate7dyHence(String strDate) throws ParseException {
+		Date tmpDate = YYYYMMDD_DateFmt.parse(strDate);
+		LocalDate then = tmpDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//		LocalDate then = LocalDate.parse(strDate);
+		// add seven days
+		LocalDate now7 = LocalDate.now().plusDays(7);
+		return now7.isBefore(then);
 	}
 }
