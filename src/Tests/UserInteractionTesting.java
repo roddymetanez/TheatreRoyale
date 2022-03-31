@@ -56,13 +56,13 @@ class UserInteractionTesting {
 	@Test
 	public void seatTest() {
 		String nowNow = LocalDateTime.now().toString();
-		Seat testSeat = new Seat(testPerformance, seatLoc.Stall, 0);
+		Seat testSeat = new Seat(testPerformance, seatLoc.Stall, false);
 		assertNotNull(testSeat);
 	}
 
 	@Test
 	public void ticketPriceTest() {
-		assertEquals(159.92, testTicket.getCost());
+		assertEquals(144.9275, testTicket.getCost());
 	}
 
 	@Test
@@ -73,9 +73,16 @@ class UserInteractionTesting {
 	}
 
 	@Test
+	public void testTooManyTickets() {
+		testTicket.addSeatsToTicket(5000, 0);
+		testTicket.calcCost();
+		assertEquals(144.9275, testTicket.getCost());
+	}
+
+	@Test
 	public void getPerformanceByDate() {
 		performancesInSearch.clear();
-		testTheatre.findShowsByDate_Test("01-01-25");
+		testTheatre.findShowsByDate_Test("01-01-25"); // Why wont you work?
 		performancesInSearch = testTheatre.getPerformancesInSearch();
 		System.out.println("number: " + performancesInSearch.size());
 		testPerformance = performancesInSearch.get(0);
@@ -98,7 +105,7 @@ class UserInteractionTesting {
 		// end the test
 		double tmpTotal = albert.getBasket().getBasketTotalCost();
 
-		assertEquals(167.92, tmpTotal);
+		assertEquals(149.9275, tmpTotal);
 
 	}
 
@@ -116,7 +123,7 @@ class UserInteractionTesting {
 	public void postageTest() {
 		testPerformance.setStartDateTime("9999-12-31 23:59:59");
 		testTicket.acceptPostage();
-		assertEquals(167.92, testTicket.getCost());
+		assertEquals(149.9275, testTicket.getCost());
 
 	}
 }
