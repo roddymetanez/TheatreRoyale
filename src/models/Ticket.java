@@ -4,10 +4,13 @@
 package models;
 
 import java.math.RoundingMode;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import data_access.DataAccess;
 import models.Seat.seatLoc;
 import util.DateTimeConverter;
 import util.InputReader;
@@ -27,6 +30,7 @@ public class Ticket {
 	private Patron patron;
 	private InputReader inputReader;
 	private DateTimeConverter dateTimeConverter;
+	private DataAccess dataAccess;
 	private DecimalFormat twoDigitsDoubles = new DecimalFormat("#.##");
 
 	public Ticket(Performance performance, Patron patron) {
@@ -41,6 +45,9 @@ public class Ticket {
 		dateTimeConverter = new DateTimeConverter();
 
 		twoDigitsDoubles.setRoundingMode(RoundingMode.FLOOR);
+
+		this.dataAccess = new DataAccess();
+		this.inputReader = new InputReader();
 
 	}
 
@@ -74,6 +81,8 @@ public class Ticket {
 	 */
 	public boolean chooseNumberSeats() {
 
+		getSeatsForPerformance(performance);
+
 		boolean tktsale = false;
 		int tmpStallSeats = getPerformance().getStallSeats();
 		int tmpCircleSeats = getPerformance().getCircleSeats();
@@ -105,6 +114,23 @@ public class Ticket {
 
 		tktsale = addSeatsToTicket(optionReg, optionConc);
 		return tktsale;
+	}
+
+	/**
+	 * Call the procedure to retrieve all scheduled shows by name, and pass them to
+	 * the printResults method to print them to the console.
+	 */
+	private void getSeatsForPerformance(Performance performance) {
+		ResultSet rs = dataAccess.getAvailableSeats(performance.getPerfID());
+		try {
+			performance.setStallSeats(rs.getInt("seats_stall"));
+			performance.setCircleSeats(rs.getInt("seats_circle"));
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/**

@@ -12,13 +12,13 @@ public class InputReader {
 	/**
 	 * Print a message to the console and return the next integer value entered by
 	 * the user
-	 * 
+	 *
 	 * @param message to print to console
 	 * @return integer user inputs
 	 */
 	public int getNextInt(String message) {
 		System.out.print(message);
-		
+
 		try {
 			return Integer.valueOf(scanner.next());
 		}catch (NumberFormatException e) {
@@ -29,7 +29,7 @@ public class InputReader {
 	/**
 	 * Print a message to the console and return the next string value entered by
 	 * the user
-	 * 
+	 *
 	 * @param message to print to console
 	 * @return String user inputs
 	 */

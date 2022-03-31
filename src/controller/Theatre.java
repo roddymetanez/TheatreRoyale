@@ -11,6 +11,8 @@ import java.util.InputMismatchException;
 import data_access.DataAccess;
 import models.Patron;
 import models.Performance;
+import models.Seat;
+import models.Seat.seatLoc;
 import models.Ticket;
 import util.DateTimeConverter;
 import util.InputReader;
@@ -369,43 +371,47 @@ public class Theatre {
 
 		case 2:
 			if (patron.getfName() == null) { // Check if the current user has already entered their details
-				if (registerCustomer()) {
-
+				if (!registerCustomer()) {
 				}
-				; // Prompt user to enter their details
+				checkoutBasket(menu); // Prompt user to enter their details
 			}
 			if (paymentForTickets(testMode)) {
 				System.out.println("Thanks for your purchase.\n");
 				updateSeats(testMode, patron.getBasket().getTicketsInBasket());
-				createTicket();
+				createPrintedTicket();
 				displayInterface();
 			}
 			break;
 		}
 	}
 
-	private void createTicket() {
-		// TODO Auto-generated method stub
+	private void createPrintedTicket() {
+		printBasket();
+		// TODO make this.
 
 	}
 
 	private boolean paymentForTickets(boolean testMode) {
+
 		return testMode;
 
 	}
 
 	private void updateSeats(boolean testMode, ArrayList<Ticket> tktListOf) {
-		for(tkt :tktListOf) {
-		ResultSet rs = dataAccess.updateAvailableSeats(p, seatsStalls, seatsCircle)
-		try {
-			performance.setStallSeats(rs.getInt("seats_stall"));
-			performance.setCircleSeats(rs.getInt("seats_circle"));
+		int stallSeats = 0;
+		int circleSeats = 0;
+		for (Ticket tkt : tktListOf) {
+			for (Seat tmpSeat : tkt.getSeatingList()) {
+				if (seatLoc.Stall == tmpSeat.getSeatLoc())
+					stallSeats++;
+				else {
+					circleSeats++;
+				}
+			}
+			if (!dataAccess.updateAvailableSeats(tkt.getPerformanceID(), stallSeats, circleSeats)) {
+				System.out.println("error in seat reservation");
+			}
 		}
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 	/**
