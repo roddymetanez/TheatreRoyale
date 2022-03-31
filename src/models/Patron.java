@@ -114,7 +114,7 @@ public class Patron {
 	// sold out, and
 	// B: Check the performanceID is valid.
 	public boolean holdForBasket(Performance performance) {
-		selectForBasket(ticket = createTicket(performance)); // Empty method
+//		selectForBasket(ticket = createTicket(performance)); // Empty method
 		boolean tktSale = ticket.chooseNumberSeats();
 		if (tktSale) {
 			ticket.calcCost();
@@ -131,16 +131,23 @@ public class Patron {
 								"\nSuccessfully added performance [" + performance.getPerfID() + "] to your basket\n");
 						acceptTicketToBasket(ticket);
 					}
+					else {
+						ticket.getSeatingList().clear();
+						return false;
+					}
 				}
 			}
 			catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				ticket.getSeatingList().clear();
+				return false;
 			}
 			return true;
 		}
 		else {
 			System.out.println("\nPlease try again as seats are limited for that performance");
+			ticket.getSeatingList().clear();
 			return false;
 		}
 	}
@@ -225,12 +232,12 @@ public class Patron {
 
 	/**
 	 * Method to select the ticket and its seats
-	 * 
+	 *
 	 * @param testTicket
 	 */
-	public void selectForBasket(Ticket ticket) {
-		usersBasket.addToBasket(ticket);
-	}
+//	public void selectForBasket(Ticket ticket) {
+//		usersBasket.addToBasket(ticket);
+//	}
 
 	public void acceptTicketToBasket(Ticket ticket) {
 		usersBasket.addToBasket(ticket);

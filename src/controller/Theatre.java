@@ -1,7 +1,9 @@
 package controller;
 
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -9,6 +11,7 @@ import java.util.InputMismatchException;
 import data_access.DataAccess;
 import models.Patron;
 import models.Performance;
+import models.Ticket;
 import util.DateTimeConverter;
 import util.InputReader;
 
@@ -27,15 +30,19 @@ public class Theatre {
 	// The patron that is currently using the application
 	private Patron patron;
 
+	private static final DecimalFormat twoDigitsDoubles = new DecimalFormat("#.##");
+
 	/**
-	 * Theatre constructor Initialtizes global variables and calls
-	 * displayInterface() to print out the main menu
+	 * Theatre constructor Initializes global variables and calls displayInterface()
+	 * to print out the main menu
 	 */
 	public Theatre(boolean testMode) {
 		this.testMode = testMode;
 		this.dataAccess = new DataAccess();
 		this.inputReader = new InputReader();
 		this.patron = new Patron();
+
+		twoDigitsDoubles.setRoundingMode(RoundingMode.FLOOR);
 
 		if (!testMode) {
 			displayInterface();
@@ -135,7 +142,7 @@ public class Theatre {
 
 	/**
 	 * Utility testing method to check for selection by date method
-	 * 
+	 *
 	 * @param testDate
 	 */
 	public void findShowsByDate_Test(String testDate) {
@@ -176,7 +183,7 @@ public class Theatre {
 	 */
 	private void printResults(ResultSet rs) {
 		try {
-			if (rs.next() == false) {
+			if (!rs.next()) {
 				System.out.println("No show of that record");
 				return;
 			}
@@ -308,7 +315,7 @@ public class Theatre {
 	 */
 	private void printBasketMenu() {
 
-		patron.printBasket(); // Prints out all tickets within a users basket
+		printBasket(); // Prints out all tickets within a users basket
 
 		System.out.println("===========================================");
 		System.out.println("| Enter the number to select an option..  |");
@@ -323,21 +330,62 @@ public class Theatre {
 		switch (option) {
 		case 1:
 			patron.removeFromBasketByID(
-					inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n")); // Remove
-																														// a
-																														// ticket
-																														// from
-																														// the
-																														// users
-																														// basket
+					inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n"));
+			// Remove a ticket from the users basket
 			break;
+
 		case 2:
 			if (patron.getfName() == null) { // Check if the current user has already entered their details
 				registerCustomer(); // Prompt user to enter their details
 			}
-			patron.checkoutBasket(testMode); // Empty method, to be implemented
+			checkoutBasket(testMode);
 			break;
 		}
+	}
+
+	/**
+	 * Method to be updated
+	 */
+	public void checkoutBasket(boolean menu) {
+		if (menu) {
+			double bsktPrice = patron.getBasket().getBasketTotalCost();
+			printBasket();
+			System.out.println("===========================================");
+			System.out.println("|                                         |");
+			System.out.println("|   1. Complete purchase                  |");
+			System.out.println("|   2. Register for purchase              |");
+			System.out.println("|   3. Return to main menu                |");
+			System.out.println("|                                         |");
+			System.out.println("|                                         |");
+			System.out.println("|                                         |");
+			System.out.println("|                                         |");
+			System.out.println("===========================================");
+		}
+	}
+
+	/**
+	 * Prints out the size of the users basket, as well as the contents
+	 */
+	public void printBasket() {
+		ArrayList<Ticket> inBasket = patron.getBasket().getTicketsInBasket();
+		System.out.println("\nBasket size: " + inBasket.size());
+		System.out.println("Basket contents:\n ");
+
+		if (inBasket.isEmpty()) {
+			System.out.println("Your basket is empty..\n");
+			return;
+		}
+		inBasket.forEach(ticket -> {
+			Double tmpTktCost = ticket.getCost(); // Need to have this Object explained to me
+			tmpTktCost.doubleValue();
+			int fullPrcTkt = ticket.getFullPrcTkt();
+			int fullCncTkt = ticket.getCncPrcTkt();
+
+			System.out.println("Performance ID: " + ticket.getPerformanceID() + "\t Show Title: "
+					+ ticket.getPerformance().getTitle() + "\t Show Time: " + ticket.getPerformance().getStartDateTime()
+					+ "\n Tickets: " + fullPrcTkt + " x Full price tickets\t " + fullCncTkt + " x Concessionary tickets"
+					+ "\t Total: " + (twoDigitsDoubles.format(tmpTktCost)));
+		});
 	}
 
 	public int getSeatsCircle() {
@@ -358,7 +406,7 @@ public class Theatre {
 
 	/**
 	 * gets the patron for the purposes of basket filling
-	 * 
+	 *
 	 * @return the Patron
 	 */
 	public Patron getPatron() {

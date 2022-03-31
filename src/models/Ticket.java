@@ -13,17 +13,19 @@ import util.DateTimeConverter;
 import util.InputReader;
 
 public class Ticket {
-	private Performance performance;
-	private Patron patron;
 	private int customerID;
 	private int performanceID;
-	private ArrayList<Seat> seatingList;
-	private double cost;
-	private InputReader inputReader;
-	private final double PostFee = 1.00;
-	private DateTimeConverter dateTimeConverter;
-	private int concessionarySeat;
+	private int concessionaryPriceTicket;
 	private int fullPriceTicket;
+	private double cost;
+	private final double PostFee = 1.00;
+
+	private ArrayList<Seat> seatingList;
+
+	private Performance performance;
+	private Patron patron;
+	private InputReader inputReader;
+	private DateTimeConverter dateTimeConverter;
 	private DecimalFormat twoDigitsDoubles = new DecimalFormat("#.##");
 
 	public Ticket(Performance performance, Patron patron) {
@@ -64,7 +66,9 @@ public class Ticket {
 	}
 
 	/**
-	 * @param seatingList the seatingList to set
+	 * Method to set the number and type of tickets sold
+	 * 
+	 * @param seatingList the seatingList within the ticket to be set
 	 */
 	public boolean chooseNumberSeats() {
 
@@ -101,6 +105,14 @@ public class Ticket {
 		return tktsale;
 	}
 
+	/**
+	 * Method, separated out from chooseNumber seats for testing purposes. itterates
+	 * through seats requested, creating seats as part of ticket
+	 * 
+	 * @param optionReg,  integer
+	 * @param optionConc, integer
+	 * @return
+	 */
 	public boolean addSeatsToTicket(int optionReg, int optionConc) {
 		int[] seatTkts = { optionReg, optionConc };
 		int tot = optionConc + optionReg;
@@ -119,6 +131,11 @@ public class Ticket {
 		return true;
 	}
 
+	/**
+	 * Method, separated out from chooseNumberSeats() for testing purposes.
+	 * Itterates through enum. NOTE, decision taken that we do not differentiate
+	 * stall and circle seats
+	 */
 	private seatLoc seatType() {
 		int seatsRmn = performance.getStallSeats();
 		if (seatsRmn > 1) {
@@ -141,13 +158,13 @@ public class Ticket {
 
 	// TODO Dan - is this ok?
 	public double calcCost() {
-		concessionarySeat = 0;
+		concessionaryPriceTicket = 0;
 		fullPriceTicket = 0;
 		double ticketCost = 0;
 		for (Seat tmpSeat : seatingList) {
 			ticketCost = ticketCost + tmpSeat.getSeatCost();
 			if (tmpSeat.isConcession()) {
-				concessionarySeat++;
+				concessionaryPriceTicket++;
 			}
 			else {
 				fullPriceTicket++;
@@ -160,13 +177,13 @@ public class Ticket {
 
 	// TODO Dan - is this ok?
 	public double calcCost(ArrayList<Seat> seatingList) {
-		concessionarySeat = 0;
+		concessionaryPriceTicket = 0;
 		fullPriceTicket = 0;
 		double ticketCost = 0;
 		for (Seat tmpSeat : seatingList) {
 			ticketCost = ticketCost + tmpSeat.getSeatCost();
 			if (tmpSeat.isConcession()) {
-				concessionarySeat++;
+				concessionaryPriceTicket++;
 			}
 			else {
 				fullPriceTicket++;
@@ -176,15 +193,23 @@ public class Ticket {
 		return ticketCost;
 	}
 
-//	public Integer getPostage() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
+	/**
+	 * Method to check date within the 7 day timing for tickets This method will be
+	 * called from the ticket sales methods
+	 * 
+	 * @param performance, the performance details of the show
+	 * @return
+	 * @throws ParseException
+	 */
 	public boolean checkPostage(Performance performance) throws ParseException {
 		return dateTimeConverter.compareDate7dyHence(performance.getStartDateTime());
 	}
 
+	/**
+	 * Method to add posting costs to the ticket. Postage added on setting of seat
+	 * being sold is concessionary or not
+	 * 
+	 */
 	public void acceptPostage() {
 		double postCharge = 0;
 		for (Seat tkt : seatingList) {
@@ -200,6 +225,6 @@ public class Ticket {
 	}
 
 	public int getCncPrcTkt() {
-		return concessionarySeat;
+		return concessionaryPriceTicket;
 	}
 }
