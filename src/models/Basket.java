@@ -59,4 +59,8 @@ public class Basket {
 		}
 		return total;
 	}
+	
+	public void clearBasket() {
+		this.ticketsInBasket.clear();
+	}
 }
