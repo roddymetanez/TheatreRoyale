@@ -348,45 +348,48 @@ public class Theatre {
 		}
 	}
 
-public void checkoutBasket(boolean menu) {
-if (menu) {
-printBasket();
-System.out.println("===========================================");
-System.out.println("|                                         |");
-System.out.println("| 1. Complete purchase                    |");
-System.out.println("| 2. Return to main menu                  |");
-System.out.println("|                                         |");
-System.out.println("===========================================");
-}
-
-int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
-
-switch (option) {
-case 1:
-if (paymentForTickets(!testMode)) {
-boolean validCCDetails = requestPaymentDetails();
-while (!validCCDetails){
-validCCDetails = requestPaymentDetails();
-}
-System.out.println("Thanks for your purchase.\n");
-updateSeats(testMode, patron.getBasket().getTicketsInBasket());
-createTicket();
-displayInterface();
-}
-break;
-case 2: return;
-}
-}
-
-private boolean requestPaymentDetails(){
-String ccLongNum = inputReader.getNextText("Enter the 16 digit number from the front of your card");
-System.out.println(ccLongNum.length());
-return ccLongNum.length() == 16;
-}
+	public void checkoutBasket(boolean menu) {
+		if (menu) {
+			printBasket();
+			System.out.println("===========================================");
+			System.out.println("| Enter the number to select an option..  |");
+			System.out.println("|                                         |");
+			System.out.println("| 1. Complete purchase                    |");
+			System.out.println("| 2. Return to main menu                  |");
+			System.out.println("|                                         |");
+			System.out.println("===========================================");
+		}
+			
+		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
+			
+		switch (option) {
+			case 1:
+				if (paymentForTickets(!testMode)) {
+					boolean validCCDetails = requestPaymentDetails();
+					while (!validCCDetails){
+						validCCDetails = requestPaymentDetails();
+					}
+					System.out.println("Thanks for your purchase.\n");
+					updateSeats(testMode, patron.getBasket().getTicketsInBasket());
+					createPrintedTicket();
+					displayInterface();
+				}
+				break;
+			case 2: return;
+		}
+	}
+	
+	private boolean requestPaymentDetails(){
+	String ccLongNum = inputReader.getNextText("Enter the 16 digit number from the front of your card");
+	System.out.println(ccLongNum.length());
+	return ccLongNum.length() == 16;
+	}
 
 	private void createPrintedTicket() {
 		printBasket();
-		// TODO make this.
+		System.out.println("Purchase has been completed!");
+		
+		patron.getBasket().clearBasket();
 	}
 
 	private boolean paymentForTickets(boolean testMode) {
