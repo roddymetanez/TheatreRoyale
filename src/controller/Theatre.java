@@ -343,58 +343,54 @@ public class Theatre {
 			if (patron.getfName() == null) { // Check if the current user has already entered their details
 				registerCustomer(); // Prompt user to enter their details
 			}
-			checkoutBasket(testMode);
+			checkoutBasket(!testMode);
 			break;
 		}
 	}
 
-	/**
-	 * Method to be updated
-	 */
-	public void checkoutBasket(boolean menu) {
-		if (menu) {
-			double bsktPrice = patron.getBasket().getBasketTotalCost();
-			printBasket();
-			System.out.println("===========================================");
-			System.out.println("|                                         |");
-			System.out.println("|   1. Complete purchase                  |");
-			System.out.println("|   2. Register for purchase              |");
-			System.out.println("|   3. Return to main menu                |");
-			System.out.println("|                                         |");
-			System.out.println("===========================================");
-		}
-		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
-		switch (option) {
-		case 1:
-			registerCustomer(); // Prompt user to enter their details
-			break;
+public void checkoutBasket(boolean menu) {
+if (menu) {
+printBasket();
+System.out.println("===========================================");
+System.out.println("|                                         |");
+System.out.println("| 1. Complete purchase                    |");
+System.out.println("| 2. Return to main menu                  |");
+System.out.println("|                                         |");
+System.out.println("===========================================");
+}
 
-		case 2:
-			if (patron.getfName() == null) { // Check if the current user has already entered their details
-				if (!registerCustomer()) {
-				}
-				checkoutBasket(menu); // Prompt user to enter their details
-			}
-			if (paymentForTickets(testMode)) {
-				System.out.println("Thanks for your purchase.\n");
-				updateSeats(testMode, patron.getBasket().getTicketsInBasket());
-				createPrintedTicket();
-				displayInterface();
-			}
-			break;
-		}
-	}
+int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
+
+switch (option) {
+case 1:
+if (paymentForTickets(!testMode)) {
+boolean validCCDetails = requestPaymentDetails();
+while (!validCCDetails){
+validCCDetails = requestPaymentDetails();
+}
+System.out.println("Thanks for your purchase.\n");
+updateSeats(testMode, patron.getBasket().getTicketsInBasket());
+createTicket();
+displayInterface();
+}
+break;
+case 2: return;
+}
+}
+
+private boolean requestPaymentDetails(){
+String ccLongNum = inputReader.getNextText("Enter the 16 digit number from the front of your card");
+System.out.println(ccLongNum.length());
+return ccLongNum.length() == 16;
+}
 
 	private void createPrintedTicket() {
 		printBasket();
 		// TODO make this.
-
 	}
 
 	private boolean paymentForTickets(boolean testMode) {
-
 		return testMode;
-
 	}
 
 	private void updateSeats(boolean testMode, ArrayList<Ticket> tktListOf) {
