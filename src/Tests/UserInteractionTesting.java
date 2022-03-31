@@ -3,7 +3,6 @@ package Tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterEach;
@@ -11,35 +10,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import controller.Theatre;
-import data_access.DataAccess;
 import models.Patron;
 import models.Performance;
 import models.Seat;
 import models.Seat.seatLoc;
 import models.Ticket;
-import util.DateTimeConverter;
 
 class UserInteractionTesting {
 
-	private String nowNow;
 	private Performance testPerformance;
-	private Seat testSeat;
-	private ArrayList<Seat> testSeats;
 	private Ticket testTicket;
-	private DateTimeConverter dtConv;
 	private Theatre testTheatre;
 	private Patron albert;
 	private ArrayList<Performance> performancesInSearch;
-	private DataAccess dataAccess;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		this.dataAccess = new DataAccess();
 		// create theatre testing mode set to true
 		testTheatre = new Theatre(true);
 		// time converter
-		dtConv = new DateTimeConverter();
-		nowNow = LocalDateTime.now().toString();
 		testTheatre.getShowByPerformanceID(99990999);
 		performancesInSearch = testTheatre.getPerformancesInSearch();
 		testPerformance = performancesInSearch.get(0);
@@ -57,7 +46,6 @@ class UserInteractionTesting {
 
 	@Test
 	public void seatTest() {
-		String nowNow = LocalDateTime.now().toString();
 		Seat testSeat = new Seat(testPerformance, seatLoc.Stall, false);
 		assertNotNull(testSeat);
 	}
