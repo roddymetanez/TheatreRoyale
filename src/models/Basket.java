@@ -39,6 +39,7 @@ public class Basket {
 	public boolean removeFromBasket(int perfID) {
 		for (Ticket ticket : ticketsInBasket) {
 			if (ticket.getPerformanceID() == perfID) {
+				ticket.markAsSold(false);
 				ticketsInBasket.remove(ticket);
 				return true;
 			}

@@ -15,7 +15,6 @@ import controller.Theatre;
 import models.Patron;
 import models.Performance;
 import models.Seat;
-import models.Seat.seatLoc;
 import models.Ticket;
 import util.DateTimeConverter;
 

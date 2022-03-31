@@ -19,6 +19,7 @@ public class Ticket {
 	private int fullPriceTicket;
 	private double cost;
 	private final double PostFee = 1.00;
+	private boolean ticketMarkAsBuy;
 
 	private ArrayList<Seat> seatingList;
 
@@ -34,6 +35,7 @@ public class Ticket {
 		this.performanceID = performance.getPerfID();
 		this.inputReader = new InputReader();
 		this.setCustomerID(patron.getID());
+		ticketMarkAsBuy = false; // tickets are unsold on generation
 
 		seatingList = new ArrayList<>();
 		dateTimeConverter = new DateTimeConverter();
@@ -226,5 +228,14 @@ public class Ticket {
 
 	public int getCncPrcTkt() {
 		return concessionaryPriceTicket;
+	}
+
+	public void markAsSold() {
+		ticketMarkAsBuy = !ticketMarkAsBuy;
+	}
+
+	public void markAsSold(boolean b) {
+		ticketMarkAsBuy = b;
+
 	}
 }

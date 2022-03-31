@@ -3,7 +3,6 @@ package models;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 
 import util.InputReader;
 
@@ -114,7 +113,7 @@ public class Patron {
 	// sold out, and
 	// B: Check the performanceID is valid.
 	public boolean holdForBasket(Performance performance) {
-//		selectForBasket(ticket = createTicket(performance)); // Empty method
+		selectForBasket(ticket = createTicket(performance)); // Empty method
 		boolean tktSale = ticket.chooseNumberSeats();
 		if (tktSale) {
 			ticket.calcCost();
@@ -187,60 +186,16 @@ public class Patron {
 	}
 
 	/**
-	 * Method to be updated
-	 */
-	public void checkoutBasket(boolean menu) {
-		if (menu) {
-			double bsktPrice = usersBasket.getBasketTotalCost();
-			printBasket();
-			System.out.println("===========================================");
-			System.out.println("|                                         |");
-			System.out.println("|                                         |");
-			System.out.println("|                                         |");
-			System.out.println("|                                         |");
-			System.out.println("|                                         |");
-			System.out.println("|                                         |");
-			System.out.println("===========================================");
-		}
-	}
-
-	// Method to be updated
-	/**
-	 * Prints on the size of the users basket, as well as the contents
-	 */
-	public void printBasket() {
-		ArrayList<Ticket> inBasket = usersBasket.getTicketsInBasket();
-		System.out.println("\nBasket size: " + inBasket.size());
-		System.out.println("Basket contents:\n ");
-
-		if (inBasket.isEmpty()) {
-			System.out.println("Your basket is empty..\n");
-			return;
-		}
-		inBasket.forEach(ticket -> {
-			Double tmpTktCost = ticket.getCost(); // Need to have this Object explained to me
-			tmpTktCost.doubleValue();
-			int fullPrcTkt = ticket.getFullPrcTkt();
-			int fullCncTkt = ticket.getCncPrcTkt();
-
-			System.out.println("Performance ID: " + ticket.getPerformanceID() + "\t Show Title: "
-					+ ticket.getPerformance().getTitle() + "\t Show Time: " + ticket.getPerformance().getStartDateTime()
-					+ "\n Tickets: " + fullPrcTkt + " x Full price tickets\t " + fullCncTkt + " x Concessionary tickets"
-					+ "\t Total: " + (twoDigitsDoubles.format(tmpTktCost)));
-		});
-	}
-
-	/**
 	 * Method to select the ticket and its seats
 	 *
 	 * @param testTicket
 	 */
-//	public void selectForBasket(Ticket ticket) {
-//		usersBasket.addToBasket(ticket);
-//	}
+	public void selectForBasket(Ticket ticket) {
+		usersBasket.addToBasket(ticket);
+	}
 
 	public void acceptTicketToBasket(Ticket ticket) {
-		usersBasket.addToBasket(ticket);
+		ticket.markAsSold();
 	}
 
 }

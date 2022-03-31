@@ -1,7 +1,11 @@
 package Tests;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,8 +14,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import data_access.DataAccess;
 import data_access.DBConnector;
+import data_access.DataAccess;
 
 
 /**
@@ -45,7 +49,7 @@ public class DataAccessTest
     public void tearDown()
     {
     }
-    
+
     /**
      * constructorTest tests that the connection has been correctly constructed
      */
@@ -72,7 +76,7 @@ public class DataAccessTest
     }
     /**
      * getShowByNameTest tests that show information is returned from a database query
-     * by show name (a visual test from the terminal window) 
+     * by show name (a visual test from the terminal window)
      */
 
     @Test
@@ -84,8 +88,8 @@ public class DataAccessTest
         db.printResult(rs);
     }
     /**
-     * getShowByDate Test tests that show information is returned from a database query 
-     * by date (a visual test from the terminal window ) 
+     * getShowByDate Test tests that show information is returned from a database query
+     * by date (a visual test from the terminal window )
      */
     @Test
     public void getShowByDateTest() {
@@ -95,7 +99,7 @@ public class DataAccessTest
         assertNotNull(rs);
         db.printResult(rs);
     }
-    
+
     /**
      * buyTicketTest tests that customer data is successfully stored in the database
      * by storing a set of customer data and then retrieving it
@@ -124,10 +128,10 @@ public class DataAccessTest
         db.printResult(rs);
     }
     /**
-     * updateAvailableSeatTest updates the number of seats for a performance and then 
+     * updateAvailableSeatTest updates the number of seats for a performance and then
      * tests that the remaining number of seats is correct
      */
-    @Test 
+    @Test
     public void updateAvailableSeatTest() {
     DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
@@ -162,9 +166,9 @@ public class DataAccessTest
             if (rs1 != null) db.printResult(rs1);
         }
     }
-  
+
     /**
-     * closeTest shows that the current database connection will be closed, by closing the connection and 
+     * closeTest shows that the current database connection will be closed, by closing the connection and
      * testing to see if it is still available
      */
     @Test
