@@ -127,7 +127,6 @@ public class Ticket {
 			performance.setCircleSeats(rs.getInt("seats_circle"));
 		}
 		catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

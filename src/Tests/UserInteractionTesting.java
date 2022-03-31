@@ -3,6 +3,8 @@ package Tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,9 +14,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import controller.Theatre;
+import data_access.DataAccess;
 import models.Patron;
 import models.Performance;
 import models.Seat;
+import models.Seat.seatLoc;
 import models.Ticket;
 import util.DateTimeConverter;
 
@@ -29,9 +33,11 @@ class UserInteractionTesting {
 	private Theatre testTheatre;
 	private Patron albert;
 	private ArrayList<Performance> performancesInSearch;
+	private DataAccess dataAccess;
 
 	@BeforeEach
 	void setUp() throws Exception {
+		this.dataAccess = new DataAccess();
 		// create theatre testing mode set to true
 		testTheatre = new Theatre(true);
 		// time converter
@@ -95,6 +101,7 @@ class UserInteractionTesting {
 		// get the performance
 		testTheatre.getShowByPerformanceID(99990999);
 		// get the price on the ticket
+		testTicket.addSeatsToTicket(5, 3);
 		testTicket.calcCost();
 		// say no to postage
 		testTicket.checkPostage(testPerformance);
@@ -113,7 +120,6 @@ class UserInteractionTesting {
 		// // remove tickets
 		albert.getBasket().removeFromBasket(99990999);
 		double tmpTotal = albert.getBasket().getBasketTotalCost();
-
 		assertEquals(0, tmpTotal);
 		// end the test
 	}
@@ -124,5 +130,21 @@ class UserInteractionTesting {
 		testTicket.acceptPostage();
 		assertEquals(149.9275, testTicket.getCost());
 
+	}
+
+	@Test
+	public void retrieveSeatsFromDb() {
+		int seatsCircle = testPerformance.getCircleSeats();
+		int seatsStall = testPerformance.getStallSeats();
+		testTicket.addSeatsToTicket(5, 3);
+		ResultSet rs = dataAccess.getAvailableSeats(99990999);
+		try {
+			testPerformance.setStallSeats(rs.getInt("seats_stall"));
+			testPerformance.setCircleSeats(rs.getInt("seats_circle"));
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			assertEquals(200, (seatsCircle + seatsStall));
+		}
 	}
 }
