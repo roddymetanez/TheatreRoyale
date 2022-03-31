@@ -364,7 +364,10 @@ public class Theatre {
 		
 		switch (option) {
 		case 1:
-			if (paymentForTickets(testMode)) {
+			if (paymentForTickets(!testMode)) {
+				while (!requestPaymentDetails){
+					requestPaymentDetails;
+				}
 				System.out.println("Thanks for your purchase.\n");
 				updateSeats(testMode, patron.getBasket().getTicketsInBasket());
 				createTicket();
@@ -373,6 +376,12 @@ public class Theatre {
 			break;
 		case 2: return;
 		}
+	}
+
+	private boolean requestPaymentDetails(){
+		String ccLongNum = inputReader.getNextText("Enter the 16 digit number from the front of your card");
+
+		return ccLongNim.length() == 16;
 	}
 	
 
