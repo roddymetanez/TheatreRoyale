@@ -121,6 +121,11 @@ public class Theatre {
 
 		printResults(rs);
 	}
+	
+	public void findShowByName_Test(String name) {
+		ResultSet rs = dataAccess.getShowByName(name);
+		printResults(rs);
+	}
 
 	/**
 	 * Call the procedure to retrieve all scheduled shows on a specific date, and
@@ -132,9 +137,8 @@ public class Theatre {
 //		String date = inputReader.getNextText("\nEnter the date of which you'd like to see shows for \t [dd-MM-yy]\n> ");
 		String date = null;
 		try {
-			date = findByDate.stringToDate(
-					inputReader.getNextText("\nEnter the date of which you'd like to see shows for \t [dd-MM-yy]\n> "));
-			ResultSet rs = dataAccess.getShowByDate(date);
+			date = findByDate.stringToDate(inputReader.getNextText("\nEnter the date of which you'd like to see shows for \t [dd-MM-yy]\n> "));
+			ResultSet rs = dataAccess.getShowByDate(date); 
 			printResults(rs);
 		}
 		catch (ParseException improperlyFormattedDate) {
@@ -152,12 +156,12 @@ public class Theatre {
 		DateTimeConverter findByDate = new DateTimeConverter();
 		try {
 			testDate = findByDate.stringToDate(testDate);
+			ResultSet rs = dataAccess.getShowByDate(testDate);
+			printResults(rs);
 		}
 		catch (ParseException improperlyFormattedDate) {
 			improperlyFormattedDate.printStackTrace();
 		}
-		ResultSet rs = dataAccess.getShowByDate(testDate);
-		printResults(rs);
 
 	}
 

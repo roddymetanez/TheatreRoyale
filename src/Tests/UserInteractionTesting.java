@@ -87,11 +87,21 @@ class UserInteractionTesting {
 	@Test
 	public void getPerformanceByDate() {
 		performancesInSearch.clear();
-		testTheatre.findShowsByDate_Test("01-01-25"); // Why wont you work?
+		testTheatre = new Theatre(true);
+		testTheatre.findShowsByDate_Test("01-01-25");
 		performancesInSearch = testTheatre.getPerformancesInSearch();
 		System.out.println("number: " + performancesInSearch.size());
 		testPerformance = performancesInSearch.get(0);
 		assertEquals("Hamlet in the original Klingon", testPerformance.getTitle());
+	}
+	
+	@Test
+	public void getPerformanceByNameTest() {
+		testTheatre = new Theatre(true);
+		testTheatre.findShowByName_Test("Aladdin");
+		
+		performancesInSearch = testTheatre.getPerformancesInSearch();
+		assertEquals("Aladdin", performancesInSearch.get(0).getTitle());
 	}
 
 	@Test
