@@ -112,7 +112,7 @@ class UserInteractionTesting {
 		testTheatre.getShowByPerformanceID(99990999);
 		// get the price on the ticket
 		testTicket.addSeatsToTicket(5, 3);
-		testTicket.calcCost();
+		testTicket.calcCost(); // Calculates and sets ticket cost
 		// say no to postage
 		testTicket.checkPostage(testPerformance);
 		testTicket.acceptPostage();
@@ -122,7 +122,6 @@ class UserInteractionTesting {
 		double tmpTotal = albert.getBasket().getBasketTotalCost();
 
 		assertEquals(149.9275, tmpTotal);
-
 	}
 
 	@Test
