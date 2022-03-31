@@ -123,8 +123,10 @@ public class Ticket {
 	private void getSeatsForPerformance(Performance performance) {
 		ResultSet rs = dataAccess.getAvailableSeats(performance.getPerfID());
 		try {
-			performance.setStallSeats(rs.getInt("seats_stall"));
-			performance.setCircleSeats(rs.getInt("seats_circle"));
+			if (rs.next()) {
+				performance.setStallSeats(rs.getInt("seats_stall"));
+				performance.setCircleSeats(rs.getInt("seats_circle"));
+			}
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

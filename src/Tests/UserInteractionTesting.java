@@ -87,11 +87,21 @@ class UserInteractionTesting {
 	@Test
 	public void getPerformanceByDate() {
 		performancesInSearch.clear();
-		testTheatre.findShowsByDate_Test("01-01-25"); // Why wont you work?
+		testTheatre = new Theatre(true);
+		testTheatre.findShowsByDate_Test("01-01-25");
 		performancesInSearch = testTheatre.getPerformancesInSearch();
 		System.out.println("number: " + performancesInSearch.size());
 		testPerformance = performancesInSearch.get(0);
 		assertEquals("Hamlet in the original Klingon", testPerformance.getTitle());
+	}
+	
+	@Test
+	public void getPerformanceByNameTest() {
+		testTheatre = new Theatre(true);
+		testTheatre.findShowByName_Test("Aladdin");
+		
+		performancesInSearch = testTheatre.getPerformancesInSearch();
+		assertEquals("Aladdin", performancesInSearch.get(0).getTitle());
 	}
 
 	@Test
@@ -102,7 +112,7 @@ class UserInteractionTesting {
 		testTheatre.getShowByPerformanceID(99990999);
 		// get the price on the ticket
 		testTicket.addSeatsToTicket(5, 3);
-		testTicket.calcCost();
+		testTicket.calcCost(); // Calculates and sets ticket cost
 		// say no to postage
 		testTicket.checkPostage(testPerformance);
 		testTicket.acceptPostage();
@@ -112,7 +122,6 @@ class UserInteractionTesting {
 		double tmpTotal = albert.getBasket().getBasketTotalCost();
 
 		assertEquals(149.9275, tmpTotal);
-
 	}
 
 	@Test
