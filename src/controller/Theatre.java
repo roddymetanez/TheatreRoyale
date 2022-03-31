@@ -341,7 +341,7 @@ public class Theatre {
 			if (patron.getfName() == null) { // Check if the current user has already entered their details
 				registerCustomer(); // Prompt user to enter their details
 			}
-			checkoutBasket(testMode);
+			checkoutBasket(!testMode);
 			break;
 		}
 	}
@@ -351,29 +351,19 @@ public class Theatre {
 	 */
 	public void checkoutBasket(boolean menu) {
 		if (menu) {
-			double bsktPrice = patron.getBasket().getBasketTotalCost();
 			printBasket();
 			System.out.println("===========================================");
 			System.out.println("|                                         |");
 			System.out.println("|   1. Complete purchase                  |");
-			System.out.println("|   2. Register for purchase              |");
-			System.out.println("|   3. Return to main menu                |");
+			System.out.println("|   2. Return to main menu                |");
 			System.out.println("|                                         |");
 			System.out.println("===========================================");
 		}
+		
 		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
+		
 		switch (option) {
 		case 1:
-			registerCustomer(); // Prompt user to enter their details
-			break;
-
-		case 2:
-			if (patron.getfName() == null) { // Check if the current user has already entered their details
-				if (registerCustomer()) {
-
-				}
-				; // Prompt user to enter their details
-			}
 			if (paymentForTickets(testMode)) {
 				System.out.println("Thanks for your purchase.\n");
 				updateSeats(testMode, patron.getBasket().getTicketsInBasket());
@@ -381,8 +371,10 @@ public class Theatre {
 				displayInterface();
 			}
 			break;
+		case 2: return;
 		}
 	}
+	
 
 	private void createTicket() {
 		// TODO Auto-generated method stub
@@ -391,21 +383,12 @@ public class Theatre {
 
 	private boolean paymentForTickets(boolean testMode) {
 		return testMode;
-
 	}
 
 	private void updateSeats(boolean testMode, ArrayList<Ticket> tktListOf) {
-		for(tkt :tktListOf) {
-		ResultSet rs = dataAccess.updateAvailableSeats(p, seatsStalls, seatsCircle)
-		try {
-			performance.setStallSeats(rs.getInt("seats_stall"));
-			performance.setCircleSeats(rs.getInt("seats_circle"));
+		for(Ticket tkt :tktListOf) {
+			//ResultSet rs = dataAccess.updateAvailableSeats(tkt.getPerformanceID(), seatsStalls, seatsCircle);
 		}
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 	/**
