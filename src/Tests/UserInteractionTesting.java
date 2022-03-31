@@ -3,9 +3,6 @@ package Tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -103,27 +100,7 @@ class UserInteractionTesting {
 		performancesInSearch = testTheatre.getPerformancesInSearch();
 		assertEquals("Aladdin", performancesInSearch.get(0).getTitle());
 	}
-
-	@Test
-	public void addTicketsToBasketTest() throws ParseException {
-		// get the patron
-		Patron albert = testTheatre.getPatron();
-		// get the performance
-		testTheatre.getShowByPerformanceID(99990999);
-		// get the price on the ticket
-		testTicket.addSeatsToTicket(5, 3);
-		testTicket.calcCost(); // Calculates and sets ticket cost
-		// say no to postage
-		testTicket.checkPostage(testPerformance);
-		testTicket.acceptPostage();
-		// process basket
-		albert.acceptTicketToBasket(testTicket);
-		// end the test
-		double tmpTotal = albert.getBasket().getBasketTotalCost();
-
-		assertEquals(149.9275, tmpTotal);
-	}
-
+	
 	@Test
 	public void subtractTicketsFromBasket() {
 		// // remove tickets
@@ -139,21 +116,5 @@ class UserInteractionTesting {
 		testTicket.acceptPostage();
 		assertEquals(149.9275, testTicket.getCost());
 
-	}
-
-	@Test
-	public void retrieveSeatsFromDb() {
-		int seatsCircle = testPerformance.getCircleSeats();
-		int seatsStall = testPerformance.getStallSeats();
-		testTicket.addSeatsToTicket(5, 3);
-		ResultSet rs = dataAccess.getAvailableSeats(99990999);
-		try {
-			testPerformance.setStallSeats(rs.getInt("seats_stall"));
-			testPerformance.setCircleSeats(rs.getInt("seats_circle"));
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			assertEquals(200, (seatsCircle + seatsStall));
-		}
 	}
 }
