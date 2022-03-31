@@ -62,6 +62,7 @@ public class Theatre {
 		int option = 0;
 		boolean exit = false; // false indicates the application should continue running, false stops it.
 		do {
+			option = 0;
 			// Interface displayed to the user through the console window
 			System.out.println("===========================================");
 			System.out.println("| Enter the number to select an option..  |");
