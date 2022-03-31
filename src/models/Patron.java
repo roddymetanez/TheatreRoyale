@@ -146,6 +146,7 @@ public class Patron {
 		}
 		else {
 			System.out.println("\nPlease try again as seats are limited for that performance");
+			usersBasket.removeFromBasket(ticket.getPerformanceID());
 			ticket.getSeatingList().clear();
 			return false;
 		}
