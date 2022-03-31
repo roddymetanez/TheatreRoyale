@@ -230,7 +230,7 @@ public class Theatre {
 	 *
 	 * ** Customer ID can NOT YET be stored **
 	 */
-	private void registerCustomer() {
+	private boolean registerCustomer() {
 		// Prompt user to enter their details
 		String fname = inputReader.getNextText("> Enter your first name..");
 		String lname = inputReader.getNextText("> Enter your last name..");
@@ -245,7 +245,7 @@ public class Theatre {
 			// The customer could NOT be registered, return to the main menu - The customer
 			// MUST be registered to continue here.
 			System.out.println("Failed to register.");
-			return;
+			return false;
 		}
 
 		// Initialize patron variables with the values entered above
@@ -268,7 +268,10 @@ public class Theatre {
 		catch (SQLException e) {
 			System.out.println("Failed to register.");
 			registerCustomer();
+			return false;
 		}
+		System.out.println("Welcome to the Royale " + fname + "\n");
+		return true;
 	}
 
 	/**
@@ -356,11 +359,53 @@ public class Theatre {
 			System.out.println("|   2. Register for purchase              |");
 			System.out.println("|   3. Return to main menu                |");
 			System.out.println("|                                         |");
-			System.out.println("|                                         |");
-			System.out.println("|                                         |");
-			System.out.println("|                                         |");
 			System.out.println("===========================================");
 		}
+		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
+		switch (option) {
+		case 1:
+			registerCustomer(); // Prompt user to enter their details
+			break;
+
+		case 2:
+			if (patron.getfName() == null) { // Check if the current user has already entered their details
+				if (registerCustomer()) {
+
+				}
+				; // Prompt user to enter their details
+			}
+			if (paymentForTickets(testMode)) {
+				System.out.println("Thanks for your purchase.\n");
+				updateSeats(testMode, patron.getBasket().getTicketsInBasket());
+				createTicket();
+				displayInterface();
+			}
+			break;
+		}
+	}
+
+	private void createTicket() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private boolean paymentForTickets(boolean testMode) {
+		return testMode;
+
+	}
+
+	private void updateSeats(boolean testMode, ArrayList<Ticket> tktListOf) {
+		for(tkt :tktListOf) {
+		ResultSet rs = dataAccess.updateAvailableSeats(p, seatsStalls, seatsCircle)
+		try {
+			performance.setStallSeats(rs.getInt("seats_stall"));
+			performance.setCircleSeats(rs.getInt("seats_circle"));
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/**

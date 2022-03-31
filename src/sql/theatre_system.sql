@@ -158,20 +158,19 @@ BEGIN
 END;$$
 DELIMITER ;
 
- -- CALL updateAvailableSeats(01001001, 52, 108);
+-- CALL updateAvailableSeats(99990999, 52, 108);
 
 drop procedure if exists getAvailableSeats;
 delimiter $$
 create procedure 
     getAvailableSeats (in  PID int) 
     begin
-    select * 
+    select seats_circle, seats_stall 
     from Performance
     where perfID = PID;
     end;$$
     delimiter ;
-    
- --  call getAvailableSeats(1000);
+--   call getAvailableSeats(99990999);
     
 DROP PROCEDURE IF EXISTS createTicket;
 DELIMITER $$
@@ -233,4 +232,4 @@ CREATE PROCEDURE getCustomerData(in CID int)
    END;$$
 DELIMITER ;
 
-CALL getCustomerData(1); 
+-- CALL getCustomerData(1); 
