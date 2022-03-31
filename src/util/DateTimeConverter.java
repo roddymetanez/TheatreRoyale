@@ -42,7 +42,7 @@ public class DateTimeConverter {
 
 	/**
 	 * Sql date parser - turns YYYYMMDD date to match the tables DD - MM - YY DD
-	 * 
+	 *
 	 * @param strDate
 	 * @return
 	 * @throws ParseException
@@ -56,7 +56,7 @@ public class DateTimeConverter {
 	/**
 	 * Sql date parser - turns DDMMYY into String date to match the tables DD - MM -
 	 * YY DD
-	 * 
+	 *
 	 * @param strDate
 	 * @return
 	 * @throws ParseException
@@ -72,7 +72,7 @@ public class DateTimeConverter {
 
 	/**
 	 * get Date from SQL string, returning a java.util.date type object
-	 * 
+	 *
 	 * @param strDate
 	 * @return
 	 * @throws ParseException
@@ -84,7 +84,7 @@ public class DateTimeConverter {
 
 	/**
 	 * check to see if date (as String) is 7 days hence from localDate time of NOW
-	 * 
+	 *
 	 * @param strDate
 	 * @return
 	 * @throws ParseException

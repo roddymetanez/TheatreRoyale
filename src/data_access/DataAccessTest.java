@@ -1,6 +1,9 @@
 package data_access;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -130,7 +133,7 @@ public class DataAccessTest
      * updateAvailableSeatTest updates the number of seats for a performance and then
      * tests that the remaining number of seats is correct
      */
-    @Test 
+    @Test
     public void updateAvailableSeatTest() {
     DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
