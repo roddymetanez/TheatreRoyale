@@ -18,9 +18,10 @@ public class Seat {
 		Circle, Stall
 	}
 
-	public Seat(Performance perf, seatLoc seatType, double concession) {
+	public Seat(Performance perf, seatLoc seatType, boolean concession) {
 		setPerformance(perf);
 		setSeat(seatType);
+		setConcession(concession);
 		calcCost();
 	}
 
@@ -51,6 +52,10 @@ public class Seat {
 
 	public void setSeat(seatLoc seatType) {
 		seatLoc = seatType;
+	}
+
+	private void setConcession(boolean concession) {
+		this.concession = concession;
 	}
 
 	/**

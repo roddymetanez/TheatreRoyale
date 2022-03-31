@@ -1,5 +1,7 @@
 package models;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -21,11 +23,14 @@ public class Patron {
 	private final InputReader inputReader;
 	private Basket usersBasket;
 
+	private DecimalFormat twoDigitsDoubles = new DecimalFormat("#.##");
+
 	public Patron() {
 		// Constructor
 		this.inputReader = new InputReader();
 		this.usersBasket = new Basket();
 		this.balance = 125.00; // TODO, why this value? All about the benjies...
+		twoDigitsDoubles.setRoundingMode(RoundingMode.FLOOR);
 	}
 
 	public void setID(int id) {
@@ -75,7 +80,7 @@ public class Patron {
 	public void setPost_code(String post_code) {
 		this.post_code = post_code;
 	}
-  
+
 	/**
 	 * @return the balance
 	 */
@@ -110,22 +115,25 @@ public class Patron {
 	// B: Check the performanceID is valid.
 	public boolean holdForBasket(Performance performance) {
 		selectForBasket(ticket = createTicket(performance)); // Empty method
-		boolean tktSale = ticket.setSeatingList();
+		boolean tktSale = ticket.chooseNumberSeats();
 		if (tktSale) {
 			ticket.calcCost();
 			try {
 				if (ticket.checkPostage(performance)) {
-					String postAccept = inputReader.getNextText("\nWould you like postage for your tickets? [Y = Yes, N = No]");
+					String postAccept = inputReader
+							.getNextText("\nWould you like postage for your tickets? [Y = Yes, N = No]");
 					if (postAccept.equalsIgnoreCase("y")) {
 						ticket.acceptPostage();
 					}
-					String ticketAccept = inputReader.getNextText("\nComplete sale?  [Y = Yes, N = No]");
+					String ticketAccept = inputReader.getNextText("\nCompleted selection?  [Y = Yes, N = No]");
 					if (ticketAccept.equalsIgnoreCase("y")) {
-						System.out.println("\nSuccessfully added performance [" + performance.getPerfID() + "] to your basket\n");
+						System.out.println(
+								"\nSuccessfully added performance [" + performance.getPerfID() + "] to your basket\n");
 						acceptTicketToBasket(ticket);
 					}
 				}
-			} catch (ParseException e) {
+			}
+			catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -136,6 +144,7 @@ public class Patron {
 			return false;
 		}
 	}
+
 	// Method needs to be updated to ensure A: Ticket is available for purchase/not
 	// sold out, and B: Check the performanceID is valid.
 	public void addToBasket(Performance performance) {
@@ -162,10 +171,11 @@ public class Patron {
 	 * @return
 	 */
 	public void removeFromBasketByID(int perfID) {
- 		if (usersBasket.removeFromBasket(perfID)) {
- 			System.out.println("Ticket has been removed from your basket.");
- 		} else {
- 			System.out.println("Ticket could not be removed, or does not exist in your basket.");
+		if (usersBasket.removeFromBasket(perfID)) {
+			System.out.println("Ticket has been removed from your basket.");
+		}
+		else {
+			System.out.println("Ticket could not be removed, or does not exist in your basket.");
 		}
 	}
 
@@ -201,9 +211,15 @@ public class Patron {
 			return;
 		}
 		inBasket.forEach(ticket -> {
+			Double tmpTktCost = ticket.getCost(); // Need to have this Object explained to me
+			tmpTktCost.doubleValue();
+			int fullPrcTkt = ticket.getFullPrcTkt();
+			int fullCncTkt = ticket.getCncPrcTkt();
+
 			System.out.println("Performance ID: " + ticket.getPerformanceID() + "\t Show Title: "
 					+ ticket.getPerformance().getTitle() + "\t Show Time: " + ticket.getPerformance().getStartDateTime()
-					+ "\t Price: " + ticket.getPerformance().getPrice());
+					+ "\n Tickets: " + fullPrcTkt + " x Full price tickets\t " + fullCncTkt + " x Concessionary tickets"
+					+ "\t Total: " + (twoDigitsDoubles.format(tmpTktCost)));
 		});
 	}
 
@@ -213,6 +229,7 @@ public class Patron {
 	 * @param testTicket
 	 */
 	public void selectForBasket(Ticket ticket) {
+		usersBasket.addToBasket(ticket);
 	}
 
 	public void acceptTicketToBasket(Ticket ticket) {

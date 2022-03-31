@@ -3,6 +3,8 @@
  */
 package models;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -20,6 +22,9 @@ public class Ticket {
 	private InputReader inputReader;
 	private final double PostFee = 1.00;
 	private DateTimeConverter dateTimeConverter;
+	private int concessionarySeat;
+	private int fullPriceTicket;
+	private DecimalFormat twoDigitsDoubles = new DecimalFormat("#.##");
 
 	public Ticket(Performance performance, Patron patron) {
 		this.performance = performance;
@@ -30,6 +35,8 @@ public class Ticket {
 
 		seatingList = new ArrayList<>();
 		dateTimeConverter = new DateTimeConverter();
+
+		twoDigitsDoubles.setRoundingMode(RoundingMode.FLOOR);
 
 	}
 
@@ -59,7 +66,8 @@ public class Ticket {
 	/**
 	 * @param seatingList the seatingList to set
 	 */
-	public boolean setSeatingList() {
+	public boolean chooseNumberSeats() {
+
 		boolean tktsale = false;
 		int tmpStallSeats = getPerformance().getStallSeats();
 		int tmpCircleSeats = getPerformance().getCircleSeats();
@@ -81,7 +89,7 @@ public class Ticket {
 		System.out.println("|  Please select the seats you want       |");
 		System.out.println("|                                         |");
 		System.out.println("|  How many regular and concessionary     |");
-		System.out.println("|  tickets would you like? " + tot + " left       |");
+		System.out.println("|  tickets would you like? " + (tot - optionReg) + " left       |");
 		System.out.println("|                                         |");
 		System.out.println("|  How many concessionary tickets?        |");
 		System.out.println("|                                         |");
@@ -96,17 +104,17 @@ public class Ticket {
 	public boolean addSeatsToTicket(int optionReg, int optionConc) {
 		int[] seatTkts = { optionReg, optionConc };
 		int tot = optionConc + optionReg;
-		if (performance.getStallSeats() < 1 || performance.getCircleSeats() < 1 - tot) {
+		boolean seatConcession = false;
+		if ((performance.getStallSeats() + performance.getCircleSeats()) < tot) {
 			System.out.println("There are not enough seats left");
 			return false;
 		}
 		for (int tktype : seatTkts) {
-			int y = 0;
 			for (int i = 0; i < tktype; i++) {
-				Seat seat = new Seat(getPerformance(), seatType(), y);
+				Seat seat = new Seat(getPerformance(), seatType(), seatConcession);
 				seatingList.add(seat);
 			}
-			y++;
+			seatConcession = !seatConcession;
 		}
 		return true;
 	}
@@ -133,24 +141,39 @@ public class Ticket {
 
 	// TODO Dan - is this ok?
 	public double calcCost() {
+		concessionarySeat = 0;
+		fullPriceTicket = 0;
 		double ticketCost = 0;
 		for (Seat tmpSeat : seatingList) {
 			ticketCost = ticketCost + tmpSeat.getSeatCost();
+			if (tmpSeat.isConcession()) {
+				concessionarySeat++;
+			}
+			else {
+				fullPriceTicket++;
+			}
+
 		}
 		setCost(ticketCost);
 		return ticketCost;
-
 	}
 
 	// TODO Dan - is this ok?
 	public double calcCost(ArrayList<Seat> seatingList) {
+		concessionarySeat = 0;
+		fullPriceTicket = 0;
 		double ticketCost = 0;
 		for (Seat tmpSeat : seatingList) {
 			ticketCost = ticketCost + tmpSeat.getSeatCost();
+			if (tmpSeat.isConcession()) {
+				concessionarySeat++;
+			}
+			else {
+				fullPriceTicket++;
+			}
 		}
 		setCost(ticketCost);
 		return ticketCost;
-
 	}
 
 //	public Integer getPostage() {
@@ -170,5 +193,13 @@ public class Ticket {
 			}
 		}
 		setCost(postCharge + getCost());
+	}
+
+	public int getFullPrcTkt() {
+		return fullPriceTicket;
+	}
+
+	public int getCncPrcTkt() {
+		return concessionarySeat;
 	}
 }

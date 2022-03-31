@@ -78,15 +78,15 @@ public class Theatre {
 			// Switch the option and call the correct method, or exit.
 			dataAccess = new DataAccess(); // Reopen the database connection
 			switch (option) {
-				case 1 -> browseShows();
-				case 2 -> findShowByName();
-				case 3 -> findShowsByDate();
-				case 4 -> printBasketMenu();
-				case 5 -> exit = true;
+			case 1 -> browseShows();
+			case 2 -> findShowByName();
+			case 3 -> findShowsByDate();
+			case 4 -> printBasketMenu();
+			case 5 -> exit = true;
 			}
 		}
 		while (!exit);
-		
+
 		System.out.println("Closing..");
 		System.exit(0); // Exit the program
 	}
@@ -276,7 +276,8 @@ public class Theatre {
 		int idSelected = 0;
 		try {
 			// ID to be selected from the performanceIDs ArrayLisy
-			idSelected = Integer.valueOf(inputReader.getNextInt("> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n"));
+			idSelected = Integer.valueOf(inputReader.getNextInt(
+					"> Enter the 'Performance ID' to add a performance to your basket, or 'Cancel' to return to the menu\n"));
 		}
 		catch (NumberFormatException e) {
 			System.out.println("Returning to the menu");
@@ -321,7 +322,14 @@ public class Theatre {
 		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
 		switch (option) {
 		case 1:
-			patron.removeFromBasketByID(inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n")); // Remove a ticket from the users basket
+			patron.removeFromBasketByID(
+					inputReader.getNextInt("Enter the 'Performance ID' to remove a performance from your basket\n")); // Remove
+																														// a
+																														// ticket
+																														// from
+																														// the
+																														// users
+																														// basket
 			break;
 		case 2:
 			if (patron.getfName() == null) { // Check if the current user has already entered their details
