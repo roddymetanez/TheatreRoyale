@@ -64,4 +64,11 @@ public class Seat {
 	public boolean isConcession() {
 		return concession;
 	}
+
+	/**
+	 * @return the seatLoc
+	 */
+	public seatLoc getSeatLoc() {
+		return seatLoc;
+	}
 }

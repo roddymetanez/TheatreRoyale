@@ -11,6 +11,8 @@ import java.util.InputMismatchException;
 import data_access.DataAccess;
 import models.Patron;
 import models.Performance;
+import models.Seat;
+import models.Seat.seatLoc;
 import models.Ticket;
 import util.DateTimeConverter;
 import util.InputReader;
@@ -346,48 +348,45 @@ public class Theatre {
 		}
 	}
 
-	/**
-	 * Method to be updated
-	 */
-	public void checkoutBasket(boolean menu) {
-		if (menu) {
-			printBasket();
-			System.out.println("===========================================");
-			System.out.println("|                                         |");
-			System.out.println("|   1. Complete purchase                  |");
-			System.out.println("|   2. Return to main menu                |");
-			System.out.println("|                                         |");
-			System.out.println("===========================================");
-		}
-		
-		int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
-		
-		switch (option) {
-		case 1:
-			if (paymentForTickets(!testMode)) {
-				while (!requestPaymentDetails){
-					requestPaymentDetails;
-				}
-				System.out.println("Thanks for your purchase.\n");
-				updateSeats(testMode, patron.getBasket().getTicketsInBasket());
-				createTicket();
-				displayInterface();
-			}
-			break;
-		case 2: return;
-		}
-	}
+public void checkoutBasket(boolean menu) {
+if (menu) {
+printBasket();
+System.out.println("===========================================");
+System.out.println("|                                         |");
+System.out.println("| 1. Complete purchase                    |");
+System.out.println("| 2. Return to main menu                  |");
+System.out.println("|                                         |");
+System.out.println("===========================================");
+}
 
-	private boolean requestPaymentDetails(){
-		String ccLongNum = inputReader.getNextText("Enter the 16 digit number from the front of your card");
+int option = inputReader.getNextInt(""); // Prompt the user to enter an option from the above menu
 
-		return ccLongNim.length() == 16;
-	}
-	
+switch (option) {
+case 1:
+if (paymentForTickets(!testMode)) {
+boolean validCCDetails = requestPaymentDetails();
+while (!validCCDetails){
+validCCDetails = requestPaymentDetails();
+}
+System.out.println("Thanks for your purchase.\n");
+updateSeats(testMode, patron.getBasket().getTicketsInBasket());
+createTicket();
+displayInterface();
+}
+break;
+case 2: return;
+}
+}
 
-	private void createTicket() {
-		// TODO Auto-generated method stub
+private boolean requestPaymentDetails(){
+String ccLongNum = inputReader.getNextText("Enter the 16 digit number from the front of your card");
+System.out.println(ccLongNum.length());
+return ccLongNum.length() == 16;
+}
 
+	private void createPrintedTicket() {
+		printBasket();
+		// TODO make this.
 	}
 
 	private boolean paymentForTickets(boolean testMode) {
@@ -395,8 +394,19 @@ public class Theatre {
 	}
 
 	private void updateSeats(boolean testMode, ArrayList<Ticket> tktListOf) {
-		for(Ticket tkt :tktListOf) {
-			//ResultSet rs = dataAccess.updateAvailableSeats(tkt.getPerformanceID(), seatsStalls, seatsCircle);
+		int stallSeats = 0;
+		int circleSeats = 0;
+		for (Ticket tkt : tktListOf) {
+			for (Seat tmpSeat : tkt.getSeatingList()) {
+				if (seatLoc.Stall == tmpSeat.getSeatLoc())
+					stallSeats++;
+				else {
+					circleSeats++;
+				}
+			}
+			if (!dataAccess.updateAvailableSeats(tkt.getPerformanceID(), stallSeats, circleSeats)) {
+				System.out.println("error in seat reservation");
+			}
 		}
 	}
 

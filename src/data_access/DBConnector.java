@@ -9,8 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * DBConnector provides an interface to the Database.
@@ -28,7 +28,7 @@ public class DBConnector {
         conn = null;
     }
 
-    
+
     /**
      * connect will connect to the database using the address, username and password
      * specified in the connParams file
@@ -65,7 +65,7 @@ public class DBConnector {
         }
     }
 
-    
+
     public ResultSet runCall(CallableStatement cst) {
         try {
         	ResultSet results;
@@ -246,7 +246,7 @@ public class DBConnector {
         }
     }
 
-    
+
     /**
      * Close will close the connection to the current database
      */
@@ -260,7 +260,7 @@ public class DBConnector {
         }
     }
 
-    
+
     /**
      * Prints out the name of the database connectd to
      */
@@ -273,7 +273,7 @@ public class DBConnector {
             return "Invalid Connection.";
         }
     }
-  
+
     /**
      * getConn returns the 'handle' of the connected database
      * @return Connection - the 'handle' of the connected database
@@ -281,8 +281,8 @@ public class DBConnector {
     public Connection getConn() {
         return conn;
     }
-    
-    
+
+
     public void commit() {
         try {
             conn.commit();
