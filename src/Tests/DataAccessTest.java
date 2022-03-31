@@ -135,7 +135,7 @@ public class DataAccessTest
     public void updateAvailableSeatTest() {
     DataAccess dataAccess = new DataAccess();
         DBConnector db = dataAccess.getDb();
-        int perfId = 1000;
+        int perfId = 4005004;
         ResultSet rs = dataAccess.getAvailableSeats(perfId);
         assertNotNull(rs);
         int aStall = -1;
