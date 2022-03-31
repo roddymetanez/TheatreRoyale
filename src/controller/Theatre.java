@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 
 import data_access.DataAccess;
 import models.Patron;
@@ -78,11 +77,11 @@ public class Theatre {
 
 			// Ensure a digit is provided
 			try {
-				option = inputReader.getNextInt("");
+				option = Integer.valueOf(inputReader.getNextText(""));
 			}
-			catch (InputMismatchException e) {
+			catch (NumberFormatException e) {
 				System.out.println("Error: You must enter a digit");
-				return;
+				continue;
 			}
 			dataAccess = new DataAccess(); // Reopen the database connection
 			
